@@ -17,10 +17,13 @@ kotlin {
         withJava()
     }
     sourceSets {
+        val decomposeVersion = "1.0.0-beta-04"
         val jvmMain by getting {
             dependencies {
                 implementation(project(":common"))
                 implementation(compose.desktop.currentOs)
+                implementation("com.arkivanov.decompose:decompose:$decomposeVersion")
+                implementation("com.arkivanov.decompose:extensions-compose-jetbrains:$decomposeVersion")
             }
         }
         val jvmTest by getting

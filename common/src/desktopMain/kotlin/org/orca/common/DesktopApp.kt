@@ -7,11 +7,3 @@ import org.orca.common.ui.App
 import org.orca.common.ui.theme.AppTheme
 import org.orca.common.ui.utils.WindowSize
 
-@ExperimentalMaterial3Api
-@Preview
-@Composable
-fun AppPreview() {
-    AppTheme {
-        App(WindowSize.MEDIUM)
-    }
-}

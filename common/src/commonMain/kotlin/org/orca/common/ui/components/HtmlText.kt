@@ -1,7 +1,7 @@
 package org.orca.common.ui.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-//import androidx.compose.foundation.onClick
+import androidx.compose.foundation.clickable
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -19,7 +19,6 @@ import org.jsoup.nodes.TextNode
 
 fun parseHtmlFromString(document: String): Node = Jsoup.parse(document).body()
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun RichTextScope.HtmlText(
     node: Node,
@@ -53,7 +52,7 @@ fun RichTextScope.HtmlText(
                     "a" -> {
                         val href = it.attr("href")
                         if (!href.startsWith("http")) HtmlText(it, modifier, style)
-//                        else HtmlText(it, modifier.onClick { uriHandler.openUri(href) }, style.copy(color = Color.Blue, textDecoration = TextDecoration.Underline))
+                        else HtmlText(it, modifier.clickable { uriHandler.openUri(href) }, style.copy(color = Color.Blue, textDecoration = TextDecoration.Underline))
                     }
 
                     else -> HtmlText(it, modifier, style)
