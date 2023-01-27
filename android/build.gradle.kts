@@ -13,15 +13,14 @@ repositories {
     jcenter()
 }
 
-val decomposeVersion = "1.0.0-beta-04"
 val material3Version = "1.1.0-alpha04"
+val decomposeVersion = "1.0.0-beta-04"
 dependencies {
     implementation(project(":common"))
     implementation("androidx.activity:activity-compose:1.6.1")
     implementation("com.google.accompanist:accompanist-systemuicontroller:0.29.0-alpha")
     implementation("androidx.window:window:1.0.0")
     implementation("com.arkivanov.decompose:decompose:$decomposeVersion")
-//    implementation("com.arkivanov.decompose:extensions-compose-jetbrains:$decomposeVersion")
 }
 
 android {

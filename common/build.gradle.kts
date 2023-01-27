@@ -19,7 +19,6 @@ kotlin {
         val datetimeVersion = "0.4.0"
 //        val ktorVersion = "2.2.2"
         val composeRichtextVersion = "0.16.0"
-        val korioVersion = "2.2.0"
         val decomposeVersion = "1.0.0-beta-04"
         val commonMain by getting {
             dependencies {
@@ -30,7 +29,6 @@ kotlin {
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:$datetimeVersion")
                 implementation("com.halilibo.compose-richtext:richtext-ui-material3:$composeRichtextVersion")
                 implementation("org.jsoup:jsoup:1.14.3")
-                implementation("com.soywiz.korlibs.korio:korio:$korioVersion")
                 implementation("com.arkivanov.decompose:decompose:$decomposeVersion")
                 implementation("com.arkivanov.decompose:extensions-compose-jetbrains:$decomposeVersion")
             }
@@ -47,7 +45,7 @@ kotlin {
                 api("androidx.compose.material3:material3:1.1.0-alpha04")
             }
         }
-        val androidTest by getting {
+        val androidUnitTest by getting {
             dependencies {
                 implementation("junit:junit:4.13.2")
             }

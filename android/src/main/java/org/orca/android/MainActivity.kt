@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.toComposeRect
@@ -14,8 +15,8 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.window.layout.WindowMetricsCalculator
 import com.arkivanov.decompose.defaultComponentContext
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import org.orca.common.ui.AppRootComponent
-import org.orca.common.ui.AppRootContent
+import org.orca.common.ui.RootComponent
+import org.orca.common.ui.RootContent
 import org.orca.common.ui.theme.AppTheme
 import org.orca.common.ui.utils.WindowSize
 
@@ -23,14 +24,24 @@ import org.orca.common.ui.utils.WindowSize
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val root = AppRootComponent(componentContext = defaultComponentContext())
+
+        val root = RootComponent(
+            componentContext = defaultComponentContext()
+        )
 
         setContent {
             AppTheme {
+                val windowSize = rememberWindowSize()
                 val systemUiController = rememberSystemUiController()
-                systemUiController.setSystemBarsColor(MaterialTheme.colorScheme.background)
+                systemUiController.setStatusBarColor(MaterialTheme.colorScheme.background)
+                systemUiController.setNavigationBarColor(MaterialTheme.colorScheme.surface)
 
-                AppRootContent(root, rememberWindowSize())
+                Surface {
+                    RootContent(
+                        component = root,
+                        windowSize = windowSize
+                    )
+                }
             }
         }
     }

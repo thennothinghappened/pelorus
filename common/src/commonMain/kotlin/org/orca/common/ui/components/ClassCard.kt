@@ -11,58 +11,16 @@ import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.ComponentContext
 import kotlinx.datetime.LocalTime
 
-class ClassListComponent(
-    private val componentContext: ComponentContext,
-
-) : ComponentContext by componentContext {
-
-
-}
-
 @Composable
-private fun ClassItem(
+fun ClassCard(
     className: String,
     roomName: String,
     teacherName: String,
-    time: LocalTime,
+    time: LocalTime?,
     onClick: () -> Unit
-) {
-    BaseCard {
-        Row(
-            Modifier
-                .padding(8.dp)
-        ) {
-            Text(
-                className,
-                style = MaterialTheme.typography.labelLarge,
-                overflow = TextOverflow.Clip,
-                maxLines = 1
-            )
-            Spacer(Modifier.weight(1f))
-            Text(
-                "Room ${roomName}",
-                style = MaterialTheme.typography.labelMedium,
-                overflow = TextOverflow.Clip,
-                maxLines = 1
-            )
-        }
-        Row(
-            Modifier
-                .padding(8.dp)
-        ) {
-            Text(
-                teacherName,
-                style = MaterialTheme.typography.labelMedium,
-                overflow = TextOverflow.Clip,
-                maxLines = 1
-            )
-            Spacer(Modifier.weight(1f))
-            Text(
-                "${time.hour}:${time.minute}",
-                style = MaterialTheme.typography.labelMedium,
-                overflow = TextOverflow.Clip,
-                maxLines = 1
-            )
-        }
-    }
-}
+) = CornersCard(
+    className,
+    "Room $roomName",
+    teacherName,
+    if (time != null) "${time.hour}:${time.minute}" else ""
+)

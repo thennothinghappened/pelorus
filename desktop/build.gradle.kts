@@ -23,7 +23,6 @@ kotlin {
                 implementation(project(":common"))
                 implementation(compose.desktop.currentOs)
                 implementation("com.arkivanov.decompose:decompose:$decomposeVersion")
-                implementation("com.arkivanov.decompose:extensions-compose-jetbrains:$decomposeVersion")
             }
         }
         val jvmTest by getting
