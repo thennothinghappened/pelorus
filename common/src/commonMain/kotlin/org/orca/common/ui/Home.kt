@@ -8,12 +8,17 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.ComponentContext
+import com.halilibo.richtext.ui.material3.Material3RichText
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import org.jsoup.Jsoup
+import org.orca.common.ui.components.BaseCard
 import org.orca.common.ui.components.ClassCard
 import org.orca.common.ui.components.CornersCard
+import org.orca.common.ui.components.HtmlText
 import org.orca.common.ui.utils.WindowSize
 import org.orca.kotlass.data.CalendarEvent
+import org.orca.kotlass.data.NewsItem
 
 class Home(
     componentContext: ComponentContext,
@@ -21,7 +26,7 @@ class Home(
 ) : ComponentContext by componentContext {
 
     init {
-        println("aww shiiiid here we go agaaaain\n\n")
+        println("made new home component!!!!!\n\n")
     }
 }
 
@@ -32,6 +37,7 @@ fun HomeContent(
     windowSize: WindowSize
 ) {
     val scheduleState by component.compass.schedule.collectAsState()
+    val newsfeedState by component.compass.newsfeed.collectAsState()
 
     Column(
         modifier = modifier
@@ -46,7 +52,7 @@ fun HomeContent(
                         Divider()
                         TodoTaskList()
                     }
-                    Newsfeed(modifier = Modifier.weight(1f))
+                    Newsfeed(modifier = Modifier.weight(1f), newsfeedState = newsfeedState)
                 }
             }
             else -> {
@@ -54,7 +60,7 @@ fun HomeContent(
                 Divider()
                 TodoTaskList()
                 Divider()
-                Newsfeed()
+                Newsfeed(newsfeedState = newsfeedState)
             }
         }
     }
@@ -77,7 +83,7 @@ fun ClassList(
                 Text("FAILURE")
             }
             is Compass.NetType.Result -> {
-                val classes = (scheduleState as Compass.NetType.Result<Array<CalendarEvent>>).data
+                val classes = scheduleState.data
                 Text("Schedule", style = MaterialTheme.typography.labelMedium)
                 when (windowSize) {
                     WindowSize.EXPANDED -> {
@@ -127,15 +133,24 @@ fun TodoTaskList(
 
 @Composable
 fun Newsfeed(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    newsfeedState: Compass.NetType<List<NewsItem>>
 ) {
     Column(modifier = modifier.padding(8.dp)) {
         Text("Newsfeed", style = MaterialTheme.typography.labelMedium)
-        CornersCard(
-            "egg",
-            "",
-            "",
-            ""
-        )
+        when (newsfeedState) {
+            is Compass.NetType.Loading -> { CircularProgressIndicator() }
+            is Compass.NetType.Error -> { Text(newsfeedState.error.toString()) }
+            is Compass.NetType.Result -> {
+                newsfeedState.data.forEach {
+                    BaseCard(modifier = Modifier.fillMaxWidth()) {
+                        Material3RichText(modifier = Modifier.padding(8.dp)) {
+                            HtmlText(Jsoup.parse(it.content1.toString()).body())
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
+            }
+        }
     }
 }
