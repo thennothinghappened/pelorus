@@ -22,7 +22,7 @@ fun CornersCard(
     colors: CardColors = CardDefaults.cardColors(),
     onClick: () -> Unit = {}
 ) {
-    BaseCard(colors = colors) {
+    BaseCard(colors = colors, onClick = onClick) {
         Row(
             Modifier
                 .padding(8.dp)

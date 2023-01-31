@@ -17,10 +17,11 @@ fun ClassCard(
     roomName: String,
     teacherName: String,
     time: LocalTime?,
-    onClick: () -> Unit
+    onClick: () -> Unit = {}
 ) = CornersCard(
     className,
     "Room $roomName",
     teacherName,
-    if (time != null) "${time.hour}:${time.minute}" else ""
+    if (time != null) "${time.hour}:${time.minute}" else "",
+    onClick = onClick
 )

@@ -34,35 +34,34 @@ class RootComponent(
     componentContext: ComponentContext
 ) : ComponentContext by componentContext {
 
-    private val scope = coroutineScope(Dispatchers.IO)
     private val navigation = StackNavigation<Config>()
     private val _stack =
         childStack(
             source = navigation,
-            initialConfiguration = Config.Home,
+            initialConfiguration = Config.Mainscreen,
             handleBackButton = true,
             childFactory = ::child
         )
     val stack: Value<ChildStack<*, Child>> = _stack
 
     // weird workaround for null pointer at runtime if getting directly from other components
-    fun compass() = instanceKeeper.getOrCreate { Compass(TestCredentials) }
+    private fun compass() = instanceKeeper.getOrCreate { Compass(TestCredentials) }
 
     private fun child(config: Config, componentContext: ComponentContext): Child =
         when (config) {
-            is Config.Home -> Child.HomeChild(Home(
+            is Config.Mainscreen -> Child.MainscreenChild(MainscreenComponent(
                 componentContext = componentContext,
                 compass()
             ))
         }
 
-    sealed class Child {
-        class HomeChild(val component: Home) : Child()
+    sealed interface Child {
+        class MainscreenChild(val component: MainscreenComponent) : Child
     }
 
     @Parcelize
-    sealed class Config : Parcelable {
-        object Home: Config()
+    sealed interface Config : Parcelable {
+        object Mainscreen : Config
     }
 
 
@@ -86,7 +85,7 @@ fun RootContent(
                     containerColor = MaterialTheme.colorScheme.surface
                 ) {
                     NavigationRailItem(
-                        selected = activeComponent is RootComponent.Child.HomeChild,
+                        selected = activeComponent is RootComponent.Child.MainscreenChild,
                         onClick = {},
                         icon = {
                             Icon(
@@ -103,7 +102,7 @@ fun RootContent(
                     animation = stackAnimation(fade())
                 ) {
                     when (val child = it.instance) {
-                        is RootComponent.Child.HomeChild -> HomeContent(
+                        is RootComponent.Child.MainscreenChild -> MainscreenContent(
                             component = child.component,
                             windowSize = windowSize
                         )
@@ -119,7 +118,7 @@ fun RootContent(
                     animation = stackAnimation(fade())
                 ) {
                     when (val child = it.instance) {
-                        is RootComponent.Child.HomeChild -> HomeContent(
+                        is RootComponent.Child.MainscreenChild -> MainscreenContent(
                             component = child.component,
                             windowSize = windowSize
                         )
@@ -127,7 +126,7 @@ fun RootContent(
                 }
                 NavigationBar(modifier = Modifier.fillMaxWidth()) {
                     NavigationBarItem(
-                        selected = activeComponent is RootComponent.Child.HomeChild,
+                        selected = activeComponent is RootComponent.Child.MainscreenChild,
                         onClick = {},
                         icon = {
                             Icon(

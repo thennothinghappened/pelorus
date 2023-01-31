@@ -11,7 +11,8 @@ import androidx.compose.ui.unit.dp
 fun BaseCard(
     modifier: Modifier = Modifier,
     colors: CardColors = CardDefaults.cardColors(),
-    content: @Composable() (ColumnScope.() -> Unit)
+    onClick: () -> Unit = {},
+    content: @Composable() (ColumnScope.() -> Unit),
 ) {
     Card(
         modifier = modifier,
@@ -19,6 +20,7 @@ fun BaseCard(
         elevation = CardDefaults.cardElevation(
             defaultElevation = 6.dp
         ),
-        content = content
+        content = content,
+        onClick = onClick
     )
 }

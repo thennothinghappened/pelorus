@@ -3,9 +3,13 @@ package org.orca.common.ui
 import com.arkivanov.essenty.instancekeeper.InstanceKeeper
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
+import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import org.orca.kotlass.CompassApiClient
 import org.orca.kotlass.CompassClientCredentials
+import org.orca.kotlass.data.Activity
 import org.orca.kotlass.data.CalendarEvent
 import org.orca.kotlass.data.NetResponse
 import org.orca.kotlass.data.NewsItem
@@ -25,6 +29,9 @@ class Compass(
     val newsfeed: StateFlow<NetType<List<NewsItem>>> = _newsfeed
     val newsfeedEnabled = true
 
+    private val _activities: MutableStateFlow<NetType<Map<String, Activity>>> = MutableStateFlow(NetType.Loading())
+    val activities: StateFlow<NetType<Map<String, Activity>>> = _activities
+
     private suspend fun pollNewsfeedUpdate() {
         // Don't start a new request if there's already one loading.
         if (newsfeed is NetType.Loading<*>) return
@@ -33,9 +40,12 @@ class Compass(
         val reply = client.getMyNewsFeedPaged()
         if (reply !is NetResponse.Success)
             _newsfeed.value = NetType.Error(Throwable(reply.toString()))
-        else
+        else {
             _newsfeed.value = NetType.Result(reply.data.data)
-
+            (newsfeed.value as NetType.Result).data.forEach {
+                
+            }
+        }
     }
 
     fun manualPollNewsfeedUpdate() {
@@ -44,15 +54,16 @@ class Compass(
         }
     }
 
-    private suspend fun pollScheduleUpdate() {
+    private suspend fun pollScheduleUpdate(startDate: LocalDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date, endDate: LocalDate = startDate) {
         // Don't start a new request if there's already one loading.
         if (schedule is NetType.Loading<*>) return
 
-        val reply = client.getCalendarEventsByUser()
+        val reply = client.getCalendarEventsByUser(startDate, endDate)
         if (reply !is NetResponse.Success)
             _schedule.value = NetType.Error(Throwable(reply.toString()))
-        else
+        else {
             _schedule.value = NetType.Result(reply.data)
+        }
     }
 
     fun manualPollScheduleUpdate() {

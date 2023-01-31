@@ -1,14 +1,22 @@
 package org.orca.common.ui
 
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Divider
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.ComponentContext
 import com.halilibo.richtext.ui.material3.Material3RichText
+import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.jsoup.Jsoup
@@ -20,47 +28,62 @@ import org.orca.common.ui.utils.WindowSize
 import org.orca.kotlass.data.CalendarEvent
 import org.orca.kotlass.data.NewsItem
 
-class Home(
+class HomeComponent(
     componentContext: ComponentContext,
-    val compass: Compass
+    val compass: Compass,
+    val onClickActivity: (String) -> Unit
 ) : ComponentContext by componentContext {
 
-    init {
-        println("made new home component!!!!!\n\n")
-    }
+
 }
+
 
 @Composable
 fun HomeContent(
-    component: Home,
+    component: HomeComponent,
     modifier: Modifier = Modifier,
     windowSize: WindowSize
 ) {
     val scheduleState by component.compass.schedule.collectAsState()
     val newsfeedState by component.compass.newsfeed.collectAsState()
-
-    Column(
-        modifier = modifier
-            .verticalScroll(rememberScrollState())
-            .padding(16.dp)
-    ) {
+    LazyColumn {
         when (windowSize) {
             WindowSize.EXPANDED -> {
-                Row {
-                    Column(modifier = Modifier.weight(1f)) {
-                        ClassList(windowSize = windowSize, scheduleState = scheduleState)
-                        Divider()
-                        TodoTaskList()
+                item {
+                    Row {
+                        Column(modifier = Modifier.weight(1f)) {
+                            ClassList(
+                                windowSize = windowSize,
+                                scheduleState = scheduleState,
+                                onClickActivity = component.onClickActivity
+                            )
+                            Divider()
+                            TodoTaskList()
+                        }
+                        Newsfeed(modifier = Modifier.weight(1f), newsfeedState = newsfeedState)
                     }
-                    Newsfeed(modifier = Modifier.weight(1f), newsfeedState = newsfeedState)
                 }
             }
             else -> {
-                ClassList(windowSize = windowSize, scheduleState = scheduleState)
-                Divider()
-                TodoTaskList()
-                Divider()
-                Newsfeed(newsfeedState = newsfeedState)
+                item {
+                    ClassList(
+                        windowSize = windowSize,
+                        scheduleState = scheduleState,
+                        onClickActivity = component.onClickActivity
+                    )
+                }
+                item {
+                    Divider()
+                }
+                item {
+                    TodoTaskList()
+                }
+                item {
+                    Divider()
+                }
+                item {
+                    Newsfeed(newsfeedState = newsfeedState)
+                }
             }
         }
     }
@@ -70,7 +93,8 @@ fun HomeContent(
 fun ClassList(
     modifier: Modifier = Modifier,
     windowSize: WindowSize,
-    scheduleState: Compass.NetType<Array<CalendarEvent>>
+    scheduleState: Compass.NetType<Array<CalendarEvent>>,
+    onClickActivity: (String) -> Unit
 ) {
     Column(
         modifier = modifier.padding(8.dp)
@@ -92,9 +116,10 @@ fun ClassList(
                                 it.longTitleWithoutTime,
                                 "wtf compass",
                                 it.managerId.toString(),
-                                it.start?.toLocalDateTime(TimeZone.currentSystemDefault())?.time,
-                                {}
-                            )
+                                it.start?.toLocalDateTime(TimeZone.currentSystemDefault())?.time
+                            ) {
+                                if (it.instanceId != null) onClickActivity(it.instanceId!!)
+                            }
                         }
                     }
                     else -> {
@@ -103,9 +128,10 @@ fun ClassList(
                                 it.longTitleWithoutTime,
                                 "wtf compass",
                                 it.managerId.toString(),
-                                it.start?.toLocalDateTime(TimeZone.currentSystemDefault())?.time,
-                                {}
-                            )
+                                it.start?.toLocalDateTime(TimeZone.currentSystemDefault())?.time
+                            ) {
+                                if (it.instanceId != null) onClickActivity(it.instanceId!!)
+                            }
                         }
                     }
                 }
