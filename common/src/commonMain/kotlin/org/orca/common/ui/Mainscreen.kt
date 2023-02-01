@@ -23,7 +23,7 @@ import org.orca.kotlass.data.Activity
 
 class MainscreenComponent(
     componentContext: ComponentContext,
-    val compass: Compass
+    private val compass: Compass
 ) : ComponentContext by componentContext {
 
     private val navigation = StackNavigation<Config>()
@@ -37,7 +37,8 @@ class MainscreenComponent(
     val stack: Value<ChildStack<*, Child>> = _stack
 
     private fun onClickActivity(instanceId: String) {
-        navigation.push(Config.Class(instanceId))
+        compass.getLessonPlan(instanceId)
+        navigation.push(Config.Activity(instanceId))
     }
 
     private fun onActivityBackPress() {
@@ -51,7 +52,7 @@ class MainscreenComponent(
                 compass = compass,
                 onClickActivity = ::onClickActivity
             ))
-            is Config.Class -> Child.ActivityChild(ActivityComponent(
+            is Config.Activity -> Child.ActivityChild(ActivityComponent(
                 componentContext = componentContext,
                 compass = compass,
                 instanceId = config.instanceId,
@@ -67,7 +68,7 @@ class MainscreenComponent(
     @Parcelize
     sealed interface Config : Parcelable {
         object Home : Config
-        data class Class(val instanceId: String) : Config
+        data class Activity(val instanceId: String) : Config
     }
 }
 

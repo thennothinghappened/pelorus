@@ -17,7 +17,6 @@ kotlin {
     }
     sourceSets {
         val datetimeVersion = "0.4.0"
-//        val ktorVersion = "2.2.2"
         val composeRichtextVersion = "0.16.0"
         val decomposeVersion = "1.0.0-beta-04"
         val commonMain by getting {

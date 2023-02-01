@@ -1,10 +1,7 @@
 package org.orca.common.ui
 
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
@@ -16,15 +13,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.ComponentContext
 import com.halilibo.richtext.ui.material3.Material3RichText
-import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.jsoup.Jsoup
-import org.orca.common.ui.components.BaseCard
-import org.orca.common.ui.components.ClassCard
-import org.orca.common.ui.components.CornersCard
-import org.orca.common.ui.components.HtmlText
+import org.orca.common.ui.components.*
 import org.orca.common.ui.utils.WindowSize
+import org.orca.kotlass.data.Activity
 import org.orca.kotlass.data.CalendarEvent
 import org.orca.kotlass.data.NewsItem
 
@@ -46,6 +40,8 @@ fun HomeContent(
 ) {
     val scheduleState by component.compass.schedule.collectAsState()
     val newsfeedState by component.compass.newsfeed.collectAsState()
+    val activitiesState by component.compass.activities.collectAsState()
+
     LazyColumn {
         when (windowSize) {
             WindowSize.EXPANDED -> {
@@ -54,7 +50,7 @@ fun HomeContent(
                         Column(modifier = Modifier.weight(1f)) {
                             ClassList(
                                 windowSize = windowSize,
-                                scheduleState = scheduleState,
+                                _scheduleState = scheduleState,
                                 onClickActivity = component.onClickActivity
                             )
                             Divider()
@@ -68,7 +64,7 @@ fun HomeContent(
                 item {
                     ClassList(
                         windowSize = windowSize,
-                        scheduleState = scheduleState,
+                        _scheduleState = scheduleState,
                         onClickActivity = component.onClickActivity
                     )
                 }
@@ -93,45 +89,46 @@ fun HomeContent(
 fun ClassList(
     modifier: Modifier = Modifier,
     windowSize: WindowSize,
-    scheduleState: Compass.NetType<Array<CalendarEvent>>,
+    _scheduleState: Compass.NetType<Array<CalendarEvent>>,
     onClickActivity: (String) -> Unit
 ) {
     Column(
         modifier = modifier.padding(8.dp)
     ) {
-        when (scheduleState) {
-            is Compass.NetType.Loading -> {
+        NetStates(
+            _scheduleState,
+            {
                 CircularProgressIndicator()
+            },
+            {
+                ErrorRenderer((_scheduleState as Compass.NetType.Error).error)
             }
-            is Compass.NetType.Error -> {
-                Text("FAILURE")
-            }
-            is Compass.NetType.Result -> {
-                val classes = scheduleState.data
-                Text("Schedule", style = MaterialTheme.typography.labelMedium)
-                when (windowSize) {
-                    WindowSize.EXPANDED -> {
-                        classes.forEach {
-                            ClassCard(
-                                it.longTitleWithoutTime,
-                                "wtf compass",
-                                it.managerId.toString(),
-                                it.start?.toLocalDateTime(TimeZone.currentSystemDefault())?.time
-                            ) {
-                                if (it.instanceId != null) onClickActivity(it.instanceId!!)
-                            }
+        ) {
+            val scheduleState = _scheduleState as Compass.NetType.Result
+            val classes = scheduleState.data
+            Text("Schedule", style = MaterialTheme.typography.labelMedium)
+            when (windowSize) {
+                WindowSize.EXPANDED -> {
+                    classes.forEach {
+                        ClassCard(
+                            it.longTitleWithoutTime,
+                            "",
+                            it.managerId.toString(),
+                            it.start?.toLocalDateTime(TimeZone.currentSystemDefault())?.time
+                        ) {
+                            if (it.instanceId != null) onClickActivity(it.instanceId!!)
                         }
                     }
-                    else -> {
-                        classes.forEach {
-                            ClassCard(
-                                it.longTitleWithoutTime,
-                                "wtf compass",
-                                it.managerId.toString(),
-                                it.start?.toLocalDateTime(TimeZone.currentSystemDefault())?.time
-                            ) {
-                                if (it.instanceId != null) onClickActivity(it.instanceId!!)
-                            }
+                }
+                else -> {
+                    classes.forEach {
+                        ClassCard(
+                            it.longTitleWithoutTime,
+                            "",
+                            it.managerId.toString(),
+                            it.start?.toLocalDateTime(TimeZone.currentSystemDefault())?.time
+                        ) {
+                            if (it.instanceId != null) onClickActivity(it.instanceId!!)
                         }
                     }
                 }
@@ -164,18 +161,18 @@ fun Newsfeed(
 ) {
     Column(modifier = modifier.padding(8.dp)) {
         Text("Newsfeed", style = MaterialTheme.typography.labelMedium)
-        when (newsfeedState) {
-            is Compass.NetType.Loading -> { CircularProgressIndicator() }
-            is Compass.NetType.Error -> { Text(newsfeedState.error.toString()) }
-            is Compass.NetType.Result -> {
-                newsfeedState.data.forEach {
-                    BaseCard(modifier = Modifier.fillMaxWidth()) {
-                        Material3RichText(modifier = Modifier.padding(8.dp)) {
-                            HtmlText(Jsoup.parse(it.content1.toString()).body())
-                        }
+        NetStates(
+            newsfeedState,
+            { CircularProgressIndicator() },
+            { Text((newsfeedState as Compass.NetType.Error).error.toString()) }
+        ) {
+            (newsfeedState as Compass.NetType.Result).data.forEach {
+                BaseCard(modifier = Modifier.fillMaxWidth()) {
+                    Material3RichText(modifier = Modifier.padding(8.dp)) {
+                        HtmlText(Jsoup.parse(it.content1.toString()).body())
                     }
-                    Spacer(modifier = Modifier.height(16.dp))
                 }
+                Spacer(modifier = Modifier.height(16.dp))
             }
         }
     }

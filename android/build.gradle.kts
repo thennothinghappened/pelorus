@@ -1,3 +1,5 @@
+import org.jetbrains.compose.internal.utils.getLocalProperty
+
 //import org.jetbrains.compose.internal.getLocalProperty
 
 plugins {
@@ -13,13 +15,14 @@ repositories {
     jcenter()
 }
 
-val material3Version = "1.1.0-alpha04"
+val material3Version = "1.1.0-alpha05" // https://issuetracker.google.com/issues/258907850
 val decomposeVersion = "1.0.0-beta-04"
 dependencies {
     implementation(project(":common"))
     implementation("androidx.activity:activity-compose:1.6.1")
     implementation("com.google.accompanist:accompanist-systemuicontroller:0.29.0-alpha")
     implementation("androidx.window:window:1.0.0")
+    implementation("androidx.compose.material3:material3:$material3Version")
     implementation("com.arkivanov.decompose:decompose:$decomposeVersion")
 }
 
@@ -36,18 +39,18 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
-//    signingConfigs {
-//        create("main") {
-//            storeFile = file(getLocalProperty("ANDROID_STORE_FILE")!!)
-//            storePassword = getLocalProperty("ANDROID_STORE_PASSWORD")
-//            keyAlias = getLocalProperty("ANDROID_KEY_ALIAS")
-//            keyPassword = getLocalProperty("ANDROID_KEY_PASSWORD")
-//        }
-//    }
-//    buildTypes {
-//        getByName("release") {
-//            isMinifyEnabled = false
-//            signingConfig = signingConfigs.getByName("main")
-//        }
-//    }
+    signingConfigs {
+        create("main") {
+            storeFile = file(getLocalProperty("ANDROID_STORE_FILE")!!)
+            storePassword = getLocalProperty("ANDROID_STORE_PASSWORD")
+            keyAlias = getLocalProperty("ANDROID_KEY_ALIAS")
+            keyPassword = getLocalProperty("ANDROID_KEY_PASSWORD")
+        }
+    }
+    buildTypes {
+        getByName("release") {
+            isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("main")
+        }
+    }
 }

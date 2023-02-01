@@ -9,10 +9,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.orca.kotlass.CompassApiClient
 import org.orca.kotlass.CompassClientCredentials
-import org.orca.kotlass.data.Activity
-import org.orca.kotlass.data.CalendarEvent
-import org.orca.kotlass.data.NetResponse
-import org.orca.kotlass.data.NewsItem
+import org.orca.kotlass.data.*
 
 class Compass(
     credentials: CompassClientCredentials,
@@ -29,8 +26,11 @@ class Compass(
     val newsfeed: StateFlow<NetType<List<NewsItem>>> = _newsfeed
     val newsfeedEnabled = true
 
-    private val _activities: MutableStateFlow<NetType<Map<String, Activity>>> = MutableStateFlow(NetType.Loading())
-    val activities: StateFlow<NetType<Map<String, Activity>>> = _activities
+    private val _activities: MutableStateFlow<MutableMap<String, NetType<Activity>>> = MutableStateFlow(mutableMapOf())
+    val activities: StateFlow<Map<String, NetType<Activity>>> = _activities
+
+    private val _lessonPlan: MutableStateFlow<NetType<String?>> = MutableStateFlow(NetType.Loading())
+    val lessonPlan: StateFlow<NetType<String?>> = _lessonPlan
 
     private suspend fun pollNewsfeedUpdate() {
         // Don't start a new request if there's already one loading.
@@ -39,13 +39,9 @@ class Compass(
 
         val reply = client.getMyNewsFeedPaged()
         if (reply !is NetResponse.Success)
-            _newsfeed.value = NetType.Error(Throwable(reply.toString()))
-        else {
+            _newsfeed.value = NetType.Error((reply as NetResponse.ClientError).error)
+        else
             _newsfeed.value = NetType.Result(reply.data.data)
-            (newsfeed.value as NetType.Result).data.forEach {
-                
-            }
-        }
     }
 
     fun manualPollNewsfeedUpdate() {
@@ -54,7 +50,11 @@ class Compass(
         }
     }
 
-    private suspend fun pollScheduleUpdate(startDate: LocalDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date, endDate: LocalDate = startDate) {
+    private suspend fun pollScheduleUpdate(
+        startDate: LocalDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date,
+        endDate: LocalDate = startDate,
+        preloadActivities: Boolean = false
+    ) {
         // Don't start a new request if there's already one loading.
         if (schedule is NetType.Loading<*>) return
 
@@ -62,13 +62,48 @@ class Compass(
         if (reply !is NetResponse.Success)
             _schedule.value = NetType.Error(Throwable(reply.toString()))
         else {
+            reply.data.sortByDescending { it.start }
+            reply.data.reverse()
             _schedule.value = NetType.Result(reply.data)
+            // preloading is expensive, so only do it if required!
+            if (preloadActivities) {
+                _activities.value = mutableMapOf()
+                // load each one sequentially, so we don't worry about spamming the API.
+                (schedule.value as NetType.Result).data.forEach {
+                    if (it.instanceId == null) return@forEach
+                    // set all their values so we can be sure they exist first
+                    _activities.value[it.instanceId!!] = NetType.Loading()
+                }
+                // loop over each and load one at a time
+                activities.value.forEach {
+                    val reply = client.getLessonsByInstanceIdQuick(it.key)
+                    _activities.value[it.key] =
+                        if (reply is NetResponse.Success) NetType.Result(reply.data)
+                        else NetType.Error((reply as NetResponse.ClientError).error)
+                }
+            }
         }
     }
 
     fun manualPollScheduleUpdate() {
         scope.launch {
             pollScheduleUpdate()
+        }
+    }
+
+    fun getLessonPlan(instanceId: String) {
+        val activity = activities.value[instanceId]!! as? NetType.Result ?: return
+        scope.launch {
+            // check if there is a lesson plan first
+            if (activity.data.lessonPlan.fileAssetId == null) {
+                _lessonPlan.value = NetType.Result(null)
+                return@launch
+            }
+            _lessonPlan.value = NetType.Loading()
+            val reply = client.downloadFile(activity.data.lessonPlan.fileAssetId!!)
+            _lessonPlan.value =
+                if (reply is NetResponse.Success) NetType.Result(reply.data)
+                else NetType.Error((reply as NetResponse.ClientError).error)
         }
     }
 
@@ -84,7 +119,7 @@ class Compass(
 
         scope.launch {
             while (scheduleEnabled) {
-                pollScheduleUpdate()
+                pollScheduleUpdate(preloadActivities = true)
                 delay(refreshIntervals.schedule)
             }
         }

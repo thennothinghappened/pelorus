@@ -16,6 +16,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.jsoup.nodes.Node
 import org.jsoup.nodes.TextNode
+import org.orca.common.data.TestCredentials
 
 fun parseHtmlFromString(document: String): Node = Jsoup.parse(document).body()
 
@@ -50,9 +51,12 @@ fun RichTextScope.HtmlText(
                         HtmlText(it, modifier, style)
                     }
                     "a" -> {
-                        val href = it.attr("href")
+                        var href = it.attr("href")
                         if (!href.startsWith("http")) HtmlText(it, modifier, style)
-                        else HtmlText(it, modifier.clickable { uriHandler.openUri(href) }, style.copy(color = Color.Blue, textDecoration = TextDecoration.Underline))
+                        else {
+                            if (href.startsWith("/")) href = "https://${TestCredentials.domain}$href"
+                            HtmlText(it, modifier.clickable { uriHandler.openUri(href) }, style.copy(color = Color.Blue, textDecoration = TextDecoration.Underline))
+                        }
                     }
 
                     else -> HtmlText(it, modifier, style)
