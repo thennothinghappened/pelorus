@@ -21,6 +21,8 @@ class Compass(
     private val _schedule: MutableStateFlow<NetType<Array<CalendarEvent>>> = MutableStateFlow(NetType.Loading())
     val schedule: StateFlow<NetType<Array<CalendarEvent>>> = _schedule
     val scheduleEnabled = true
+    private val scheduleStartDate: LocalDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
+    private val scheduleEndDate = scheduleStartDate
 
     private val _newsfeed: MutableStateFlow<NetType<List<NewsItem>>> = MutableStateFlow(NetType.Loading())
     val newsfeed: StateFlow<NetType<List<NewsItem>>> = _newsfeed
@@ -51,8 +53,8 @@ class Compass(
     }
 
     private suspend fun pollScheduleUpdate(
-        startDate: LocalDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date,
-        endDate: LocalDate = startDate,
+        startDate: LocalDate = scheduleStartDate,
+        endDate: LocalDate = scheduleEndDate,
         preloadActivities: Boolean = false
     ) {
         // Don't start a new request if there's already one loading.
@@ -66,8 +68,8 @@ class Compass(
             reply.data.reverse()
             _schedule.value = NetType.Result(reply.data)
             // preloading is expensive, so only do it if required!
+            _activities.value = mutableMapOf()
             if (preloadActivities) {
-                _activities.value = mutableMapOf()
                 // load each one sequentially, so we don't worry about spamming the API.
                 (schedule.value as NetType.Result).data.forEach {
                     if (it.instanceId == null) return@forEach
