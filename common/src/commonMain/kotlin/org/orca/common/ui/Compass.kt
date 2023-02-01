@@ -39,7 +39,7 @@ class Compass(
 
         val reply = client.getMyNewsFeedPaged()
         if (reply !is NetResponse.Success)
-            _newsfeed.value = NetType.Error((reply as NetResponse.ClientError).error)
+            _newsfeed.value = NetType.Error((reply as NetResponse.Error<*>).error)
         else
             _newsfeed.value = NetType.Result(reply.data.data)
     }
@@ -79,7 +79,7 @@ class Compass(
                     val reply = client.getLessonsByInstanceIdQuick(it.key)
                     _activities.value[it.key] =
                         if (reply is NetResponse.Success) NetType.Result(reply.data)
-                        else NetType.Error((reply as NetResponse.ClientError).error)
+                        else NetType.Error((reply as NetResponse.Error<*>).error)
                 }
             }
         }
@@ -103,7 +103,7 @@ class Compass(
             val reply = client.downloadFile(activity.data.lessonPlan.fileAssetId!!)
             _lessonPlan.value =
                 if (reply is NetResponse.Success) NetType.Result(reply.data)
-                else NetType.Error((reply as NetResponse.ClientError).error)
+                else NetType.Error((reply as NetResponse.Error<*>).error)
         }
     }
 
