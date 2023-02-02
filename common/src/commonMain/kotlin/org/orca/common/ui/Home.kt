@@ -164,7 +164,7 @@ fun Newsfeed(
         NetStates(
             newsfeedState,
             { CircularProgressIndicator() },
-            { Text((newsfeedState as Compass.NetType.Error).error.toString()) }
+            { ErrorRenderer((newsfeedState as Compass.NetType.Error).error) }
         ) {
             (newsfeedState as Compass.NetType.Result).data.forEach {
                 BaseCard(modifier = Modifier.fillMaxWidth()) {
