@@ -37,7 +37,7 @@ class MainscreenComponent(
     val stack: Value<ChildStack<*, Child>> = _stack
 
     private fun onClickActivity(instanceId: String) {
-        compass.getLessonPlan(instanceId)
+//        compass.getLessonPlan(instanceId)
         navigation.push(Config.Activity(instanceId))
     }
 

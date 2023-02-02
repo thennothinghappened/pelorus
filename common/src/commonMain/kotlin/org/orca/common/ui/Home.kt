@@ -18,8 +18,7 @@ import kotlinx.datetime.toLocalDateTime
 import org.jsoup.Jsoup
 import org.orca.common.ui.components.*
 import org.orca.common.ui.utils.WindowSize
-import org.orca.kotlass.data.Activity
-import org.orca.kotlass.data.CalendarEvent
+import org.orca.kotlass.CompassApiClient
 import org.orca.kotlass.data.NewsItem
 
 class HomeComponent(
@@ -40,7 +39,7 @@ fun HomeContent(
 ) {
     val scheduleState by component.compass.schedule.collectAsState()
     val newsfeedState by component.compass.newsfeed.collectAsState()
-    val activitiesState by component.compass.activities.collectAsState()
+//    val activitiesState by component.compass.activities.collectAsState()
 
     LazyColumn {
         when (windowSize) {
@@ -89,7 +88,7 @@ fun HomeContent(
 fun ClassList(
     modifier: Modifier = Modifier,
     windowSize: WindowSize,
-    _scheduleState: Compass.NetType<Array<CalendarEvent>>,
+    _scheduleState: CompassApiClient.State<Array<CompassApiClient.ScheduleEntry>>,
     onClickActivity: (String) -> Unit
 ) {
     Column(
@@ -101,15 +100,16 @@ fun ClassList(
                 CircularProgressIndicator()
             },
             {
-                ErrorRenderer((_scheduleState as Compass.NetType.Error).error)
+                ErrorRenderer((_scheduleState as CompassApiClient.State.Error).error)
             }
         ) {
-            val scheduleState = _scheduleState as Compass.NetType.Result
+            val scheduleState = _scheduleState as CompassApiClient.State.Success
             val classes = scheduleState.data
             Text("Schedule", style = MaterialTheme.typography.labelMedium)
             when (windowSize) {
                 WindowSize.EXPANDED -> {
                     classes.forEach {
+                        val it = it.event
                         ClassCard(
                             it.longTitleWithoutTime,
                             "",
@@ -122,6 +122,7 @@ fun ClassList(
                 }
                 else -> {
                     classes.forEach {
+                        val it = it.event
                         ClassCard(
                             it.longTitleWithoutTime,
                             "",
@@ -157,16 +158,16 @@ fun TodoTaskList(
 @Composable
 fun Newsfeed(
     modifier: Modifier = Modifier,
-    newsfeedState: Compass.NetType<List<NewsItem>>
+    newsfeedState: CompassApiClient.State<List<NewsItem>>
 ) {
     Column(modifier = modifier.padding(8.dp)) {
         Text("Newsfeed", style = MaterialTheme.typography.labelMedium)
         NetStates(
             newsfeedState,
             { CircularProgressIndicator() },
-            { ErrorRenderer((newsfeedState as Compass.NetType.Error).error) }
+            { ErrorRenderer((newsfeedState as CompassApiClient.State.Error).error) }
         ) {
-            (newsfeedState as Compass.NetType.Result).data.forEach {
+            (newsfeedState as CompassApiClient.State.Success).data.forEach {
                 BaseCard(modifier = Modifier.fillMaxWidth()) {
                     Material3RichText(modifier = Modifier.padding(8.dp)) {
                         HtmlText(Jsoup.parse(it.content1.toString()).body())

@@ -39,44 +39,44 @@ fun ActivityContent(
     component: ActivityComponent,
     windowSize: WindowSize
 ) {
-    val activity by remember { mutableStateOf(component.compass.activities.value[component.instanceId]) }
-    val lessonPlan by component.compass.lessonPlan.collectAsState()
-
-    LazyColumn {
-        if (getPlatform() is Platform.Desktop) {
-            item {
-                Button(onClick = component.onBackPress) {
-                    Icon(Icons.Default.ArrowBack, "Back")
-                }
-            }
-        }
-
-        item {
-            NetStates(
-                activity,
-                { CircularProgressIndicator() },
-                { ErrorRenderer((activity as Compass.NetType.Error<Activity>).error) }
-            ) {
-                val a = (activity as Compass.NetType.Result).data
-
-                Text(a.subjectName)
-                Text("${a.managerTextReadable} - Room ${a.locationName}")
-
-                Card(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    NetStates(
-                        lessonPlan,
-                        { CircularProgressIndicator() },
-                        { ErrorRenderer((lessonPlan as Compass.NetType.Error).error) }
-                    ) {
-                        val lp = (lessonPlan as Compass.NetType.Result).data
-                        RichText(modifier = Modifier.padding(8.dp)) {
-                            HtmlText(Jsoup.parse(lp ?: "<body>No lesson plan recorded.</body>"))
-                        }
-                    }
-                }
-            }
-        }
-    }
+//    val activity by remember { mutableStateOf(component.compass.activities.value[component.instanceId]) }
+//    val lessonPlan by component.compass.lessonPlan.collectAsState()
+//
+//    LazyColumn {
+//        if (getPlatform() is Platform.Desktop) {
+//            item {
+//                Button(onClick = component.onBackPress) {
+//                    Icon(Icons.Default.ArrowBack, "Back")
+//                }
+//            }
+//        }
+//
+//        item {
+//            NetStates(
+//                activity,
+//                { CircularProgressIndicator() },
+//                { ErrorRenderer((activity as Compass.NetType.Error<Activity>).error) }
+//            ) {
+//                val a = (activity as Compass.NetType.Result).data
+//
+//                Text(a.subjectName)
+//                Text("${a.managerTextReadable} - Room ${a.locationName}")
+//
+//                Card(
+//                    modifier = Modifier.fillMaxWidth()
+//                ) {
+//                    NetStates(
+//                        lessonPlan,
+//                        { CircularProgressIndicator() },
+//                        { ErrorRenderer((lessonPlan as Compass.NetType.Error).error) }
+//                    ) {
+//                        val lp = (lessonPlan as Compass.NetType.Result).data
+//                        RichText(modifier = Modifier.padding(8.dp)) {
+//                            HtmlText(Jsoup.parse(lp ?: "<body>No lesson plan recorded.</body>"))
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
 }
