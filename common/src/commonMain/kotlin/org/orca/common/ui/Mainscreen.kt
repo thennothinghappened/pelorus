@@ -19,6 +19,7 @@ import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.parcelable.Parcelable
 import com.arkivanov.essenty.parcelable.Parcelize
 import org.orca.common.ui.utils.WindowSize
+import org.orca.kotlass.CompassApiClient
 import org.orca.kotlass.data.Activity
 
 class MainscreenComponent(
@@ -36,9 +37,16 @@ class MainscreenComponent(
         )
     val stack: Value<ChildStack<*, Child>> = _stack
 
-    private fun onClickActivity(instanceId: String) {
-//        compass.getLessonPlan(instanceId)
-        navigation.push(Config.Activity(instanceId))
+    private fun onClickActivity(scheduleEntryIndex: Int) {
+        if (compass.schedule.value !is CompassApiClient.State.Success) return
+
+        val scheduleEntry = (compass.schedule.value as CompassApiClient.State.Success<Array<CompassApiClient.ScheduleEntry>>)
+            .data[scheduleEntryIndex]
+
+        if (scheduleEntry !is CompassApiClient.ScheduleEntry.Lesson) return
+
+        compass.loadLessonPlan(scheduleEntryIndex)
+        navigation.push(Config.Activity(scheduleEntry))
     }
 
     private fun onActivityBackPress() {
@@ -55,7 +63,7 @@ class MainscreenComponent(
             is Config.Activity -> Child.ActivityChild(ActivityComponent(
                 componentContext = componentContext,
                 compass = compass,
-                instanceId = config.instanceId,
+                scheduleEntry = config.scheduleEntry,
                 onBackPress = ::onActivityBackPress
             ))
         }
@@ -68,7 +76,7 @@ class MainscreenComponent(
     @Parcelize
     sealed interface Config : Parcelable {
         object Home : Config
-        data class Activity(val instanceId: String) : Config
+        data class Activity(val scheduleEntry: CompassApiClient.ScheduleEntry.ActivityEntry) : Config
     }
 }
 

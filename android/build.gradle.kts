@@ -39,18 +39,20 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
-    signingConfigs {
-        create("main") {
-            storeFile = file(getLocalProperty("ANDROID_STORE_FILE")!!)
-            storePassword = getLocalProperty("ANDROID_STORE_PASSWORD")
-            keyAlias = getLocalProperty("ANDROID_KEY_ALIAS")
-            keyPassword = getLocalProperty("ANDROID_KEY_PASSWORD")
+    if (getLocalProperty("ANDROID_STORE_FILE") != null) {
+        signingConfigs {
+            create("main") {
+                storeFile = file(getLocalProperty("ANDROID_STORE_FILE")!!)
+                storePassword = getLocalProperty("ANDROID_STORE_PASSWORD")
+                keyAlias = getLocalProperty("ANDROID_KEY_ALIAS")
+                keyPassword = getLocalProperty("ANDROID_KEY_PASSWORD")
+            }
         }
-    }
-    buildTypes {
-        getByName("release") {
-            isMinifyEnabled = false
-            signingConfig = signingConfigs.getByName("main")
+        buildTypes {
+            getByName("release") {
+                isMinifyEnabled = false
+                signingConfig = signingConfigs.getByName("main")
+            }
         }
     }
 }

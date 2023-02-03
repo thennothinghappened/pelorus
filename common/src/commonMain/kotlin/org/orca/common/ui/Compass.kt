@@ -16,6 +16,7 @@ class Compass(
     }
 
     init {
+        println("new compass instance")
         beginPollingNewsfeed()
         beginPollingSchedule()
     }

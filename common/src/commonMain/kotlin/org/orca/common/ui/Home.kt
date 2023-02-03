@@ -12,23 +12,26 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.ComponentContext
+import com.halilibo.richtext.ui.Heading
 import com.halilibo.richtext.ui.material3.Material3RichText
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.jsoup.Jsoup
+import org.orca.common.data.formatAsDateTime
+import org.orca.common.data.formatAsHourMinute
+import org.orca.common.data.timeAgo
 import org.orca.common.ui.components.*
 import org.orca.common.ui.utils.WindowSize
 import org.orca.kotlass.CompassApiClient
+import org.orca.kotlass.data.Activity
+import org.orca.kotlass.data.CalendarEvent
 import org.orca.kotlass.data.NewsItem
 
 class HomeComponent(
     componentContext: ComponentContext,
     val compass: Compass,
-    val onClickActivity: (String) -> Unit
-) : ComponentContext by componentContext {
-
-
-}
+    val onClickActivity: (Int) -> Unit
+) : ComponentContext by componentContext
 
 
 @Composable
@@ -39,7 +42,6 @@ fun HomeContent(
 ) {
     val scheduleState by component.compass.schedule.collectAsState()
     val newsfeedState by component.compass.newsfeed.collectAsState()
-//    val activitiesState by component.compass.activities.collectAsState()
 
     LazyColumn {
         when (windowSize) {
@@ -49,11 +51,11 @@ fun HomeContent(
                         Column(modifier = Modifier.weight(1f)) {
                             ClassList(
                                 windowSize = windowSize,
-                                _scheduleState = scheduleState,
+                                scheduleState = scheduleState,
                                 onClickActivity = component.onClickActivity
                             )
                             Divider()
-                            TodoTaskList()
+                            DueLearningTasks(scheduleState = scheduleState)
                         }
                         Newsfeed(modifier = Modifier.weight(1f), newsfeedState = newsfeedState)
                     }
@@ -63,7 +65,7 @@ fun HomeContent(
                 item {
                     ClassList(
                         windowSize = windowSize,
-                        _scheduleState = scheduleState,
+                        scheduleState = scheduleState,
                         onClickActivity = component.onClickActivity
                     )
                 }
@@ -71,7 +73,7 @@ fun HomeContent(
                     Divider()
                 }
                 item {
-                    TodoTaskList()
+                    DueLearningTasks(scheduleState = scheduleState)
                 }
                 item {
                     Divider()
@@ -88,50 +90,29 @@ fun HomeContent(
 fun ClassList(
     modifier: Modifier = Modifier,
     windowSize: WindowSize,
-    _scheduleState: CompassApiClient.State<Array<CompassApiClient.ScheduleEntry>>,
-    onClickActivity: (String) -> Unit
+    scheduleState: CompassApiClient.State<Array<CompassApiClient.ScheduleEntry>>,
+    onClickActivity: (Int) -> Unit
 ) {
     Column(
-        modifier = modifier.padding(8.dp)
+        modifier = modifier.padding(8.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        NetStates(
-            _scheduleState,
+        NetStates<Array<CompassApiClient.ScheduleEntry>>(
+            scheduleState,
             {
                 CircularProgressIndicator()
             },
-            {
-                ErrorRenderer((_scheduleState as CompassApiClient.State.Error).error)
+            { error ->
+                ErrorRenderer(error)
             }
-        ) {
-            val scheduleState = _scheduleState as CompassApiClient.State.Success
-            val classes = scheduleState.data
+        ) { entries ->
+            val classes = entries.filterIsInstance<CompassApiClient.ScheduleEntry.ActivityEntry>()
+
             Text("Schedule", style = MaterialTheme.typography.labelMedium)
-            when (windowSize) {
-                WindowSize.EXPANDED -> {
-                    classes.forEach {
-                        val it = it.event
-                        ClassCard(
-                            it.longTitleWithoutTime,
-                            "",
-                            it.managerId.toString(),
-                            it.start?.toLocalDateTime(TimeZone.currentSystemDefault())?.time
-                        ) {
-                            if (it.instanceId != null) onClickActivity(it.instanceId!!)
-                        }
-                    }
-                }
-                else -> {
-                    classes.forEach {
-                        val it = it.event
-                        ClassCard(
-                            it.longTitleWithoutTime,
-                            "",
-                            it.managerId.toString(),
-                            it.start?.toLocalDateTime(TimeZone.currentSystemDefault())?.time
-                        ) {
-                            if (it.instanceId != null) onClickActivity(it.instanceId!!)
-                        }
-                    }
+            classes.forEachIndexed { index, it ->
+
+                ClassCard(it) {
+                    onClickActivity(index)
                 }
             }
         }
@@ -139,19 +120,33 @@ fun ClassList(
 }
 
 @Composable
-fun TodoTaskList(
-    modifier: Modifier = Modifier
+fun DueLearningTasks(
+    modifier: Modifier = Modifier,
+    scheduleState: CompassApiClient.State<Array<CompassApiClient.ScheduleEntry>>
 ) {
     Column(
-        modifier = modifier.padding(8.dp)
+        modifier = modifier.padding(8.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Text("Uncompleted Tasks", style = MaterialTheme.typography.labelMedium)
-        CornersCard(
-            "Book Essay",
-            "Submissions: 0/1",
-            "English",
-            "Due 4:00"
-        )
+        Text("Due Tasks", style = MaterialTheme.typography.labelMedium)
+        NetStates<Array<CompassApiClient.ScheduleEntry>>(
+            scheduleState,
+            { CircularProgressIndicator() },
+            { error -> ErrorRenderer(error) }
+        ) { entries ->
+            val tasks = entries.filterIsInstance<CompassApiClient.ScheduleEntry.LearningTask>()
+
+            tasks.forEach {
+                val event = it.event
+
+                CornersCard(
+                    event.title,
+                    event.description,
+                    "Due ${event.start?.toLocalDateTime(TimeZone.currentSystemDefault())?.time?.formatAsHourMinute()}",
+                    ""
+                )
+            }
+        }
     }
 }
 
@@ -160,20 +155,24 @@ fun Newsfeed(
     modifier: Modifier = Modifier,
     newsfeedState: CompassApiClient.State<List<NewsItem>>
 ) {
-    Column(modifier = modifier.padding(8.dp)) {
+    Column(
+        modifier = modifier.padding(8.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
         Text("Newsfeed", style = MaterialTheme.typography.labelMedium)
-        NetStates(
+        NetStates<List<NewsItem>>(
             newsfeedState,
             { CircularProgressIndicator() },
             { ErrorRenderer((newsfeedState as CompassApiClient.State.Error).error) }
-        ) {
-            (newsfeedState as CompassApiClient.State.Success).data.forEach {
+        ) { list ->
+            list.forEach {
                 BaseCard(modifier = Modifier.fillMaxWidth()) {
                     Material3RichText(modifier = Modifier.padding(8.dp)) {
+                        Heading(4, it.title)
+                        Heading(9, "${it.userName} - ${it.postDateTime?.timeAgo()}")
                         HtmlText(Jsoup.parse(it.content1.toString()).body())
                     }
                 }
-                Spacer(modifier = Modifier.height(16.dp))
             }
         }
     }

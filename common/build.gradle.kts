@@ -41,7 +41,7 @@ kotlin {
             dependencies {
                 api("androidx.appcompat:appcompat:1.6.0")
                 api("androidx.core:core-ktx:1.9.0")
-                api("androidx.compose.material3:material3:1.1.0-alpha04")
+                api("androidx.compose.material3:material3:1.1.0-alpha05")
             }
         }
         val androidUnitTest by getting {

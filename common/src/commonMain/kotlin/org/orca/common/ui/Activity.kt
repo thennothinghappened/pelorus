@@ -21,62 +21,60 @@ import org.orca.common.ui.components.ErrorRenderer
 import org.orca.common.ui.components.HtmlText
 import org.orca.common.ui.components.NetStates
 import org.orca.common.ui.utils.WindowSize
+import org.orca.kotlass.CompassApiClient
 import org.orca.kotlass.data.Activity
 import kotlin.reflect.typeOf
 
 class ActivityComponent(
     componentContext: ComponentContext,
     val compass: Compass,
-    val instanceId: String,
+    val scheduleEntry: CompassApiClient.ScheduleEntry.ActivityEntry,
     val onBackPress: () -> Unit
-) : ComponentContext by componentContext {
-
-
-}
+) : ComponentContext by componentContext
 
 @Composable
 fun ActivityContent(
     component: ActivityComponent,
     windowSize: WindowSize
 ) {
-//    val activity by remember { mutableStateOf(component.compass.activities.value[component.instanceId]) }
-//    val lessonPlan by component.compass.lessonPlan.collectAsState()
-//
-//    LazyColumn {
-//        if (getPlatform() is Platform.Desktop) {
-//            item {
-//                Button(onClick = component.onBackPress) {
-//                    Icon(Icons.Default.ArrowBack, "Back")
-//                }
-//            }
-//        }
-//
-//        item {
-//            NetStates(
-//                activity,
-//                { CircularProgressIndicator() },
-//                { ErrorRenderer((activity as Compass.NetType.Error<Activity>).error) }
-//            ) {
-//                val a = (activity as Compass.NetType.Result).data
-//
-//                Text(a.subjectName)
-//                Text("${a.managerTextReadable} - Room ${a.locationName}")
-//
-//                Card(
-//                    modifier = Modifier.fillMaxWidth()
-//                ) {
-//                    NetStates(
-//                        lessonPlan,
-//                        { CircularProgressIndicator() },
-//                        { ErrorRenderer((lessonPlan as Compass.NetType.Error).error) }
-//                    ) {
-//                        val lp = (lessonPlan as Compass.NetType.Result).data
-//                        RichText(modifier = Modifier.padding(8.dp)) {
-//                            HtmlText(Jsoup.parse(lp ?: "<body>No lesson plan recorded.</body>"))
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
+
+    val entry = component.scheduleEntry
+
+    LazyColumn {
+        if (getPlatform() is Platform.Desktop) {
+            item {
+                Button(onClick = component.onBackPress) {
+                    Icon(Icons.Default.ArrowBack, "Back")
+                }
+            }
+        }
+
+        item {
+            NetStates<Activity>(
+                entry.activity,
+                { CircularProgressIndicator() },
+                { ErrorRenderer((entry.activity as CompassApiClient.State.Error<Activity>).error) }
+            ) { activity ->
+
+                Text(activity.subjectName)
+                Text("${activity.managerTextReadable} - Room ${activity.locationName}")
+
+                if (entry is CompassApiClient.ScheduleEntry.Lesson) {
+                    Card(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                    NetStates<String?>(
+                        (entry as CompassApiClient.ScheduleEntry.Lesson).lessonPlan,
+                        { CircularProgressIndicator() },
+                        { error -> ErrorRenderer(error) }
+                    ) { lp ->
+                        RichText(modifier = Modifier.padding(8.dp)) {
+                            HtmlText(Jsoup.parse(lp ?: "<body>No lesson plan recorded.</body>"))
+                        }
+                    }
+                    }
+                }
+            }
+        }
+    }
 }
