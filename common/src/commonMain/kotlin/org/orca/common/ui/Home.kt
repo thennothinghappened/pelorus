@@ -17,14 +17,11 @@ import com.halilibo.richtext.ui.material3.Material3RichText
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.jsoup.Jsoup
-import org.orca.common.data.formatAsDateTime
 import org.orca.common.data.formatAsHourMinute
 import org.orca.common.data.timeAgo
 import org.orca.common.ui.components.*
 import org.orca.common.ui.utils.WindowSize
 import org.orca.kotlass.CompassApiClient
-import org.orca.kotlass.data.Activity
-import org.orca.kotlass.data.CalendarEvent
 import org.orca.kotlass.data.NewsItem
 
 class HomeComponent(
@@ -90,14 +87,14 @@ fun HomeContent(
 fun ClassList(
     modifier: Modifier = Modifier,
     windowSize: WindowSize,
-    scheduleState: CompassApiClient.State<Array<CompassApiClient.ScheduleEntry>>,
+    scheduleState: CompassApiClient.State<List<CompassApiClient.ScheduleEntry>>,
     onClickActivity: (Int) -> Unit
 ) {
     Column(
         modifier = modifier.padding(8.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        NetStates<Array<CompassApiClient.ScheduleEntry>>(
+        NetStates(
             scheduleState,
             {
                 CircularProgressIndicator()
@@ -122,14 +119,14 @@ fun ClassList(
 @Composable
 fun DueLearningTasks(
     modifier: Modifier = Modifier,
-    scheduleState: CompassApiClient.State<Array<CompassApiClient.ScheduleEntry>>
+    scheduleState: CompassApiClient.State<List<CompassApiClient.ScheduleEntry>>
 ) {
     Column(
         modifier = modifier.padding(8.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text("Due Tasks", style = MaterialTheme.typography.labelMedium)
-        NetStates<Array<CompassApiClient.ScheduleEntry>>(
+        NetStates(
             scheduleState,
             { CircularProgressIndicator() },
             { error -> ErrorRenderer(error) }
@@ -160,7 +157,7 @@ fun Newsfeed(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text("Newsfeed", style = MaterialTheme.typography.labelMedium)
-        NetStates<List<NewsItem>>(
+        NetStates(
             newsfeedState,
             { CircularProgressIndicator() },
             { ErrorRenderer((newsfeedState as CompassApiClient.State.Error).error) }

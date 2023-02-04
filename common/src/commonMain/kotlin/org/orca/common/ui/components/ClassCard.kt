@@ -17,15 +17,15 @@ fun ClassCard(
     scheduleEntry: CompassApiClient.ScheduleEntry.ActivityEntry,
     onClick: () -> Unit = {}
 ) {
-    val activity = scheduleEntry.activity
-    val bannerUrl = scheduleEntry.bannerUrl
+    val activity by scheduleEntry.activity.collectAsState()
+    val bannerUrl by scheduleEntry.bannerUrl.collectAsState()
     val time = scheduleEntry.event.start?.toLocalDateTime(TimeZone.currentSystemDefault())?.time?.formatAsHourMinute() ?: ""
 
-    if (activity is CompassApiClient.State.Success) {
+    if (activity is CompassApiClient.State.Success<Activity>) {
         CornersCard(
-            activity.data.subjectName,
-            "Room ${activity.data.locationName}",
-            activity.data.managerTextReadable,
+            (activity as CompassApiClient.State.Success<Activity>).data.subjectName,
+            "Room ${(activity as CompassApiClient.State.Success<Activity>).data.locationName}",
+            (activity as CompassApiClient.State.Success<Activity>).data.managerTextReadable,
             time,
             onClick = onClick
         )

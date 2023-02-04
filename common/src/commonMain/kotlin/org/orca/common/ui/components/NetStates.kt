@@ -6,7 +6,7 @@ import org.orca.kotlass.CompassApiClient
 
 @Composable
 fun <T> NetStates(
-    state: CompassApiClient.State<*>?,
+    state: CompassApiClient.State<T>,
     loading: @Composable () -> Unit,
     error: @Composable (error: Throwable) -> Unit,
     invalid: @Composable () -> Unit = { Text("Invalid State!") },
@@ -14,10 +14,10 @@ fun <T> NetStates(
     result: @Composable (T) -> Unit
 ) {
     when (state) {
-        is CompassApiClient.State.NotInitiated<*> -> notInitiated()
-        is CompassApiClient.State.Loading<*> -> loading()
-        is CompassApiClient.State.Error<*> -> error(state.error)
-        is CompassApiClient.State.Success<*> -> @Suppress("UNCHECKED_CAST") result(state.data as T)
+        is CompassApiClient.State.NotInitiated -> notInitiated()
+        is CompassApiClient.State.Loading -> loading()
+        is CompassApiClient.State.Error -> error(state.error)
+        is CompassApiClient.State.Success -> @Suppress("UNCHECKED_CAST") result(state.data)
         else -> invalid()
     }
 }

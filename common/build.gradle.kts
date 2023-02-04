@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.compose")
     id("com.android.library")
     id("kotlin-parcelize")
+    id("app.cash.sqldelight") version "2.0.0-alpha05"
 }
 
 group = "org.orca"
@@ -19,6 +20,7 @@ kotlin {
         val datetimeVersion = "0.4.0"
         val composeRichtextVersion = "0.16.0"
         val decomposeVersion = "1.0.0-beta-04"
+        val sqlDelightVersion = "2.0.0-alpha05"
         val commonMain by getting {
             dependencies {
                 api(compose.runtime)
@@ -42,6 +44,7 @@ kotlin {
                 api("androidx.appcompat:appcompat:1.6.0")
                 api("androidx.core:core-ktx:1.9.0")
                 api("androidx.compose.material3:material3:1.1.0-alpha05")
+                implementation("app.cash.sqldelight:android-driver:$sqlDelightVersion")
             }
         }
         val androidUnitTest by getting {
@@ -53,9 +56,18 @@ kotlin {
             dependencies {
                 api(compose.preview)
                 implementation("com.github.Dansoftowner:jSystemThemeDetector:3.6")
+                implementation("app.cash.sqldelight:sqlite-driver:$sqlDelightVersion")
             }
         }
         val desktopTest by getting
+    }
+}
+
+sqldelight {
+    databases {
+        create("Database") {
+            packageName.set("org.orca")
+        }
     }
 }
 

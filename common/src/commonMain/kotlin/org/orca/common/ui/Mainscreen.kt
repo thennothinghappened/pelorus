@@ -1,8 +1,6 @@
 package org.orca.common.ui
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -17,10 +15,11 @@ import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.stac
 import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.parcelable.Parcelable
+import com.arkivanov.essenty.parcelable.Parceler
 import com.arkivanov.essenty.parcelable.Parcelize
+import com.arkivanov.essenty.parcelable.TypeParceler
 import org.orca.common.ui.utils.WindowSize
 import org.orca.kotlass.CompassApiClient
-import org.orca.kotlass.data.Activity
 
 class MainscreenComponent(
     componentContext: ComponentContext,
@@ -40,13 +39,14 @@ class MainscreenComponent(
     private fun onClickActivity(scheduleEntryIndex: Int) {
         if (compass.schedule.value !is CompassApiClient.State.Success) return
 
-        val scheduleEntry = (compass.schedule.value as CompassApiClient.State.Success<Array<CompassApiClient.ScheduleEntry>>)
+        val scheduleEntry = (compass.schedule.value as CompassApiClient.State.Success<List<CompassApiClient.ScheduleEntry>>)
             .data[scheduleEntryIndex]
 
         if (scheduleEntry !is CompassApiClient.ScheduleEntry.Lesson) return
 
-        compass.loadLessonPlan(scheduleEntryIndex)
-        navigation.push(Config.Activity(scheduleEntry))
+        compass.loadLessonPlan(scheduleEntry)
+        compass.setViewedEntry(scheduleEntryIndex)
+        navigation.push(Config.Activity(scheduleEntryIndex))
     }
 
     private fun onActivityBackPress() {
@@ -63,7 +63,7 @@ class MainscreenComponent(
             is Config.Activity -> Child.ActivityChild(ActivityComponent(
                 componentContext = componentContext,
                 compass = compass,
-                scheduleEntry = config.scheduleEntry,
+                scheduleEntryIndex = config.scheduleEntryIndex,
                 onBackPress = ::onActivityBackPress
             ))
         }
@@ -76,7 +76,7 @@ class MainscreenComponent(
     @Parcelize
     sealed interface Config : Parcelable {
         object Home : Config
-        data class Activity(val scheduleEntry: CompassApiClient.ScheduleEntry.ActivityEntry) : Config
+        data class Activity(val scheduleEntryIndex: Int) : Config
     }
 }
 

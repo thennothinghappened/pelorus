@@ -2,8 +2,6 @@ package org.orca.common.ui
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
@@ -12,23 +10,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.ComponentContext
 import com.halilibo.richtext.ui.RichText
-import kotlinx.coroutines.flow.StateFlow
 import org.jsoup.Jsoup
 import org.orca.common.data.Platform
 import org.orca.common.data.getPlatform
-import org.orca.common.ui.components.BaseCard
 import org.orca.common.ui.components.ErrorRenderer
 import org.orca.common.ui.components.HtmlText
 import org.orca.common.ui.components.NetStates
 import org.orca.common.ui.utils.WindowSize
 import org.orca.kotlass.CompassApiClient
 import org.orca.kotlass.data.Activity
-import kotlin.reflect.typeOf
 
 class ActivityComponent(
     componentContext: ComponentContext,
     val compass: Compass,
-    val scheduleEntry: CompassApiClient.ScheduleEntry.ActivityEntry,
+    scheduleEntryIndex: Int,
     val onBackPress: () -> Unit
 ) : ComponentContext by componentContext
 
@@ -38,7 +33,14 @@ fun ActivityContent(
     windowSize: WindowSize
 ) {
 
-    val entry = component.scheduleEntry
+    // TODO: need a better way to do this, getting it over and over is really slow!
+    val entry by component.compass.viewedEntry.collectAsState()
+    val activity = entry?.activity?.collectAsState()?.value
+
+    if (activity == null) {
+        Text("something has gone very, very wrong")
+        return
+    }
 
     LazyColumn {
         if (getPlatform() is Platform.Desktop) {
@@ -50,21 +52,22 @@ fun ActivityContent(
         }
 
         item {
-            NetStates<Activity>(
-                entry.activity,
+            NetStates(
+                activity,
                 { CircularProgressIndicator() },
-                { ErrorRenderer((entry.activity as CompassApiClient.State.Error<Activity>).error) }
+                { ErrorRenderer((activity as CompassApiClient.State.Error<Activity>).error) }
             ) { activity ->
 
                 Text(activity.subjectName)
                 Text("${activity.managerTextReadable} - Room ${activity.locationName}")
 
                 if (entry is CompassApiClient.ScheduleEntry.Lesson) {
+                    val lessonPlan by (entry as CompassApiClient.ScheduleEntry.Lesson).lessonPlan.collectAsState()
                     Card(
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                    NetStates<String?>(
-                        (entry as CompassApiClient.ScheduleEntry.Lesson).lessonPlan,
+                    NetStates(
+                        lessonPlan,
                         { CircularProgressIndicator() },
                         { error -> ErrorRenderer(error) }
                     ) { lp ->
