@@ -4,7 +4,8 @@
             android:allowBackup="false"
             android:supportsRtl="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:enableOnBackInvokedCallback="true">
+            android:enableOnBackInvokedCallback="true"
+            android:label="Pelorus">
 
         <activity android:name=".MainActivity" android:exported="true">
             <intent-filter>
