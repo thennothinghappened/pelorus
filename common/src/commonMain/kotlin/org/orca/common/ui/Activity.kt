@@ -11,6 +11,7 @@ import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.ComponentContext
 import com.halilibo.richtext.ui.RichText
 import org.jsoup.Jsoup
+import org.orca.common.data.Compass
 import org.orca.common.data.Platform
 import org.orca.common.data.getPlatform
 import org.orca.common.ui.components.ErrorRenderer

@@ -15,9 +15,8 @@ import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.stac
 import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.parcelable.Parcelable
-import com.arkivanov.essenty.parcelable.Parceler
 import com.arkivanov.essenty.parcelable.Parcelize
-import com.arkivanov.essenty.parcelable.TypeParceler
+import org.orca.common.data.Compass
 import org.orca.common.ui.utils.WindowSize
 import org.orca.kotlass.CompassApiClient
 

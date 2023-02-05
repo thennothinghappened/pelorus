@@ -17,6 +17,7 @@ import com.halilibo.richtext.ui.material3.Material3RichText
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.jsoup.Jsoup
+import org.orca.common.data.Compass
 import org.orca.common.data.formatAsHourMinute
 import org.orca.common.data.timeAgo
 import org.orca.common.ui.components.*

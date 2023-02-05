@@ -1,6 +1,5 @@
 package org.orca.common.ui.components
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,7 +15,6 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.jsoup.nodes.Node
 import org.jsoup.nodes.TextNode
-import org.orca.common.data.TestCredentials
 
 fun parseHtmlFromString(document: String): Node = Jsoup.parse(document).body()
 
@@ -54,7 +52,7 @@ fun RichTextScope.HtmlText(
                         var href = it.attr("href")
                         if (!href.startsWith("http")) HtmlText(it, modifier, style)
                         else {
-                            if (href.startsWith("/")) href = "https://${TestCredentials.domain}$href"
+//                            if (href.startsWith("/")) href = "https://${compass.domain}$href"
                             HtmlText(it, modifier.clickable { uriHandler.openUri(href) }, style.copy(color = Color.Blue, textDecoration = TextDecoration.Underline))
                         }
                     }
@@ -76,7 +74,7 @@ fun RichTextScope.HtmlList(
 
     val list: List<Node> = node.childNodes().filterNot { it.toString().trim() == "" }
 
-    FormattedList<Node>(
+    FormattedList(
         listType = listType,
         items = list,
         drawItem = {

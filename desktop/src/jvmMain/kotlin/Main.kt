@@ -5,6 +5,7 @@ import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 import com.arkivanov.decompose.DefaultComponentContext
 import com.arkivanov.essenty.lifecycle.LifecycleRegistry
+import org.orca.common.data.utils.Preferences
 import org.orca.common.ui.RootComponent
 import org.orca.common.ui.RootContent
 import org.orca.common.ui.theme.AppTheme
@@ -18,7 +19,8 @@ fun main() {
 
     val root = runOnUiThread {
         RootComponent(
-            componentContext = DefaultComponentContext(lifecycle = lifecycle)
+            componentContext = DefaultComponentContext(lifecycle = lifecycle),
+            Preferences()
         )
     }
 

@@ -15,6 +15,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.window.layout.WindowMetricsCalculator
 import com.arkivanov.decompose.defaultComponentContext
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import org.orca.common.data.utils.Preferences
 import org.orca.common.ui.RootComponent
 import org.orca.common.ui.RootContent
 import org.orca.common.ui.theme.AppTheme
@@ -26,7 +27,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         val root = RootComponent(
-            componentContext = defaultComponentContext()
+            componentContext = defaultComponentContext(),
+            Preferences(getSharedPreferences("data", MODE_PRIVATE))
         )
 
         setContent {

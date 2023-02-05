@@ -1,4 +1,4 @@
-package org.orca.common.ui.utils
+package org.orca.common.data.utils
 
 import com.arkivanov.essenty.lifecycle.LifecycleOwner
 import com.arkivanov.essenty.lifecycle.doOnDestroy
