@@ -9,14 +9,19 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.ComponentContext
 import com.halilibo.richtext.ui.Heading
 import com.halilibo.richtext.ui.material3.Material3RichText
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import org.jsoup.Jsoup
 import org.orca.common.data.Compass
+import org.orca.common.data.formatAsVisualDate
 import org.orca.common.data.timeAgo
 import org.orca.common.ui.components.*
 import org.orca.common.ui.components.calendar.ClassList
@@ -40,6 +45,7 @@ fun HomeContent(
 ) {
     val scheduleState by component.compass.schedule.collectAsState()
     val newsfeedState by component.compass.newsfeed.collectAsState()
+    val date = remember { Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date.formatAsVisualDate() }
 
     LazyColumn(
         contentPadding = PaddingValues(16.dp)
@@ -47,6 +53,7 @@ fun HomeContent(
         when (windowSize) {
             WindowSize.EXPANDED -> {
                 item {
+                    Text(date)
                     Row {
                         Column(modifier = Modifier.weight(1f)) {
                             ClassList(
