@@ -1,6 +1,9 @@
 package org.orca.common.data
 
+import androidx.compose.ui.text.toLowerCase
 import kotlinx.datetime.*
+import kotlinx.datetime.TimeZone
+import java.util.*
 
 fun Instant.timeAgo(): String {
     val timeZone = TimeZone.currentSystemDefault()
@@ -33,5 +36,22 @@ fun LocalTime.formatAsHourMinute(): String =
 fun LocalDate.formatAsDate(): String =
     "${dayOfMonth.toString().padStart(2, '0')}/${monthNumber.toString().padStart(2, '0')}/${year}"
 
+fun LocalDate.formatAsVisualDate(): String =
+    "${dayOfWeek.name.capFirstLetter()}, $dayOfMonth${getDaySuffix(dayOfMonth)} of ${month.name.capFirstLetter()} $year"
+
 fun LocalDateTime.formatAsDateTime(): String =
     time.formatAsHourMinute() + " " + date.formatAsDate()
+
+private fun getDaySuffix(day: Int) = when(day) {
+    1 -> "st"
+    21 -> "st"
+    31 -> "st"
+    2 -> "nd"
+    22 -> "nd"
+    3 -> "rd"
+    23 -> "rd"
+    else -> "th"
+}
+
+private fun String.capFirstLetter() =
+    this[0].uppercaseChar() + this.slice(1..this.length-1).lowercase(Locale.getDefault())

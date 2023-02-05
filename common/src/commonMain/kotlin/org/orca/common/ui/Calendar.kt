@@ -20,6 +20,7 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 import org.orca.common.data.Compass
+import org.orca.common.data.formatAsVisualDate
 import org.orca.common.ui.components.calendar.ClassList
 import org.orca.common.ui.components.calendar.DueLearningTasks
 import org.orca.common.ui.utils.WindowSize
@@ -60,7 +61,7 @@ fun CalendarContent(
             contentPadding = PaddingValues(16.dp)
         ) {
             item {
-                Text(viewedDay.toString())
+                Text(viewedDay.formatAsVisualDate())
             }
             item {
                 ClassList(
