@@ -13,6 +13,6 @@
  Logging in will later use a better method, but currently requires grabbing the data manually
  from your browser.
  1. Log into compass, open the F12 menu and find the Network tab.
- 2. Reload the page and filter by XHR. Choose a request, and copy the `Cookie` request header value.
- 3. For the domain, just copy the domain (and subdomain) from the site URL.
- 4. For User Id, click on a class, and copy the value of `targetUserId` from the URL.
+ 2. Reload the page and filter by XHR. Choose a request, and copy the `Cookie` *request header* value.
+ 3. For the domain, just copy the domain (and subdomain) from the site URL. (`*.compass.education`)
+ 4. For User Id, click on a class, and copy the *value* of `targetUserId` from the URL.
