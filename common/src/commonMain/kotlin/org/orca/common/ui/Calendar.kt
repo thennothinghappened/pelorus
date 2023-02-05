@@ -21,6 +21,7 @@ import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 import org.orca.common.data.Compass
 import org.orca.common.data.formatAsVisualDate
+import org.orca.common.ui.components.ShortDivider
 import org.orca.common.ui.components.calendar.ClassList
 import org.orca.common.ui.components.calendar.DueLearningTasks
 import org.orca.common.ui.utils.WindowSize
@@ -70,7 +71,7 @@ fun CalendarContent(
                     onClickActivity = component.onClickActivity
                 )
             }
-            item { Divider() }
+            item { ShortDivider() }
             item {
                 DueLearningTasks(scheduleState = scheduleState)
             }

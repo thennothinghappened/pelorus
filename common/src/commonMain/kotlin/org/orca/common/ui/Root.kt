@@ -3,6 +3,7 @@ package org.orca.common.ui
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -78,10 +79,10 @@ class RootComponent(
     }
 
     // calendar is special.
-    fun goToCalendar(config: Config.Calendar) {
+    fun goToCalendar() {
         compass.endPollingSchedule()
         compass.manualPollScheduleUpdate(compass.viewedDay.value)
-        _goToNavItem(config)
+        _goToNavItem(Config.Calendar)
     }
 
     private fun onClickActivity(scheduleEntryIndex: Int) {
@@ -120,6 +121,11 @@ class RootComponent(
                 compass,
                 ::onClickActivity
             ))
+            is Config.LearningTasks -> Child.LearningTasksChild(
+                LearningTasksComponent(
+                componentContext = componentContext,
+                compass
+            ))
             is Config.Activity -> Child.ActivityChild(ActivityComponent(
                 componentContext = componentContext,
                 compass,
@@ -131,6 +137,7 @@ class RootComponent(
         class LoginChild(val component: LoginComponent) : Child
         class HomeChild(val component: HomeComponent) : Child
         class CalendarChild(val component: CalendarComponent) : Child
+        class LearningTasksChild(val component: LearningTasksComponent) : Child
         class ActivityChild(val component: ActivityComponent) : Child
     }
 
@@ -139,6 +146,7 @@ class RootComponent(
         object Login : Config
         object Home : Config
         object Calendar : Config
+        object LearningTasks : Config
         data class Activity(val scheduleEntryIndex: Int) : Config
     }
 
@@ -182,7 +190,7 @@ fun RootContent(
                     )
                     NavigationRailItem(
                         selected = activeComponent is RootComponent.Child.CalendarChild,
-                        onClick = { component.goToCalendar(RootComponent.Config.Calendar) },
+                        onClick = { component.goToCalendar() },
                         icon = {
                             Icon(
                                 imageVector = Icons.Default.DateRange,
@@ -190,6 +198,17 @@ fun RootContent(
                             )
                         },
                         label = { Text("Calendar") }
+                    )
+                    NavigationRailItem(
+                        selected = activeComponent is RootComponent.Child.LearningTasksChild,
+                        onClick = { component.goToNavItem(RootComponent.Config.LearningTasks) },
+                        icon = {
+                            Icon(
+                                imageVector = Icons.Default.Edit,
+                                contentDescription = "Tasks"
+                            )
+                        },
+                        label = { Text("Tasks") }
                     )
                 }
                 Children(
@@ -241,7 +260,7 @@ fun RootContent(
                 NavigationBar(modifier = Modifier.fillMaxWidth()) {
                     NavigationBarItem(
                         selected = activeComponent is RootComponent.Child.CalendarChild,
-                        onClick = { component.goToCalendar(RootComponent.Config.Calendar) },
+                        onClick = { component.goToCalendar() },
                         icon = {
                             Icon(
                                 imageVector = Icons.Default.DateRange,
@@ -260,6 +279,17 @@ fun RootContent(
                             )
                         },
                         label = { Text("Home") }
+                    )
+                    NavigationBarItem(
+                        selected = activeComponent is RootComponent.Child.LearningTasksChild,
+                        onClick = { component.goToNavItem(RootComponent.Config.LearningTasks) },
+                        icon = {
+                            Icon(
+                                imageVector = Icons.Default.Edit,
+                                contentDescription = "Tasks"
+                            )
+                        },
+                        label = { Text("Tasks") }
                     )
                 }
             }

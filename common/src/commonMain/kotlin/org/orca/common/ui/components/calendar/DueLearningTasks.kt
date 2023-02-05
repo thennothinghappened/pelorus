@@ -3,6 +3,7 @@ package org.orca.common.ui.components.calendar
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -34,6 +35,10 @@ fun DueLearningTasks(
         ) { entries ->
             val tasks = entries.filterIsInstance<CompassApiClient.ScheduleEntry.LearningTask>()
 
+            if (tasks.isEmpty()) {
+                Text("None today!", style = MaterialTheme.typography.bodySmall)
+            }
+
             tasks.forEach {
                 val event = it.event
 
@@ -41,7 +46,11 @@ fun DueLearningTasks(
                     event.title,
                     event.description,
                     "Due ${event.start?.toLocalDateTime(TimeZone.currentSystemDefault())?.time?.formatAsHourMinute()}",
-                    ""
+                    "",
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
                 )
             }
         }

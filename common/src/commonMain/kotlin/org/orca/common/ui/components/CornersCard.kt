@@ -9,6 +9,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import kotlinx.datetime.LocalTime
@@ -30,6 +31,7 @@ fun CornersCard(
             Text(
                 title,
                 style = MaterialTheme.typography.labelLarge,
+                fontWeight = FontWeight.Bold,
                 overflow = TextOverflow.Clip,
                 maxLines = 1
             )

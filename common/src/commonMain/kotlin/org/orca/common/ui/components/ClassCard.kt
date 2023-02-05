@@ -27,7 +27,11 @@ fun ClassCard(
             "Room ${(activity as CompassApiClient.State.Success<Activity>).data.locationName}",
             (activity as CompassApiClient.State.Success<Activity>).data.managerTextReadable,
             time,
-            onClick = onClick
+            onClick = onClick,
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.background
+            )
         )
     }
     else
@@ -36,6 +40,10 @@ fun ClassCard(
             "loading",
             "loading",
             time,
-            onClick = onClick
+            onClick = onClick,
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
+            )
         )
 }

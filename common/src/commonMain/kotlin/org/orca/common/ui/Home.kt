@@ -61,7 +61,7 @@ fun HomeContent(
                                 scheduleState = scheduleState,
                                 onClickActivity = component.onClickActivity
                             )
-                            Divider()
+                            ShortDivider()
                             DueLearningTasks(scheduleState = scheduleState)
                         }
                         Newsfeed(modifier = Modifier.weight(1f), newsfeedState = newsfeedState)
@@ -76,11 +76,11 @@ fun HomeContent(
                         onClickActivity = component.onClickActivity
                     )
                 }
-                item { Divider() }
+                item { ShortDivider() }
                 item {
                     DueLearningTasks(scheduleState = scheduleState)
                 }
-                item { Divider() }
+                item { ShortDivider() }
                 item {
                     Newsfeed(newsfeedState = newsfeedState)
                 }

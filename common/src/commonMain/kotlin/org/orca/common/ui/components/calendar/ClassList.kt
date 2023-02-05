@@ -26,6 +26,7 @@ fun ClassList(
         modifier = modifier.padding(8.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
+        Text("Schedule", style = MaterialTheme.typography.labelMedium)
         NetStates(
             scheduleState,
             {
@@ -37,7 +38,9 @@ fun ClassList(
         ) { entries ->
             val classes = entries.filterIsInstance<CompassApiClient.ScheduleEntry.ActivityEntry>()
 
-            Text("Schedule", style = MaterialTheme.typography.labelMedium)
+            if (classes.isEmpty()) {
+                Text("None today!", style = MaterialTheme.typography.bodySmall)
+            }
             classes.forEachIndexed { index, it ->
                 ClassCard(it) {
                     onClickActivity(index)
