@@ -15,4 +15,4 @@
  1. Log into compass, open the F12 menu and find the Network tab.
  2. Reload the page and filter by XHR. Choose a request, and copy the `Cookie` *request header* value.
  3. For the domain, just copy the domain (and subdomain) from the site URL. (`*.compass.education`)
- 4. For User Id, click on a class, and copy the *value* of `targetUserId` from the URL.
+ 4. For User Id, click on a class, and copy the *value* of `targetUserId` from the URL. If your Compass instance doesn't have this, it can also be obtained by grabbing it from the request body of `GetMyNewsFeedPaged`.
