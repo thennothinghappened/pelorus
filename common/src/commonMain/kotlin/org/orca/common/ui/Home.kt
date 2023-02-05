@@ -33,7 +33,7 @@ import org.orca.kotlass.data.NewsItem
 class HomeComponent(
     componentContext: ComponentContext,
     val compass: Compass,
-    val onClickActivity: (Int) -> Unit
+    val onClickActivity: (Int, CompassApiClient.Schedule) -> Unit
 ) : ComponentContext by componentContext
 
 
@@ -43,7 +43,6 @@ fun HomeContent(
     modifier: Modifier = Modifier,
     windowSize: WindowSize
 ) {
-    val scheduleState by component.compass.defaultSchedule.state.collectAsState()
     val newsfeedState by component.compass.defaultNewsfeed.state.collectAsState()
     val date = remember { Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date.formatAsVisualDate() }
 
@@ -58,11 +57,11 @@ fun HomeContent(
                         Column(modifier = Modifier.weight(1f)) {
                             ClassList(
                                 windowSize = windowSize,
-                                scheduleState = scheduleState,
+                                schedule = component.compass.defaultSchedule,
                                 onClickActivity = component.onClickActivity
                             )
                             ShortDivider()
-                            DueLearningTasks(scheduleState = scheduleState)
+                            DueLearningTasks(schedule = component.compass.defaultSchedule)
                         }
                         Newsfeed(modifier = Modifier.weight(1f), newsfeedState = newsfeedState)
                     }
@@ -72,13 +71,13 @@ fun HomeContent(
                 item {
                     ClassList(
                         windowSize = windowSize,
-                        scheduleState = scheduleState,
+                        schedule = component.compass.defaultSchedule,
                         onClickActivity = component.onClickActivity
                     )
                 }
                 item { ShortDivider() }
                 item {
-                    DueLearningTasks(scheduleState = scheduleState)
+                    DueLearningTasks(schedule = component.compass.defaultSchedule)
                 }
                 item { ShortDivider() }
                 item {

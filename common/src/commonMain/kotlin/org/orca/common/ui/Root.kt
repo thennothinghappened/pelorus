@@ -69,32 +69,20 @@ class RootComponent(
         return true
     }
 
-    private fun _goToNavItem(config: Config) {
+    fun goToNavItem(config: Config) {
         navigation.replaceAll(config)
     }
 
-    fun goToNavItem(config: Config) {
-        compass.beginPollingSchedule()
-        _goToNavItem(config)
-    }
+    private fun onClickActivity(scheduleEntryIndex: Int, schedule: CompassApiClient.Schedule) {
+        if (schedule.state.value !is CompassApiClient.State.Success) return
 
-    // calendar is special.
-    fun goToCalendar() {
-        compass.endPollingSchedule()
-        compass.manualPollScheduleUpdate(compass.viewedDay.value)
-        _goToNavItem(Config.Calendar)
-    }
-
-    private fun onClickActivity(scheduleEntryIndex: Int) {
-        if (compass.defaultSchedule.state.value !is CompassApiClient.State.Success) return
-
-        val scheduleEntry = (compass.defaultSchedule.state.value as CompassApiClient.State.Success<List<CompassApiClient.ScheduleEntry>>)
+        val scheduleEntry = (schedule.state.value as CompassApiClient.State.Success<List<CompassApiClient.ScheduleEntry>>)
             .data[scheduleEntryIndex]
 
         if (scheduleEntry !is CompassApiClient.ScheduleEntry.Lesson) return
 
         compass.loadLessonPlan(scheduleEntry)
-        compass.setViewedEntry(scheduleEntryIndex)
+        compass.setViewedEntry(scheduleEntryIndex, schedule)
         navigation.push(Config.Activity(scheduleEntryIndex))
     }
 
@@ -190,7 +178,7 @@ fun RootContent(
                     )
                     NavigationRailItem(
                         selected = activeComponent is RootComponent.Child.CalendarChild,
-                        onClick = { component.goToCalendar() },
+                        onClick = { component.goToNavItem(RootComponent.Config.Calendar) },
                         icon = {
                             Icon(
                                 imageVector = Icons.Default.DateRange,
@@ -260,7 +248,7 @@ fun RootContent(
                 NavigationBar(modifier = Modifier.fillMaxWidth()) {
                     NavigationBarItem(
                         selected = activeComponent is RootComponent.Child.CalendarChild,
-                        onClick = { component.goToCalendar() },
+                        onClick = { component.goToNavItem(RootComponent.Config.Calendar) },
                         icon = {
                             Icon(
                                 imageVector = Icons.Default.DateRange,

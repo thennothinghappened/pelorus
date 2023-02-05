@@ -19,31 +19,26 @@ fun ClassCard(
 ) {
     val activity by scheduleEntry.activity.collectAsState()
     val bannerUrl by scheduleEntry.bannerUrl.collectAsState()
+
+    var title = scheduleEntry.event.longTitleWithoutTime
     val time = scheduleEntry.event.start?.toLocalDateTime(TimeZone.currentSystemDefault())?.time?.formatAsHourMinute() ?: ""
+    var teacher = ""
+    var room = ""
 
     if (activity is CompassApiClient.State.Success<Activity>) {
-        CornersCard(
-            (activity as CompassApiClient.State.Success<Activity>).data.subjectName,
-            "Room ${(activity as CompassApiClient.State.Success<Activity>).data.locationName}",
-            (activity as CompassApiClient.State.Success<Activity>).data.managerTextReadable,
-            time,
-            onClick = onClick,
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.background
-            )
-        )
+        title = (activity as CompassApiClient.State.Success<Activity>).data.subjectName
+        teacher = (activity as CompassApiClient.State.Success<Activity>).data.managerTextReadable
+        room = (activity as CompassApiClient.State.Success<Activity>).data.locationName
     }
-    else
-        CornersCard(
-            scheduleEntry.event.longTitleWithoutTime,
-            "loading",
-            "loading",
-            time,
-            onClick = onClick,
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary
-            )
+    CornersCard(
+        title,
+        "Room $room",
+        teacher,
+        time,
+        onClick = onClick,
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.background
         )
+    )
 }

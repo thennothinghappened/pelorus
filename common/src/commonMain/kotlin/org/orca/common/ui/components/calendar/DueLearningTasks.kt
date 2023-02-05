@@ -8,6 +8,8 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import kotlinx.datetime.TimeZone
@@ -21,8 +23,10 @@ import org.orca.kotlass.CompassApiClient
 @Composable
 fun DueLearningTasks(
     modifier: Modifier = Modifier,
-    scheduleState: CompassApiClient.State<List<CompassApiClient.ScheduleEntry>>
+    schedule: CompassApiClient.Schedule
 ) {
+    val scheduleState by schedule.state.collectAsState()
+
     Column(
         modifier = modifier.padding(8.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)

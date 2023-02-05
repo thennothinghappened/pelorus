@@ -20,15 +20,18 @@ class Compass(
         TODO("Not yet implemented")
     }
 
-    init {
-        beginPollingNewsfeed()
-        beginPollingSchedule()
-    }
-
     private val _viewedEntry: MutableStateFlow<ScheduleEntry.ActivityEntry?> = MutableStateFlow(null)
     val viewedEntry: StateFlow<ScheduleEntry.ActivityEntry?> = _viewedEntry
 
+    // calendar
+    val calendarSchedule = Schedule(refreshIntervals.schedule)
     val viewedDay = MutableStateFlow(Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date)
+
+    init {
+        beginPollingNewsfeed()
+        beginPollingSchedule()
+        manualPollScheduleUpdate(schedule = calendarSchedule)
+    }
 
     fun setViewedEntry(scheduleEntryIndex: Int, schedule: Schedule = defaultSchedule) {
         if (schedule.state.value !is State.Success) return

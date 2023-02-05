@@ -25,16 +25,17 @@ import org.orca.common.ui.components.ShortDivider
 import org.orca.common.ui.components.calendar.ClassList
 import org.orca.common.ui.components.calendar.DueLearningTasks
 import org.orca.common.ui.utils.WindowSize
+import org.orca.kotlass.CompassApiClient
 
 class CalendarComponent(
     componentContext: ComponentContext,
     val compass: Compass,
-    val onClickActivity: (Int) -> Unit
+    val onClickActivity: (Int, CompassApiClient.Schedule) -> Unit
 ) : ComponentContext by componentContext {
 
     fun setDay(date: LocalDate) {
         compass.viewedDay.value = date
-        compass.manualPollScheduleUpdate(compass.viewedDay.value)
+        compass.manualPollScheduleUpdate(compass.viewedDay.value, schedule = compass.calendarSchedule)
     }
 
     fun goBackDay() {
@@ -51,7 +52,6 @@ fun CalendarContent(
     component: CalendarComponent,
     windowSize: WindowSize
 ) {
-    val scheduleState by component.compass.defaultSchedule.state.collectAsState()
     val viewedDay by component.compass.viewedDay.collectAsState()
 
     Column(
@@ -67,13 +67,13 @@ fun CalendarContent(
             item {
                 ClassList(
                     windowSize = windowSize,
-                    scheduleState = scheduleState,
+                    schedule = component.compass.calendarSchedule,
                     onClickActivity = component.onClickActivity
                 )
             }
             item { ShortDivider() }
             item {
-                DueLearningTasks(scheduleState = scheduleState)
+                DueLearningTasks(schedule = component.compass.calendarSchedule)
             }
         }
         NavigationBar(modifier = Modifier.height(50.dp)) {
