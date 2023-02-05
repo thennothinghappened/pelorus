@@ -33,7 +33,6 @@ fun ActivityContent(
     windowSize: WindowSize
 ) {
 
-    // TODO: need a better way to do this, getting it over and over is really slow!
     val entry by component.compass.viewedEntry.collectAsState()
     val activity = entry?.activity?.collectAsState()?.value
 

@@ -43,8 +43,8 @@ fun HomeContent(
     modifier: Modifier = Modifier,
     windowSize: WindowSize
 ) {
-    val scheduleState by component.compass.schedule.collectAsState()
-    val newsfeedState by component.compass.newsfeed.collectAsState()
+    val scheduleState by component.compass.defaultSchedule.state.collectAsState()
+    val newsfeedState by component.compass.defaultNewsfeed.state.collectAsState()
     val date = remember { Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date.formatAsVisualDate() }
 
     LazyColumn(

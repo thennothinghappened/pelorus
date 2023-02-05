@@ -51,7 +51,7 @@ fun CalendarContent(
     component: CalendarComponent,
     windowSize: WindowSize
 ) {
-    val scheduleState by component.compass.schedule.collectAsState()
+    val scheduleState by component.compass.defaultSchedule.state.collectAsState()
     val viewedDay by component.compass.viewedDay.collectAsState()
 
     Column(

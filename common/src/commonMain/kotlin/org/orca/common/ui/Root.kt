@@ -86,9 +86,9 @@ class RootComponent(
     }
 
     private fun onClickActivity(scheduleEntryIndex: Int) {
-        if (compass.schedule.value !is CompassApiClient.State.Success) return
+        if (compass.defaultSchedule.state.value !is CompassApiClient.State.Success) return
 
-        val scheduleEntry = (compass.schedule.value as CompassApiClient.State.Success<List<CompassApiClient.ScheduleEntry>>)
+        val scheduleEntry = (compass.defaultSchedule.state.value as CompassApiClient.State.Success<List<CompassApiClient.ScheduleEntry>>)
             .data[scheduleEntryIndex]
 
         if (scheduleEntry !is CompassApiClient.ScheduleEntry.Lesson) return

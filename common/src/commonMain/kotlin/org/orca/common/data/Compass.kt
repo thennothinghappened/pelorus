@@ -30,12 +30,12 @@ class Compass(
 
     val viewedDay = MutableStateFlow(Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date)
 
-    fun setViewedEntry(scheduleEntryIndex: Int) {
-        if (schedule.value !is State.Success) return
+    fun setViewedEntry(scheduleEntryIndex: Int, schedule: Schedule = defaultSchedule) {
+        if (schedule.state.value !is State.Success) return
 
         _viewedEntry.value =
             @Suppress("UNCHECKED_CAST") // we always know the entry index supplied is an ActivityEntry.
-            (schedule.value as State.Success<List<ScheduleEntry.ActivityEntry>>).data[scheduleEntryIndex]
+            (schedule.state.value as State.Success<List<ScheduleEntry.ActivityEntry>>).data[scheduleEntryIndex]
     }
 
 }
