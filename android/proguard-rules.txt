@@ -1,0 +1,3 @@
+# TODO: get proguard working properly.
+-dontshrink
+-dontobfuscate

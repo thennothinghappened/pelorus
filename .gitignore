@@ -5,7 +5,6 @@ build/
 !**/src/test/**/build/
 local.properties
 java_pid*
-/common/src/commonMain/kotlin/org/orca/common/data/TestCredentials.kt
 
 ### IntelliJ IDEA ###
 .idea/modules.xml

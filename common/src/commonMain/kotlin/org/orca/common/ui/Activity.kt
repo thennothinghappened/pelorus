@@ -24,7 +24,6 @@ import org.orca.kotlass.data.Activity
 class ActivityComponent(
     componentContext: ComponentContext,
     val compass: Compass,
-    scheduleEntryIndex: Int,
     val onBackPress: () -> Unit
 ) : ComponentContext by componentContext
 
@@ -43,7 +42,9 @@ fun ActivityContent(
         return
     }
 
-    LazyColumn {
+    LazyColumn(
+        contentPadding = PaddingValues(16.dp)
+    ) {
         if (getPlatform() is Platform.Desktop) {
             item {
                 Button(onClick = component.onBackPress) {

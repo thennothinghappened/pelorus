@@ -1,7 +1,5 @@
 import org.jetbrains.compose.internal.utils.getLocalProperty
 
-//import org.jetbrains.compose.internal.getLocalProperty
-
 plugins {
     id("org.jetbrains.compose")
     id("com.android.application")
@@ -50,8 +48,12 @@ android {
         }
         buildTypes {
             getByName("release") {
-                isMinifyEnabled = false
+                isMinifyEnabled = true
                 signingConfig = signingConfigs.getByName("main")
+                proguardFiles(
+                    getDefaultProguardFile("proguard-android-optimize.txt"),
+                    "proguard-rules.txt"
+                )
             }
         }
     }

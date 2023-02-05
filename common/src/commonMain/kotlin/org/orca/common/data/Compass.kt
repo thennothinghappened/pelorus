@@ -4,6 +4,9 @@ import com.arkivanov.essenty.instancekeeper.InstanceKeeper
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import org.orca.kotlass.CompassApiClient
 import org.orca.kotlass.CompassClientCredentials
 
@@ -24,6 +27,8 @@ class Compass(
 
     private val _viewedEntry: MutableStateFlow<ScheduleEntry.ActivityEntry?> = MutableStateFlow(null)
     val viewedEntry: StateFlow<ScheduleEntry.ActivityEntry?> = _viewedEntry
+
+    val viewedDay = MutableStateFlow(Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date)
 
     fun setViewedEntry(scheduleEntryIndex: Int) {
         if (schedule.value !is State.Success) return

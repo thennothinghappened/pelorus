@@ -2,6 +2,7 @@ package org.orca.common.ui
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -20,6 +21,7 @@ import com.arkivanov.essenty.parcelable.Parcelable
 import com.arkivanov.essenty.parcelable.Parcelize
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.datetime.*
 import org.orca.common.data.Compass
 import org.orca.common.data.clearClientCredentials
 import org.orca.common.data.getClientCredentials
@@ -39,7 +41,7 @@ class RootComponent(
         childStack(
             source = navigation,
             initialConfiguration = Config.Login,
-            handleBackButton = false,
+            handleBackButton = true,
             childFactory = ::child
         )
     val stack: Value<ChildStack<*, Child>> = _stack
@@ -47,7 +49,7 @@ class RootComponent(
     private lateinit var compassClientCredentials: CompassClientCredentials
 
     // weird workaround for null pointer at runtime if getting directly from other components
-    private val compass: Compass
+    val compass: Compass
         get() = instanceKeeper.getOrCreate { Compass(compassClientCredentials) }
 
     private fun onFinishLogin(credentials: CompassClientCredentials): Boolean {
@@ -62,8 +64,37 @@ class RootComponent(
 
         compassClientCredentials = credentials
         setClientCredentials(preferences, compassClientCredentials)
-        navigation.bringToFront(Config.Mainscreen)
+        navigation.bringToFront(Config.Home)
         return true
+    }
+
+    private fun _goToNavItem(config: Config) {
+        navigation.replaceAll(config)
+    }
+
+    fun goToNavItem(config: Config) {
+        compass.beginPollingSchedule()
+        _goToNavItem(config)
+    }
+
+    // calendar is special.
+    fun goToCalendar(config: Config.Calendar) {
+        compass.endPollingSchedule()
+        compass.manualPollScheduleUpdate(compass.viewedDay.value)
+        _goToNavItem(config)
+    }
+
+    private fun onClickActivity(scheduleEntryIndex: Int) {
+        if (compass.schedule.value !is CompassApiClient.State.Success) return
+
+        val scheduleEntry = (compass.schedule.value as CompassApiClient.State.Success<List<CompassApiClient.ScheduleEntry>>)
+            .data[scheduleEntryIndex]
+
+        if (scheduleEntry !is CompassApiClient.ScheduleEntry.Lesson) return
+
+        compass.loadLessonPlan(scheduleEntry)
+        compass.setViewedEntry(scheduleEntryIndex)
+        navigation.push(Config.Activity(scheduleEntryIndex))
     }
 
     init {
@@ -79,21 +110,36 @@ class RootComponent(
                 componentContext = componentContext,
                 onFinishLogin = ::onFinishLogin
             ))
-            is Config.Mainscreen -> Child.MainscreenChild(MainscreenComponent(
+            is Config.Home -> Child.HomeChild(HomeComponent(
                 componentContext = componentContext,
-                compass
+                compass,
+                ::onClickActivity
+            ))
+            is Config.Calendar -> Child.CalendarChild(CalendarComponent(
+                componentContext = componentContext,
+                compass,
+                ::onClickActivity
+            ))
+            is Config.Activity -> Child.ActivityChild(ActivityComponent(
+                componentContext = componentContext,
+                compass,
+                navigation::pop
             ))
         }
 
     sealed interface Child {
         class LoginChild(val component: LoginComponent) : Child
-        class MainscreenChild(val component: MainscreenComponent) : Child
+        class HomeChild(val component: HomeComponent) : Child
+        class CalendarChild(val component: CalendarComponent) : Child
+        class ActivityChild(val component: ActivityComponent) : Child
     }
 
     @Parcelize
     sealed interface Config : Parcelable {
         object Login : Config
-        object Mainscreen : Config
+        object Home : Config
+        object Calendar : Config
+        data class Activity(val scheduleEntryIndex: Int) : Config
     }
 
 
@@ -124,8 +170,8 @@ fun RootContent(
                     containerColor = MaterialTheme.colorScheme.surface
                 ) {
                     NavigationRailItem(
-                        selected = activeComponent is RootComponent.Child.MainscreenChild,
-                        onClick = {},
+                        selected = activeComponent is RootComponent.Child.HomeChild,
+                        onClick = { component.goToNavItem(RootComponent.Config.Home) },
                         icon = {
                             Icon(
                                 imageVector = Icons.Default.Home,
@@ -134,6 +180,17 @@ fun RootContent(
                         },
                         label = { Text("Home") }
                     )
+                    NavigationRailItem(
+                        selected = activeComponent is RootComponent.Child.CalendarChild,
+                        onClick = { component.goToCalendar(RootComponent.Config.Calendar) },
+                        icon = {
+                            Icon(
+                                imageVector = Icons.Default.DateRange,
+                                contentDescription = "Calendar"
+                            )
+                        },
+                        label = { Text("Calendar") }
+                    )
                 }
                 Children(
                     stack = component.stack,
@@ -141,7 +198,15 @@ fun RootContent(
                     animation = stackAnimation(fade())
                 ) {
                     when (val child = it.instance) {
-                        is RootComponent.Child.MainscreenChild -> MainscreenContent(
+                        is RootComponent.Child.HomeChild -> HomeContent(
+                            component = child.component,
+                            windowSize = windowSize
+                        )
+                        is RootComponent.Child.CalendarChild -> CalendarContent(
+                            component = child.component,
+                            windowSize = windowSize
+                        )
+                        is RootComponent.Child.ActivityChild -> ActivityContent(
                             component = child.component,
                             windowSize = windowSize
                         )
@@ -158,18 +223,36 @@ fun RootContent(
                     animation = stackAnimation(fade())
                 ) {
                     when (val child = it.instance) {
-                        is RootComponent.Child.MainscreenChild -> MainscreenContent(
+                        is RootComponent.Child.HomeChild -> HomeContent(
                             component = child.component,
                             windowSize = windowSize
                         )
-
+                        is RootComponent.Child.CalendarChild -> CalendarContent(
+                            component = child.component,
+                            windowSize = windowSize
+                        )
+                        is RootComponent.Child.ActivityChild -> ActivityContent(
+                            component = child.component,
+                            windowSize = windowSize
+                        )
                         else -> {}
                     }
                 }
                 NavigationBar(modifier = Modifier.fillMaxWidth()) {
                     NavigationBarItem(
-                        selected = activeComponent is RootComponent.Child.MainscreenChild,
-                        onClick = {},
+                        selected = activeComponent is RootComponent.Child.CalendarChild,
+                        onClick = { component.goToCalendar(RootComponent.Config.Calendar) },
+                        icon = {
+                            Icon(
+                                imageVector = Icons.Default.DateRange,
+                                contentDescription = "Calendar"
+                            )
+                        },
+                        label = { Text("Calendar") }
+                    )
+                    NavigationBarItem(
+                        selected = activeComponent is RootComponent.Child.HomeChild,
+                        onClick = { component.goToNavItem(RootComponent.Config.Home) },
                         icon = {
                             Icon(
                                 imageVector = Icons.Default.Home,
