@@ -66,3 +66,32 @@ fun CornersCard(
         }
     }
 }
+
+@Composable
+fun CornersCard(
+    title: @Composable () -> Unit,
+    topRight: @Composable () -> Unit,
+    bottomLeft: @Composable () -> Unit,
+    bottomRight: @Composable () -> Unit,
+    colors: CardColors = CardDefaults.cardColors(),
+    onClick: () -> Unit = {}
+) {
+    BaseCard(colors = colors, onClick = onClick) {
+        Row(
+            Modifier
+                .padding(8.dp)
+        ) {
+            title()
+            Spacer(Modifier.weight(1f))
+            topRight()
+        }
+        Row(
+            Modifier
+                .padding(8.dp)
+        ) {
+            bottomLeft()
+            Spacer(Modifier.weight(1f))
+            bottomRight()
+        }
+    }
+}

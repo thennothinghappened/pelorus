@@ -64,7 +64,7 @@ fun ActivityContent(
                 { ErrorRenderer((activity as CompassApiClient.State.Error<Activity>).error) }
             ) { activity ->
 
-                Text(activity.subjectName)
+                Text(activity.subjectName ?: activity.activityDisplayName)
                 Text("${activity.managerTextReadable} - Room ${activity.locationName}")
                 KamelImage(
                     lazyPainterResource(component.compass.buildDomainUrlString(activity.managerPhotoPath)),

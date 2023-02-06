@@ -35,8 +35,14 @@ fun ClassCard(
             contentColor = MaterialTheme.colorScheme.background
         )
 
+    if (scheduleEntry is CompassApiClient.ScheduleEntry.Event)
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.tertiary,
+            contentColor = MaterialTheme.colorScheme.background
+        )
+
     if (activity is CompassApiClient.State.Success<Activity>) {
-        title = (activity as CompassApiClient.State.Success<Activity>).data.subjectName
+        title = (activity as CompassApiClient.State.Success<Activity>).data.subjectName ?: (activity as CompassApiClient.State.Success<Activity>).data.activityDisplayName
         teacher = (activity as CompassApiClient.State.Success<Activity>).data.managerTextReadable
         room = (activity as CompassApiClient.State.Success<Activity>).data.locationName
     }

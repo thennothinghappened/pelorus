@@ -14,6 +14,8 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.Children
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.fade
+import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.plus
+import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.scale
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import com.arkivanov.decompose.router.stack.*
@@ -23,19 +25,24 @@ import com.arkivanov.essenty.parcelable.Parcelable
 import com.arkivanov.essenty.parcelable.Parcelize
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.datetime.*
 import org.orca.common.data.Compass
 import org.orca.common.data.clearClientCredentials
 import org.orca.common.data.getClientCredentials
 import org.orca.common.data.setClientCredentials
+import org.orca.common.data.utils.DefaultPreferences
 import org.orca.common.ui.utils.WindowSize
 import org.orca.kotlass.CompassApiClient
 import org.orca.kotlass.CompassClientCredentials
 import org.orca.common.data.utils.Preferences
+import org.orca.common.data.utils.get
 
 class RootComponent(
     componentContext: ComponentContext,
-    private val preferences: Preferences
+    private val preferences: Preferences,
+    private val pauseStatus: StateFlow<Boolean> = MutableStateFlow(false) // only needed for mobile
 ) : ComponentContext by componentContext {
 
     private val navigation = StackNavigation<Config>()
@@ -54,19 +61,23 @@ class RootComponent(
     val compass: Compass
         get() = instanceKeeper.getOrCreate { Compass(compassClientCredentials) }
 
-    private fun onFinishLogin(credentials: CompassClientCredentials): Boolean {
-        // make sure the credentials are valid!
-//        val _compass = CompassApiClient(credentials, CoroutineScope(Dispatchers.Main))
-//        val valid = _compass.validateCredentials()
-//
-//        if (!valid) {
+    private fun onFinishLogin(credentials: CompassClientCredentials, enableVerify: Boolean = true): Boolean {
+        if (enableVerify) {
+            // make sure the credentials are valid!
+            val _compass = CompassApiClient(credentials, CoroutineScope(Dispatchers.Main))
+            val valid = _compass.validateCredentials()
+
+            if (!valid) {
 //            clearClientCredentials(preferences)
-//            return false
-//        }
+                // we shouldnt clear credentials just because they failed this time until kotlass can return *why* it failed
+                return false
+            }
+        }
 
         compassClientCredentials = credentials
         setClientCredentials(preferences, compassClientCredentials)
         navigation.bringToFront(Config.Home)
+
         return true
     }
 
@@ -80,9 +91,11 @@ class RootComponent(
         val scheduleEntry = (schedule.state.value as CompassApiClient.State.Success<List<CompassApiClient.ScheduleEntry>>)
             .data[scheduleEntryIndex]
 
-        if (scheduleEntry !is CompassApiClient.ScheduleEntry.Lesson) return
+        if (scheduleEntry !is CompassApiClient.ScheduleEntry.ActivityEntry) return
 
-        compass.loadLessonPlan(scheduleEntry)
+        if (scheduleEntry is CompassApiClient.ScheduleEntry.Lesson)
+            compass.loadLessonPlan(scheduleEntry)
+
         compass.setViewedEntry(scheduleEntryIndex, schedule)
         navigation.push(Config.Activity(scheduleEntryIndex))
     }
@@ -90,7 +103,7 @@ class RootComponent(
     init {
         val credentials = getClientCredentials(preferences)
         if (credentials != null) {
-            onFinishLogin(credentials)
+            onFinishLogin(credentials, preferences.get(DefaultPreferences.Api.verifyCredentials))
         }
     }
 
@@ -114,11 +127,10 @@ class RootComponent(
                 componentContext = componentContext,
                 compass
             ))
-            is Config.Settings -> Child.SettingsChild(
-                SettingsComponent(
-                componentContext = componentContext
-            )
-            )
+            is Config.Settings -> Child.SettingsChild(SettingsComponent(
+                componentContext = componentContext,
+                preferences = preferences
+            ))
             is Config.Activity -> Child.ActivityChild(ActivityComponent(
                 componentContext = componentContext,
                 compass,
@@ -148,7 +160,7 @@ class RootComponent(
 
 }
 
-@OptIn(ExperimentalDecomposeApi::class)
+@OptIn(ExperimentalDecomposeApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun RootContent(
     component: RootComponent,
@@ -232,6 +244,10 @@ fun RootContent(
                             component = child.component,
                             windowSize = windowSize
                         )
+                        is RootComponent.Child.SettingsChild -> SettingsContent(
+                            component = child.component,
+                            windowSize = windowSize
+                        )
                         is RootComponent.Child.ActivityChild -> ActivityContent(
                             component = child.component,
                             windowSize = windowSize
@@ -242,10 +258,48 @@ fun RootContent(
             }
         }
         else -> {
-            Column(modifier = modifier) {
+            Scaffold(
+                modifier = modifier,
+                bottomBar = {
+                    NavigationBar(modifier = Modifier.fillMaxWidth()) {
+                        NavigationBarItem(
+                            selected = activeComponent is RootComponent.Child.CalendarChild,
+                            onClick = { component.goToNavItem(RootComponent.Config.Calendar) },
+                            icon = {
+                                Icon(
+                                    imageVector = Icons.Default.DateRange,
+                                    contentDescription = "Calendar"
+                                )
+                            },
+                            label = { Text("Calendar") }
+                        )
+                        NavigationBarItem(
+                            selected = activeComponent is RootComponent.Child.HomeChild,
+                            onClick = { component.goToNavItem(RootComponent.Config.Home) },
+                            icon = {
+                                Icon(
+                                    imageVector = Icons.Default.Home,
+                                    contentDescription = "Home"
+                                )
+                            },
+                            label = { Text("Home") }
+                        )
+                        NavigationBarItem(
+                            selected = activeComponent is RootComponent.Child.LearningTasksChild,
+                            onClick = { component.goToNavItem(RootComponent.Config.LearningTasks) },
+                            icon = {
+                                Icon(
+                                    imageVector = Icons.Default.Edit,
+                                    contentDescription = "Tasks"
+                                )
+                            },
+                            label = { Text("Tasks") }
+                        )
+                    }
+                }
+            ) {
                 Children(
                     stack = component.stack,
-                    modifier = Modifier.weight(1f),
                     animation = stackAnimation(fade())
                 ) {
                     when (val child = it.instance) {
@@ -263,41 +317,6 @@ fun RootContent(
                         )
                         else -> {}
                     }
-                }
-                NavigationBar(modifier = Modifier.fillMaxWidth()) {
-                    NavigationBarItem(
-                        selected = activeComponent is RootComponent.Child.CalendarChild,
-                        onClick = { component.goToNavItem(RootComponent.Config.Calendar) },
-                        icon = {
-                            Icon(
-                                imageVector = Icons.Default.DateRange,
-                                contentDescription = "Calendar"
-                            )
-                        },
-                        label = { Text("Calendar") }
-                    )
-                    NavigationBarItem(
-                        selected = activeComponent is RootComponent.Child.HomeChild,
-                        onClick = { component.goToNavItem(RootComponent.Config.Home) },
-                        icon = {
-                            Icon(
-                                imageVector = Icons.Default.Home,
-                                contentDescription = "Home"
-                            )
-                        },
-                        label = { Text("Home") }
-                    )
-                    NavigationBarItem(
-                        selected = activeComponent is RootComponent.Child.LearningTasksChild,
-                        onClick = { component.goToNavItem(RootComponent.Config.LearningTasks) },
-                        icon = {
-                            Icon(
-                                imageVector = Icons.Default.Edit,
-                                contentDescription = "Tasks"
-                            )
-                        },
-                        label = { Text("Tasks") }
-                    )
                 }
             }
         }

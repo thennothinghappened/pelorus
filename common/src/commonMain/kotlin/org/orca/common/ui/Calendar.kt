@@ -7,11 +7,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.ComponentContext
@@ -34,9 +34,12 @@ class CalendarComponent(
     val onClickActivity: (Int, CompassApiClient.Schedule) -> Unit
 ) : ComponentContext by componentContext {
 
+    fun poll() =
+        compass.manualPollScheduleUpdate(compass.viewedDay.value, schedule = compass.calendarSchedule)
+
     fun setDay(date: LocalDate) {
         compass.viewedDay.value = date
-        compass.manualPollScheduleUpdate(compass.viewedDay.value, schedule = compass.calendarSchedule)
+        poll()
     }
 
     fun goBackDay() {

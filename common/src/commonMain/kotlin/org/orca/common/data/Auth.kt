@@ -1,20 +1,17 @@
 package org.orca.common.data
 
+import org.orca.common.data.utils.DefaultPreferences
 import org.orca.kotlass.CompassClientCredentials
 import org.orca.common.data.utils.Preferences
-
-private object credentialLocations {
-    val cookie = "credentials/cookie"
-    val domain = "credentials/domain"
-    val userId = "credentials/userId"
-}
+import org.orca.common.data.utils.get
+import org.orca.common.data.utils.put
 
 fun getClientCredentials(
     preferences: Preferences
 ): CompassClientCredentials? {
-    val cookie = preferences.get(credentialLocations.cookie, "")
-    val domain = preferences.get(credentialLocations.domain, "")
-    val userId = preferences.getInt(credentialLocations.userId, -1)
+    val cookie = preferences.get(DefaultPreferences.Credentials.cookie)
+    val domain = preferences.get(DefaultPreferences.Credentials.domain)
+    val userId = preferences.get(DefaultPreferences.Credentials.userId)
 
     println("$cookie, $domain, $userId")
 
@@ -36,15 +33,15 @@ fun setClientCredentials(
     preferences: Preferences,
     compassClientCredentials: CompassClientCredentials
 ) {
-    preferences.put(credentialLocations.cookie, compassClientCredentials.cookie)
-    preferences.put(credentialLocations.domain, compassClientCredentials.domain)
-    preferences.putInt(credentialLocations.userId, compassClientCredentials.userId)
+    preferences.put(DefaultPreferences.Credentials.cookie, compassClientCredentials.cookie)
+    preferences.put(DefaultPreferences.Credentials.domain, compassClientCredentials.domain)
+    preferences.put(DefaultPreferences.Credentials.userId, compassClientCredentials.userId)
 }
 
 fun clearClientCredentials(
     preferences: Preferences
 ) {
-    preferences.put(credentialLocations.cookie, "")
-    preferences.put(credentialLocations.domain, "")
-    preferences.putInt(credentialLocations.userId, -1)
+    preferences.put(DefaultPreferences.Credentials.cookie, "")
+    preferences.put(DefaultPreferences.Credentials.domain, "")
+    preferences.put(DefaultPreferences.Credentials.userId, -1)
 }
