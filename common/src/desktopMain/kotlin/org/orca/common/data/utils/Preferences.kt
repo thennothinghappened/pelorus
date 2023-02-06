@@ -9,9 +9,15 @@ actual class Preferences {
     actual fun getInt(key: String, def: Int): Int =
         p.getInt(key, def)
 
+    actual fun getBoolean(key: String, def: Boolean): Boolean =
+        p.getBoolean(key, def)
+
     actual fun put(key: String, value: String) =
         p.put(key, value)
 
     actual fun putInt(key: String, value: Int) =
         p.putInt(key, value)
+
+    actual fun putBoolean(key: String, value: Boolean) =
+        p.putBoolean(key, value)
 }

@@ -21,6 +21,7 @@ import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 import org.orca.common.data.Compass
 import org.orca.common.data.formatAsVisualDate
+import org.orca.common.data.utils.collectAsStateAndLifecycle
 import org.orca.common.ui.components.ShortDivider
 import org.orca.common.ui.components.calendar.ClassList
 import org.orca.common.ui.components.calendar.DueLearningTasks
@@ -47,18 +48,45 @@ class CalendarComponent(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CalendarContent(
     component: CalendarComponent,
     windowSize: WindowSize
 ) {
-    val viewedDay by component.compass.viewedDay.collectAsState()
+    val viewedDay by component.compass.viewedDay.collectAsStateAndLifecycle()
 
-    Column(
-        modifier = Modifier.fillMaxHeight()
+    Scaffold(
+        bottomBar = {
+            NavigationBar(modifier = Modifier.height(50.dp)) {
+                NavigationBarItem(
+                    false,
+                    component::goBackDay,
+                    { Icon(
+                        imageVector = Icons.Default.ArrowBack,
+                        contentDescription = "Previous"
+                    ) }
+                )
+                NavigationBarItem(
+                    false,
+                    {},
+                    { Icon(
+                        imageVector = Icons.Default.DateRange,
+                        contentDescription = "Select"
+                    ) }
+                )
+                NavigationBarItem(
+                    false,
+                    component::goForwardDay,
+                    { Icon(
+                        imageVector = Icons.Default.ArrowForward,
+                        contentDescription = "Next"
+                    ) }
+                )
+            }
+        }
     ) {
         LazyColumn(
-            modifier = Modifier.weight(1f),
             contentPadding = PaddingValues(16.dp)
         ) {
             item {
@@ -75,32 +103,6 @@ fun CalendarContent(
             item {
                 DueLearningTasks(schedule = component.compass.calendarSchedule)
             }
-        }
-        NavigationBar(modifier = Modifier.height(50.dp)) {
-            NavigationBarItem(
-                false,
-                component::goBackDay,
-                { Icon(
-                    imageVector = Icons.Default.ArrowBack,
-                    contentDescription = "Previous"
-                ) }
-            )
-            NavigationBarItem(
-                false,
-                {},
-                { Icon(
-                    imageVector = Icons.Default.DateRange,
-                    contentDescription = "Select"
-                ) }
-            )
-            NavigationBarItem(
-                false,
-                component::goForwardDay,
-                { Icon(
-                    imageVector = Icons.Default.ArrowForward,
-                    contentDescription = "Next"
-                ) }
-            )
         }
     }
 }

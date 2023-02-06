@@ -11,16 +11,27 @@ import androidx.compose.ui.unit.dp
 fun BaseCard(
     modifier: Modifier = Modifier,
     colors: CardColors = CardDefaults.cardColors(),
-    onClick: () -> Unit = {},
+    onClick: (() -> Unit)? = null,
     content: @Composable() (ColumnScope.() -> Unit),
 ) {
-    Card(
-        modifier = modifier,
-        colors = colors,
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 6.dp
-        ),
-        content = content,
-        onClick = onClick
-    )
+
+    if (onClick == null)
+        Card(
+            modifier = modifier,
+            colors = colors,
+            elevation = CardDefaults.cardElevation(
+                defaultElevation = 6.dp
+            ),
+            content = content
+        )
+    else
+        Card(
+            modifier = modifier,
+            colors = colors,
+            elevation = CardDefaults.cardElevation(
+                defaultElevation = 6.dp
+            ),
+            content = content,
+            onClick = onClick
+        )
 }

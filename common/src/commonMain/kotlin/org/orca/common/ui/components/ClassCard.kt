@@ -20,10 +20,20 @@ fun ClassCard(
     val activity by scheduleEntry.activity.collectAsState()
     val bannerUrl by scheduleEntry.bannerUrl.collectAsState()
 
+    val startTime = scheduleEntry.event.start?.toLocalDateTime(TimeZone.currentSystemDefault())?.time?.formatAsHourMinute()
+    val endTime = scheduleEntry.event.finish?.toLocalDateTime(TimeZone.currentSystemDefault())?.time?.formatAsHourMinute()
+
     var title = scheduleEntry.event.longTitleWithoutTime
-    val time = scheduleEntry.event.start?.toLocalDateTime(TimeZone.currentSystemDefault())?.time?.formatAsHourMinute() ?: ""
+    val time = "$startTime - $endTime"
     var teacher = ""
     var room = ""
+    var colors = CardDefaults.cardColors()
+
+    if (scheduleEntry.event.finish != null && scheduleEntry.event.finish!! > Clock.System.now())
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.background
+        )
 
     if (activity is CompassApiClient.State.Success<Activity>) {
         title = (activity as CompassApiClient.State.Success<Activity>).data.subjectName
@@ -36,9 +46,6 @@ fun ClassCard(
         teacher,
         time,
         onClick = onClick,
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primary,
-            contentColor = MaterialTheme.colorScheme.background
-        )
+        colors = colors
     )
 }

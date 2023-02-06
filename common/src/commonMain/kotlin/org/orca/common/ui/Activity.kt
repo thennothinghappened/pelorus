@@ -2,18 +2,23 @@ package org.orca.common.ui
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.ComponentContext
 import com.halilibo.richtext.ui.RichText
+import io.kamel.image.KamelImage
+import io.kamel.image.lazyPainterResource
 import org.jsoup.Jsoup
 import org.orca.common.data.Compass
 import org.orca.common.data.Platform
 import org.orca.common.data.getPlatform
+import org.orca.common.data.utils.collectAsStateAndLifecycle
 import org.orca.common.ui.components.ErrorRenderer
 import org.orca.common.ui.components.HtmlText
 import org.orca.common.ui.components.NetStates
@@ -33,8 +38,8 @@ fun ActivityContent(
     windowSize: WindowSize
 ) {
 
-    val entry by component.compass.viewedEntry.collectAsState()
-    val activity = entry?.activity?.collectAsState()?.value
+    val entry by component.compass.viewedEntry.collectAsStateAndLifecycle()
+    val activity = entry?.activity?.collectAsStateAndLifecycle()?.value
 
     if (activity == null) {
         Text("something has gone very, very wrong")
@@ -61,9 +66,14 @@ fun ActivityContent(
 
                 Text(activity.subjectName)
                 Text("${activity.managerTextReadable} - Room ${activity.locationName}")
+                KamelImage(
+                    lazyPainterResource(component.compass.buildDomainUrlString(activity.managerPhotoPath)),
+                    contentDescription = "Teacher Photo",
+                    modifier = Modifier.clip(CircleShape)
+                )
 
                 if (entry is CompassApiClient.ScheduleEntry.Lesson) {
-                    val lessonPlan by (entry as CompassApiClient.ScheduleEntry.Lesson).lessonPlan.collectAsState()
+                    val lessonPlan by (entry as CompassApiClient.ScheduleEntry.Lesson).lessonPlan.collectAsStateAndLifecycle()
                     Card(
                         modifier = Modifier.fillMaxWidth()
                     ) {

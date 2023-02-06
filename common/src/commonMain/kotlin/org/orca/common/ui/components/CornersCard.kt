@@ -31,7 +31,7 @@ fun CornersCard(
             Text(
                 title,
                 style = MaterialTheme.typography.labelLarge,
-                fontWeight = FontWeight.Bold,
+                fontWeight = FontWeight.ExtraBold,
                 overflow = TextOverflow.Clip,
                 maxLines = 1
             )
@@ -39,6 +39,7 @@ fun CornersCard(
             Text(
                 topRight,
                 style = MaterialTheme.typography.labelMedium,
+                fontWeight = FontWeight.Bold,
                 overflow = TextOverflow.Clip,
                 maxLines = 1
             )
@@ -50,6 +51,7 @@ fun CornersCard(
             Text(
                 bottomLeft,
                 style = MaterialTheme.typography.labelMedium,
+                fontWeight = FontWeight.Bold,
                 overflow = TextOverflow.Clip,
                 maxLines = 1
             )
@@ -57,6 +59,7 @@ fun CornersCard(
             Text(
                 bottomRight,
                 style = MaterialTheme.typography.labelMedium,
+                fontWeight = FontWeight.Bold,
                 overflow = TextOverflow.Clip,
                 maxLines = 1
             )

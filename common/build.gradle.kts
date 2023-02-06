@@ -19,6 +19,7 @@ kotlin {
         val datetimeVersion = "0.4.0"
         val composeRichtextVersion = "0.16.0"
         val decomposeVersion = "1.0.0-beta-04"
+        val kamelVersion = "0.4.0"
         val commonMain by getting {
             dependencies {
                 api(compose.runtime)
@@ -30,6 +31,7 @@ kotlin {
                 implementation("org.jsoup:jsoup:1.14.3")
                 implementation("com.arkivanov.decompose:decompose:$decomposeVersion")
                 implementation("com.arkivanov.decompose:extensions-compose-jetbrains:$decomposeVersion")
+                implementation("com.alialbaali.kamel:kamel-image:$kamelVersion")
             }
         }
         val commonTest by getting {
@@ -42,6 +44,7 @@ kotlin {
                 api("androidx.appcompat:appcompat:1.6.0")
                 api("androidx.core:core-ktx:1.9.0")
                 api("androidx.compose.material3:material3:1.1.0-alpha05")
+                implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.0-alpha05")
             }
         }
         val androidUnitTest by getting {

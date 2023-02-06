@@ -5,6 +5,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -55,13 +56,13 @@ class RootComponent(
 
     private fun onFinishLogin(credentials: CompassClientCredentials): Boolean {
         // make sure the credentials are valid!
-        val _compass = CompassApiClient(credentials, CoroutineScope(Dispatchers.Main))
-        val valid = _compass.validateCredentials()
-
-        if (!valid) {
-            clearClientCredentials(preferences)
-            return false
-        }
+//        val _compass = CompassApiClient(credentials, CoroutineScope(Dispatchers.Main))
+//        val valid = _compass.validateCredentials()
+//
+//        if (!valid) {
+//            clearClientCredentials(preferences)
+//            return false
+//        }
 
         compassClientCredentials = credentials
         setClientCredentials(preferences, compassClientCredentials)
@@ -109,11 +110,15 @@ class RootComponent(
                 compass,
                 ::onClickActivity
             ))
-            is Config.LearningTasks -> Child.LearningTasksChild(
-                LearningTasksComponent(
+            is Config.LearningTasks -> Child.LearningTasksChild(LearningTasksComponent(
                 componentContext = componentContext,
                 compass
             ))
+            is Config.Settings -> Child.SettingsChild(
+                SettingsComponent(
+                componentContext = componentContext
+            )
+            )
             is Config.Activity -> Child.ActivityChild(ActivityComponent(
                 componentContext = componentContext,
                 compass,
@@ -126,6 +131,7 @@ class RootComponent(
         class HomeChild(val component: HomeComponent) : Child
         class CalendarChild(val component: CalendarComponent) : Child
         class LearningTasksChild(val component: LearningTasksComponent) : Child
+        class SettingsChild(val component: SettingsComponent) : Child
         class ActivityChild(val component: ActivityComponent) : Child
     }
 
@@ -135,6 +141,7 @@ class RootComponent(
         object Home : Config
         object Calendar : Config
         object LearningTasks : Config
+        object Settings : Config
         data class Activity(val scheduleEntryIndex: Int) : Config
     }
 
@@ -197,6 +204,18 @@ fun RootContent(
                             )
                         },
                         label = { Text("Tasks") }
+                    )
+
+                    NavigationRailItem(
+                        selected = activeComponent is RootComponent.Child.SettingsChild,
+                        onClick = { component.goToNavItem(RootComponent.Config.Settings) },
+                        icon = {
+                            Icon(
+                                imageVector = Icons.Default.Settings,
+                                contentDescription = "Settings"
+                            )
+                        },
+                        label = { Text("Settings") }
                     )
                 }
                 Children(
