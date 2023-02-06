@@ -297,10 +297,11 @@ fun RootContent(
                         )
                     }
                 }
-            ) {
+            ) { innerPadding ->
                 Children(
                     stack = component.stack,
-                    animation = stackAnimation(fade())
+                    animation = stackAnimation(fade()),
+                    modifier = Modifier.padding(innerPadding)
                 ) {
                     when (val child = it.instance) {
                         is RootComponent.Child.HomeChild -> HomeContent(
