@@ -30,6 +30,7 @@ class Compass(
     init {
         beginPollingNewsfeed()
         beginPollingSchedule()
+        beginPollingLearningTasks()
         manualPollScheduleUpdate(schedule = calendarSchedule)
     }
 

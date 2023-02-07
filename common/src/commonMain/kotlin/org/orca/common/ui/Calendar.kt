@@ -31,7 +31,8 @@ import org.orca.kotlass.CompassApiClient
 class CalendarComponent(
     componentContext: ComponentContext,
     val compass: Compass,
-    val onClickActivity: (Int, CompassApiClient.Schedule) -> Unit
+    val onClickActivity: (Int, CompassApiClient.Schedule) -> Unit,
+    val onClickLearningTask: (String) -> Unit
 ) : ComponentContext by componentContext {
 
     fun poll() =
@@ -104,7 +105,10 @@ fun CalendarContent(
             }
             item { ShortDivider() }
             item {
-                DueLearningTasks(schedule = component.compass.calendarSchedule)
+                DueLearningTasks(
+                    schedule = component.compass.calendarSchedule,
+                    onClickTask = component.onClickLearningTask
+                )
             }
         }
     }

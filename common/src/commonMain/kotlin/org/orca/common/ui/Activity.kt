@@ -49,7 +49,7 @@ fun ActivityContent(
     LazyColumn(
         contentPadding = PaddingValues(16.dp)
     ) {
-        if (getPlatform() is Platform.Desktop) {
+        if (getPlatform() == Platform.DESKTOP) {
             item {
                 Button(onClick = component.onBackPress) {
                     Icon(Icons.Default.ArrowBack, "Back")

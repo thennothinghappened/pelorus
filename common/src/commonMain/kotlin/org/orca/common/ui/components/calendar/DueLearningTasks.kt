@@ -15,17 +15,20 @@ import androidx.compose.ui.unit.dp
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.orca.common.data.formatAsHourMinute
+import org.orca.common.data.utils.collectAsStateAndLifecycle
 import org.orca.common.ui.components.CornersCard
 import org.orca.common.ui.components.ErrorRenderer
 import org.orca.common.ui.components.NetStates
 import org.orca.kotlass.CompassApiClient
+import org.orca.kotlass.data.LearningTask
 
 @Composable
 fun DueLearningTasks(
     modifier: Modifier = Modifier,
-    schedule: CompassApiClient.Schedule
+    schedule: CompassApiClient.Schedule,
+    onClickTask: (String) -> Unit
 ) {
-    val scheduleState by schedule.state.collectAsState()
+    val scheduleState by schedule.state.collectAsStateAndLifecycle()
 
     Column(
         modifier = modifier.padding(8.dp),
@@ -43,8 +46,8 @@ fun DueLearningTasks(
                 Text("None today!", style = MaterialTheme.typography.bodySmall)
             }
 
-            tasks.forEach {
-                val event = it.event
+            tasks.forEach { task ->
+                val event = task.event
 
                 CornersCard(
                     event.title,
@@ -54,7 +57,10 @@ fun DueLearningTasks(
                     colors = CardDefaults.cardColors(
                         containerColor = MaterialTheme.colorScheme.primaryContainer,
                         contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                    )
+                    ),
+                    onClick = { onClickTask(
+                        event.title
+                    ) }
                 )
             }
         }

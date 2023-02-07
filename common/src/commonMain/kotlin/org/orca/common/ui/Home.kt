@@ -37,7 +37,8 @@ import org.orca.kotlass.data.NewsItem
 class HomeComponent(
     componentContext: ComponentContext,
     val compass: Compass,
-    val onClickActivity: (Int, CompassApiClient.Schedule) -> Unit
+    val onClickActivity: (Int, CompassApiClient.Schedule) -> Unit,
+    val onClickLearningTask: (String) -> Unit
 ) : ComponentContext by componentContext
 
 
@@ -65,7 +66,10 @@ fun HomeContent(
                                 onClickActivity = component.onClickActivity
                             )
                             ShortDivider()
-                            DueLearningTasks(schedule = component.compass.defaultSchedule)
+                            DueLearningTasks(
+                                schedule = component.compass.defaultSchedule,
+                                onClickTask = component.onClickLearningTask
+                            )
                         }
                         Newsfeed(modifier = Modifier.weight(1f), newsfeedState = newsfeedState, compass = component.compass)
                     }
@@ -81,7 +85,10 @@ fun HomeContent(
                 }
                 item { ShortDivider() }
                 item {
-                    DueLearningTasks(schedule = component.compass.defaultSchedule)
+                    DueLearningTasks(
+                        schedule = component.compass.defaultSchedule,
+                        onClickTask = component.onClickLearningTask
+                    )
                 }
                 item { ShortDivider() }
                 item {

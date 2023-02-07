@@ -10,6 +10,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.Children
@@ -38,6 +39,7 @@ import org.orca.kotlass.CompassApiClient
 import org.orca.kotlass.CompassClientCredentials
 import org.orca.common.data.utils.Preferences
 import org.orca.common.data.utils.get
+import org.orca.kotlass.data.LearningTask
 
 class RootComponent(
     componentContext: ComponentContext,
@@ -100,6 +102,21 @@ class RootComponent(
         navigation.push(Config.Activity(scheduleEntryIndex))
     }
 
+    private fun onClickLearningTaskByName(name: String) {
+        // terrible way of finding the associated task
+        if (compass.defaultLearningTasks.state.value !is CompassApiClient.State.Success) return
+
+        val associatedTaskIndex = (compass.defaultLearningTasks.state.value as CompassApiClient.State.Success<List<LearningTask>>)
+            .data.indexOfFirst { it.name == name }
+
+        if (associatedTaskIndex == -1) return
+        onClickLearningTaskById(associatedTaskIndex)
+    }
+
+    private fun onClickLearningTaskById(id: Int) {
+        navigation.push(Config.LearningTaskView(id))
+    }
+
     init {
         val credentials = getClientCredentials(preferences)
         if (credentials != null) {
@@ -116,16 +133,25 @@ class RootComponent(
             is Config.Home -> Child.HomeChild(HomeComponent(
                 componentContext = componentContext,
                 compass,
-                ::onClickActivity
+                ::onClickActivity,
+                ::onClickLearningTaskByName
             ))
             is Config.Calendar -> Child.CalendarChild(CalendarComponent(
                 componentContext = componentContext,
                 compass,
-                ::onClickActivity
+                ::onClickActivity,
+                ::onClickLearningTaskByName
             ))
             is Config.LearningTasks -> Child.LearningTasksChild(LearningTasksComponent(
                 componentContext = componentContext,
-                compass
+                compass,
+                ::onClickLearningTaskById
+            ))
+            is Config.LearningTaskView -> Child.LearningTaskViewChild(LearningTaskViewComponent(
+                componentContext = componentContext,
+                compass,
+                config.learningTaskIndex,
+                navigation::pop
             ))
             is Config.Settings -> Child.SettingsChild(SettingsComponent(
                 componentContext = componentContext,
@@ -143,6 +169,7 @@ class RootComponent(
         class HomeChild(val component: HomeComponent) : Child
         class CalendarChild(val component: CalendarComponent) : Child
         class LearningTasksChild(val component: LearningTasksComponent) : Child
+        class LearningTaskViewChild(val component: LearningTaskViewComponent) : Child
         class SettingsChild(val component: SettingsComponent) : Child
         class ActivityChild(val component: ActivityComponent) : Child
     }
@@ -153,6 +180,7 @@ class RootComponent(
         object Home : Config
         object Calendar : Config
         object LearningTasks : Config
+        data class LearningTaskView(val learningTaskIndex: Int) : Config
         object Settings : Config
         data class Activity(val scheduleEntryIndex: Int) : Config
     }
@@ -184,77 +212,34 @@ fun RootContent(
                     modifier = Modifier.fillMaxHeight(),
                     containerColor = MaterialTheme.colorScheme.surface
                 ) {
-                    NavigationRailItem(
-                        selected = activeComponent is RootComponent.Child.HomeChild,
-                        onClick = { component.goToNavItem(RootComponent.Config.Home) },
-                        icon = {
-                            Icon(
-                                imageVector = Icons.Default.Home,
-                                contentDescription = "Home"
-                            )
-                        },
-                        label = { Text("Home") }
+                    NavItem(
+                        activeComponent is RootComponent.Child.HomeChild,
+                        { component.goToNavItem(RootComponent.Config.Home) },
+                        Icons.Default.Home,
+                        "Home"
                     )
-                    NavigationRailItem(
-                        selected = activeComponent is RootComponent.Child.CalendarChild,
-                        onClick = { component.goToNavItem(RootComponent.Config.Calendar) },
-                        icon = {
-                            Icon(
-                                imageVector = Icons.Default.DateRange,
-                                contentDescription = "Calendar"
-                            )
-                        },
-                        label = { Text("Calendar") }
+                    NavItem(
+                        activeComponent is RootComponent.Child.CalendarChild,
+                        { component.goToNavItem(RootComponent.Config.Calendar) },
+                        Icons.Default.DateRange,
+                        "Calendar"
                     )
-                    NavigationRailItem(
-                        selected = activeComponent is RootComponent.Child.LearningTasksChild,
-                        onClick = { component.goToNavItem(RootComponent.Config.LearningTasks) },
-                        icon = {
-                            Icon(
-                                imageVector = Icons.Default.Edit,
-                                contentDescription = "Tasks"
-                            )
-                        },
-                        label = { Text("Tasks") }
+                    NavItem(
+                        activeComponent is RootComponent.Child.LearningTasksChild,
+                        { component.goToNavItem(RootComponent.Config.LearningTasks) },
+                        Icons.Default.Edit,
+                        "Tasks"
                     )
-
-                    NavigationRailItem(
-                        selected = activeComponent is RootComponent.Child.SettingsChild,
-                        onClick = { component.goToNavItem(RootComponent.Config.Settings) },
-                        icon = {
-                            Icon(
-                                imageVector = Icons.Default.Settings,
-                                contentDescription = "Settings"
-                            )
-                        },
-                        label = { Text("Settings") }
+                    NavItem(
+                        activeComponent is RootComponent.Child.SettingsChild,
+                        { component.goToNavItem(RootComponent.Config.Settings) },
+                        Icons.Default.Settings,
+                        "Settings"
                     )
                 }
-                Children(
-                    stack = component.stack,
-                    modifier = Modifier.weight(1f),
-                    animation = stackAnimation(fade())
-                ) {
-                    when (val child = it.instance) {
-                        is RootComponent.Child.HomeChild -> HomeContent(
-                            component = child.component,
-                            windowSize = windowSize
-                        )
-                        is RootComponent.Child.CalendarChild -> CalendarContent(
-                            component = child.component,
-                            windowSize = windowSize
-                        )
-                        is RootComponent.Child.SettingsChild -> SettingsContent(
-                            component = child.component,
-                            windowSize = windowSize
-                        )
-                        is RootComponent.Child.ActivityChild -> ActivityContent(
-                            component = child.component,
-                            windowSize = windowSize
-                        )
-                        else -> {}
-                    }
-                }
+                RootChildSwitcher(
+                    component, Modifier, windowSize
+                )
             }
         }
         else -> {
@@ -262,64 +247,115 @@ fun RootContent(
                 modifier = modifier,
                 bottomBar = {
                     NavigationBar(modifier = Modifier.fillMaxWidth()) {
-                        NavigationBarItem(
-                            selected = activeComponent is RootComponent.Child.CalendarChild,
-                            onClick = { component.goToNavItem(RootComponent.Config.Calendar) },
-                            icon = {
-                                Icon(
-                                    imageVector = Icons.Default.DateRange,
-                                    contentDescription = "Calendar"
-                                )
-                            },
-                            label = { Text("Calendar") }
+                        NavItem(
+                            activeComponent is RootComponent.Child.CalendarChild,
+                            { component.goToNavItem(RootComponent.Config.Calendar) },
+                            Icons.Default.DateRange,
+                            "Calendar"
                         )
-                        NavigationBarItem(
-                            selected = activeComponent is RootComponent.Child.HomeChild,
-                            onClick = { component.goToNavItem(RootComponent.Config.Home) },
-                            icon = {
-                                Icon(
-                                    imageVector = Icons.Default.Home,
-                                    contentDescription = "Home"
-                                )
-                            },
-                            label = { Text("Home") }
+                        NavItem(
+                            activeComponent is RootComponent.Child.HomeChild,
+                            { component.goToNavItem(RootComponent.Config.Home) },
+                            Icons.Default.Home,
+                            "Home"
                         )
-                        NavigationBarItem(
-                            selected = activeComponent is RootComponent.Child.LearningTasksChild,
-                            onClick = { component.goToNavItem(RootComponent.Config.LearningTasks) },
-                            icon = {
-                                Icon(
-                                    imageVector = Icons.Default.Edit,
-                                    contentDescription = "Tasks"
-                                )
-                            },
-                            label = { Text("Tasks") }
+                        NavItem(
+                                activeComponent is RootComponent.Child.LearningTasksChild,
+                        { component.goToNavItem(RootComponent.Config.LearningTasks) },
+                        Icons.Default.Edit,
+                        "Tasks"
                         )
                     }
                 }
             ) { innerPadding ->
-                Children(
-                    stack = component.stack,
-                    animation = stackAnimation(fade()),
-                    modifier = Modifier.padding(innerPadding)
-                ) {
-                    when (val child = it.instance) {
-                        is RootComponent.Child.HomeChild -> HomeContent(
-                            component = child.component,
-                            windowSize = windowSize
-                        )
-                        is RootComponent.Child.CalendarChild -> CalendarContent(
-                            component = child.component,
-                            windowSize = windowSize
-                        )
-                        is RootComponent.Child.ActivityChild -> ActivityContent(
-                            component = child.component,
-                            windowSize = windowSize
-                        )
-                        else -> {}
-                    }
-                }
+                RootChildSwitcher(
+                    component, Modifier.padding(innerPadding), windowSize
+                )
             }
+        }
+    }
+}
+
+enum class NavDisplayType {
+    HORIZONTAL,
+    VERTICAL
+}
+
+@Composable
+fun RowScope.NavItem(
+    selected: Boolean,
+    onClick: () -> Unit,
+    icon: ImageVector,
+    label: String
+) {
+    NavigationBarItem(
+        selected = selected,
+        icon = { Icon(icon, label) },
+        label = { Text(label) },
+        onClick = onClick
+    )
+}
+
+@Composable
+fun ColumnScope.NavItem(
+    selected: Boolean,
+    onClick: () -> Unit,
+    icon: ImageVector,
+    label: String
+) {
+    NavigationRailItem(
+        selected = selected,
+        icon = { Icon(icon, label) },
+        label = { Text(label) },
+        onClick = onClick
+    )
+}
+
+@Composable
+private fun RootScaffoldNav(
+    component: RootComponent,
+    windowSize: WindowSize
+) {
+
+}
+
+@OptIn(ExperimentalDecomposeApi::class)
+@Composable
+private fun RootChildSwitcher(
+    component: RootComponent,
+    modifier: Modifier,
+    windowSize: WindowSize
+) {
+    Children(
+        stack = component.stack,
+        animation = stackAnimation(fade()),
+        modifier = modifier
+    ) {
+        when (val child = it.instance) {
+            is RootComponent.Child.HomeChild -> HomeContent(
+                component = child.component,
+                windowSize = windowSize
+            )
+            is RootComponent.Child.CalendarChild -> CalendarContent(
+                component = child.component,
+                windowSize = windowSize
+            )
+            is RootComponent.Child.LearningTasksChild -> LearningTasksContent(
+                component = child.component
+            )
+            is RootComponent.Child.SettingsChild -> SettingsContent(
+                component = child.component,
+                windowSize = windowSize
+            )
+            is RootComponent.Child.ActivityChild -> ActivityContent(
+                component = child.component,
+                windowSize = windowSize
+            )
+            is RootComponent.Child.LearningTaskViewChild -> LearningTaskViewContent(
+                component = child.component,
+                windowSize = windowSize
+            )
+            else -> {}
         }
     }
 }

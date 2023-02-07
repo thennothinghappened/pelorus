@@ -15,6 +15,8 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.window.layout.WindowMetricsCalculator
 import com.arkivanov.decompose.defaultComponentContext
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import org.orca.common.data.utils.Preferences
 import org.orca.common.ui.RootComponent
 import org.orca.common.ui.RootContent
@@ -23,12 +25,17 @@ import org.orca.common.ui.utils.WindowSize
 
 @ExperimentalMaterial3Api
 class MainActivity : AppCompatActivity() {
+
+    private val _pauseStatus: MutableStateFlow<Boolean> = MutableStateFlow(false) // todo
+    val pauseStatus: StateFlow<Boolean> = _pauseStatus
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val root = RootComponent(
             componentContext = defaultComponentContext(),
-            Preferences(getSharedPreferences("data", MODE_PRIVATE))
+            Preferences(getSharedPreferences("data", MODE_PRIVATE)),
+            pauseStatus
         )
 
         setContent {
@@ -46,6 +53,12 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+
     }
 }
 

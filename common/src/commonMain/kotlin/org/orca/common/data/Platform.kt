@@ -1,8 +1,8 @@
 package org.orca.common.data
 
-sealed interface Platform {
-    object Android : Platform
-    object Desktop : Platform
+enum class Platform {
+    ANDROID,
+    DESKTOP
 }
 
 expect fun getPlatform(): Platform

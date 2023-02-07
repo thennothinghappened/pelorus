@@ -31,15 +31,7 @@ fun ClassList(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text("Schedule", style = MaterialTheme.typography.labelMedium)
-        NetStates(
-            scheduleState,
-            {
-                CircularProgressIndicator()
-            },
-            { error ->
-                ErrorRenderer(error)
-            }
-        ) { entries ->
+        NetStates(scheduleState) { entries ->
             val classes = entries.filterIsInstance<CompassApiClient.ScheduleEntry.ActivityEntry>()
 
             if (classes.isEmpty()) {
