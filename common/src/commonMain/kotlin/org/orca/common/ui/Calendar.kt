@@ -36,19 +36,22 @@ class CalendarComponent(
 ) : ComponentContext by componentContext {
 
     fun poll() =
-        compass.manualPollScheduleUpdate(compass.viewedDay.value, schedule = compass.calendarSchedule)
+        compass.manualPoll(compass.calendarSchedule)
+
+    private fun getDay() =
+        compass.calendarSchedule.startDate.value
 
     fun setDay(date: LocalDate) {
-        compass.viewedDay.value = date
+        compass.calendarSchedule.setDate(date)
         poll()
     }
 
     fun goBackDay() {
-        setDay(compass.viewedDay.value.minus(1, DateTimeUnit.DAY))
+        getDay()?.let { setDay(it.minus(1, DateTimeUnit.DAY)) }
     }
 
     fun goForwardDay() {
-        setDay(compass.viewedDay.value.plus(1, DateTimeUnit.DAY))
+        getDay()?.let { setDay(it.plus(1, DateTimeUnit.DAY)) }
     }
 }
 
@@ -58,7 +61,7 @@ fun CalendarContent(
     component: CalendarComponent,
     windowSize: WindowSize
 ) {
-    val viewedDay by component.compass.viewedDay.collectAsStateAndLifecycle()
+    val viewedDay by component.compass.calendarSchedule.startDate.collectAsStateAndLifecycle()
 
     Scaffold(
         bottomBar = {
@@ -94,7 +97,7 @@ fun CalendarContent(
             contentPadding = PaddingValues(16.dp)
         ) {
             item {
-                Text(viewedDay.formatAsVisualDate())
+                Text(viewedDay?.formatAsVisualDate() ?: "")
             }
             item {
                 ClassList(

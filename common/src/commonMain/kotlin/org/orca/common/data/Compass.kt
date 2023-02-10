@@ -24,14 +24,14 @@ class Compass(
     val viewedEntry: StateFlow<ScheduleEntry.ActivityEntry?> = _viewedEntry
 
     // calendar
-    val calendarSchedule = Schedule(refreshIntervals.schedule)
-    val viewedDay = MutableStateFlow(Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date)
+    val calendarSchedule = Schedule(refreshIntervals.schedule, startDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date)
 
     init {
-        beginPollingNewsfeed()
-        beginPollingSchedule()
-        beginPollingLearningTasks()
-        manualPollScheduleUpdate(schedule = calendarSchedule)
+        beginPolling(defaultNewsfeed)
+        beginPolling(defaultSchedule)
+        beginPolling(defaultLearningTasks)
+        manualPoll(calendarSchedule)
+        manualPoll(defaultTaskCategories)
     }
 
     fun setViewedEntry(scheduleEntryIndex: Int, schedule: Schedule = defaultSchedule) {

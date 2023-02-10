@@ -117,7 +117,7 @@ fun Newsfeed(
             { ErrorRenderer((newsfeedState as CompassApiClient.State.Error).error) }
         ) { list ->
             list.forEach {
-                BaseCard(modifier = Modifier.fillMaxWidth()) {
+                Card(modifier = Modifier.fillMaxWidth()) {
                     Material3RichText(modifier = Modifier.padding(16.dp)) {
                         Row {
                             KamelImage(

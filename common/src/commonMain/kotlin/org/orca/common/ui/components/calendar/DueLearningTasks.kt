@@ -35,11 +35,7 @@ fun DueLearningTasks(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text("Due Tasks", style = MaterialTheme.typography.labelMedium)
-        NetStates(
-            scheduleState,
-            { CircularProgressIndicator() },
-            { error -> ErrorRenderer(error) }
-        ) { entries ->
+        NetStates(scheduleState) { entries ->
             val tasks = entries.filterIsInstance<CompassApiClient.ScheduleEntry.LearningTask>()
 
             if (tasks.isEmpty()) {
