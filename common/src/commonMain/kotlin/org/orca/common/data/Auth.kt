@@ -1,14 +1,14 @@
 package org.orca.common.data
 
 import org.orca.common.data.utils.DefaultPreferences
-import org.orca.kotlass.CompassClientCredentials
 import org.orca.common.data.utils.Preferences
 import org.orca.common.data.utils.get
 import org.orca.common.data.utils.put
+import org.orca.kotlass.KotlassClient
 
 fun getClientCredentials(
     preferences: Preferences
-): CompassClientCredentials? {
+): KotlassClient.CompassClientCredentials? {
     val cookie = preferences.get(DefaultPreferences.Credentials.cookie)
     val domain = preferences.get(DefaultPreferences.Credentials.domain)
     val userId = preferences.get(DefaultPreferences.Credentials.userId)
@@ -22,7 +22,7 @@ fun getClientCredentials(
         )
         return null
 
-    return object : CompassClientCredentials {
+    return object : KotlassClient.CompassClientCredentials {
         override val cookie = cookie
         override val domain = domain
         override val userId = userId
@@ -31,7 +31,7 @@ fun getClientCredentials(
 
 fun setClientCredentials(
     preferences: Preferences,
-    compassClientCredentials: CompassClientCredentials
+    compassClientCredentials: KotlassClient.CompassClientCredentials
 ) {
     preferences.put(DefaultPreferences.Credentials.cookie, compassClientCredentials.cookie)
     preferences.put(DefaultPreferences.Credentials.domain, compassClientCredentials.domain)

@@ -1,20 +1,18 @@
 package org.orca.common.ui.components
 
-import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import kotlinx.datetime.Clock
-import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.orca.common.data.formatAsHourMinute
-import org.orca.kotlass.CompassApiClient
+import org.orca.kotlass.IFlowKotlassClient
 import org.orca.kotlass.data.Activity
 
 @Composable
 fun ClassCard(
-    scheduleEntry: CompassApiClient.ScheduleEntry.ActivityEntry,
+    scheduleEntry: IFlowKotlassClient.ScheduleEntry.ActivityEntry,
     onClick: () -> Unit = {}
 ) {
     val activity by scheduleEntry.activity.collectAsState()
@@ -35,16 +33,16 @@ fun ClassCard(
             contentColor = MaterialTheme.colorScheme.background
         )
 
-    if (scheduleEntry is CompassApiClient.ScheduleEntry.Event)
+    if (scheduleEntry is IFlowKotlassClient.ScheduleEntry.Event)
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.tertiary,
             contentColor = MaterialTheme.colorScheme.background
         )
 
-    if (activity is CompassApiClient.State.Success<Activity>) {
-        title = (activity as CompassApiClient.State.Success<Activity>).data.subjectName ?: (activity as CompassApiClient.State.Success<Activity>).data.activityDisplayName
-        teacher = (activity as CompassApiClient.State.Success<Activity>).data.managerTextReadable
-        room = (activity as CompassApiClient.State.Success<Activity>).data.locationName
+    if (activity is IFlowKotlassClient.State.Success<Activity>) {
+        title = (activity as IFlowKotlassClient.State.Success<Activity>).data.subjectName ?: (activity as IFlowKotlassClient.State.Success<Activity>).data.activityDisplayName
+        teacher = (activity as IFlowKotlassClient.State.Success<Activity>).data.managerTextReadable
+        room = (activity as IFlowKotlassClient.State.Success<Activity>).data.locationName
     }
     CornersCard(
         title,

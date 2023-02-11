@@ -1,31 +1,34 @@
 package org.orca.common.ui.components.calendar
 
+import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.orca.common.data.formatAsHourMinute
 import org.orca.common.data.utils.collectAsStateAndLifecycle
 import org.orca.common.ui.components.CornersCard
-import org.orca.common.ui.components.ErrorRenderer
 import org.orca.common.ui.components.NetStates
-import org.orca.kotlass.CompassApiClient
-import org.orca.kotlass.data.LearningTask
+import org.orca.kotlass.FlowKotlassClient
+import org.orca.kotlass.IFlowKotlassClient
+import org.orca.kotlass.KotlassClient
+import org.orca.kotlass.dummy.createDummyFlowsClient
 
 @Composable
 fun DueLearningTasks(
     modifier: Modifier = Modifier,
-    schedule: CompassApiClient.Schedule,
+    schedule: IFlowKotlassClient.Pollable.Schedule,
     onClickTask: (String) -> Unit
 ) {
     val scheduleState by schedule.state.collectAsStateAndLifecycle()
@@ -36,7 +39,7 @@ fun DueLearningTasks(
     ) {
         Text("Due Tasks", style = MaterialTheme.typography.labelMedium)
         NetStates(scheduleState) { entries ->
-            val tasks = entries.filterIsInstance<CompassApiClient.ScheduleEntry.LearningTask>()
+            val tasks = entries.filterIsInstance<IFlowKotlassClient.ScheduleEntry.LearningTask>()
 
             if (tasks.isEmpty()) {
                 Text("None today!", style = MaterialTheme.typography.bodySmall)

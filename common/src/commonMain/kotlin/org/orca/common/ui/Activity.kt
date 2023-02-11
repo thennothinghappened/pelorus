@@ -23,7 +23,7 @@ import org.orca.common.ui.components.ErrorRenderer
 import org.orca.common.ui.components.HtmlText
 import org.orca.common.ui.components.NetStates
 import org.orca.common.ui.utils.WindowSize
-import org.orca.kotlass.CompassApiClient
+import org.orca.kotlass.IFlowKotlassClient
 import org.orca.kotlass.data.Activity
 
 class ActivityComponent(
@@ -58,11 +58,7 @@ fun ActivityContent(
         }
 
         item {
-            NetStates(
-                activity,
-                { CircularProgressIndicator() },
-                { ErrorRenderer((activity as CompassApiClient.State.Error<Activity>).error) }
-            ) { activity ->
+            NetStates(activity) { activity ->
 
                 Text(activity.subjectName ?: activity.activityDisplayName)
                 Text("${activity.managerTextReadable} - Room ${activity.locationName}")
@@ -72,8 +68,8 @@ fun ActivityContent(
                     modifier = Modifier.clip(CircleShape)
                 )
 
-                if (entry is CompassApiClient.ScheduleEntry.Lesson) {
-                    val lessonPlan by (entry as CompassApiClient.ScheduleEntry.Lesson).lessonPlan.collectAsStateAndLifecycle()
+                if (entry is IFlowKotlassClient.ScheduleEntry.Lesson) {
+                    val lessonPlan by (entry as IFlowKotlassClient.ScheduleEntry.Lesson).lessonPlan.collectAsStateAndLifecycle()
                     Card(
                         modifier = Modifier.fillMaxWidth()
                     ) {

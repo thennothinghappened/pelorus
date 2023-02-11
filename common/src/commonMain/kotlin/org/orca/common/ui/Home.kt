@@ -1,5 +1,6 @@
 package org.orca.common.ui
 
+import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
@@ -19,6 +20,7 @@ import com.halilibo.richtext.ui.Heading
 import com.halilibo.richtext.ui.material3.Material3RichText
 import io.kamel.image.KamelImage
 import io.kamel.image.lazyPainterResource
+import kotlinx.coroutines.Dispatchers
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -31,13 +33,14 @@ import org.orca.common.ui.components.*
 import org.orca.common.ui.components.calendar.ClassList
 import org.orca.common.ui.components.calendar.DueLearningTasks
 import org.orca.common.ui.utils.WindowSize
-import org.orca.kotlass.CompassApiClient
+import org.orca.kotlass.IFlowKotlassClient
 import org.orca.kotlass.data.NewsItem
+import org.orca.kotlass.dummy.createDummyFlowsClient
 
 class HomeComponent(
     componentContext: ComponentContext,
     val compass: Compass,
-    val onClickActivity: (Int, CompassApiClient.Schedule) -> Unit,
+    val onClickActivity: (Int, IFlowKotlassClient.Pollable.Schedule) -> Unit,
     val onClickLearningTask: (String) -> Unit
 ) : ComponentContext by componentContext
 
@@ -102,7 +105,7 @@ fun HomeContent(
 @Composable
 fun Newsfeed(
     modifier: Modifier = Modifier,
-    newsfeedState: CompassApiClient.State<List<NewsItem>>,
+    newsfeedState: IFlowKotlassClient.State<List<NewsItem>>,
     compass: Compass
 ) {
 
@@ -111,11 +114,7 @@ fun Newsfeed(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text("Newsfeed", style = MaterialTheme.typography.labelMedium)
-        NetStates(
-            newsfeedState,
-            { CircularProgressIndicator() },
-            { ErrorRenderer((newsfeedState as CompassApiClient.State.Error).error) }
-        ) { list ->
+        NetStates(newsfeedState) { list ->
             list.forEach {
                 Card(modifier = Modifier.fillMaxWidth()) {
                     Material3RichText(modifier = Modifier.padding(16.dp)) {
@@ -139,4 +138,13 @@ fun Newsfeed(
             }
         }
     }
+}
+
+@Preview
+@Composable
+fun previewHome() {
+    val compass = createDummyFlowsClient(Dispatchers.IO)
+    compass.manualPoll(compass.defaultSchedule)
+    compass.manualPoll(compass.defaultNewsfeed)
+
 }

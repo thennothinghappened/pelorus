@@ -7,15 +7,14 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import org.orca.kotlass.CompassApiClient
-import org.orca.kotlass.CompassClientCredentials
+import org.orca.kotlass.FlowKotlassClient
+import org.orca.kotlass.IFlowKotlassClient.*
+import org.orca.kotlass.KotlassClient
 
 class Compass(
-    credentials: CompassClientCredentials
-) : CompassApiClient(
-    credentials,
-    CoroutineScope(Dispatchers.IO)
-    ), InstanceKeeper.Instance {
+    credentials: KotlassClient.CompassClientCredentials,
+    scope: CoroutineScope = CoroutineScope(Dispatchers.IO)
+) : FlowKotlassClient(credentials, scope), InstanceKeeper.Instance {
     override fun onDestroy() {
         TODO("Not yet implemented")
     }
@@ -24,7 +23,7 @@ class Compass(
     val viewedEntry: StateFlow<ScheduleEntry.ActivityEntry?> = _viewedEntry
 
     // calendar
-    val calendarSchedule = Schedule(refreshIntervals.schedule, startDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date)
+    val calendarSchedule = Pollable.Schedule(refreshIntervals.schedule, startDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date)
 
     init {
         beginPolling(defaultNewsfeed)
@@ -34,7 +33,7 @@ class Compass(
         manualPoll(defaultTaskCategories)
     }
 
-    fun setViewedEntry(scheduleEntryIndex: Int, schedule: Schedule = defaultSchedule) {
+    fun setViewedEntry(scheduleEntryIndex: Int, schedule: Pollable.Schedule = defaultSchedule) {
         if (schedule.state.value !is State.Success) return
 
         _viewedEntry.value =

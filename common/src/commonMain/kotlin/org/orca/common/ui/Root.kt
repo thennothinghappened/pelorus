@@ -35,10 +35,11 @@ import org.orca.common.data.getClientCredentials
 import org.orca.common.data.setClientCredentials
 import org.orca.common.data.utils.DefaultPreferences
 import org.orca.common.ui.utils.WindowSize
-import org.orca.kotlass.CompassApiClient
-import org.orca.kotlass.CompassClientCredentials
+import org.orca.kotlass.FlowKotlassClient
 import org.orca.common.data.utils.Preferences
 import org.orca.common.data.utils.get
+import org.orca.kotlass.IFlowKotlassClient
+import org.orca.kotlass.KotlassClient
 import org.orca.kotlass.data.LearningTask
 
 class RootComponent(
@@ -57,16 +58,16 @@ class RootComponent(
         )
     val stack: Value<ChildStack<*, Child>> = _stack
     // this gets filled in when login form is complete, or preferences loaded.
-    private lateinit var compassClientCredentials: CompassClientCredentials
+    private lateinit var compassClientCredentials: KotlassClient.CompassClientCredentials
 
     // weird workaround for null pointer at runtime if getting directly from other components
     val compass: Compass
         get() = instanceKeeper.getOrCreate { Compass(compassClientCredentials) }
 
-    private fun onFinishLogin(credentials: CompassClientCredentials, enableVerify: Boolean = true): Boolean {
+    private fun onFinishLogin(credentials: KotlassClient.CompassClientCredentials, enableVerify: Boolean = true): Boolean {
         if (enableVerify) {
             // make sure the credentials are valid!
-            val _compass = CompassApiClient(credentials, CoroutineScope(Dispatchers.Main))
+            val _compass = FlowKotlassClient(credentials, CoroutineScope(Dispatchers.Main))
             val valid = _compass.validateCredentials()
 
             if (!valid) {
@@ -87,15 +88,15 @@ class RootComponent(
         navigation.replaceAll(config)
     }
 
-    private fun onClickActivity(scheduleEntryIndex: Int, schedule: CompassApiClient.Schedule) {
-        if (schedule.state.value !is CompassApiClient.State.Success) return
+    private fun onClickActivity(scheduleEntryIndex: Int, schedule: IFlowKotlassClient.Pollable.Schedule) {
+        if (schedule.state.value !is IFlowKotlassClient.State.Success) return
 
-        val scheduleEntry = (schedule.state.value as CompassApiClient.State.Success<List<CompassApiClient.ScheduleEntry>>)
+        val scheduleEntry = (schedule.state.value as IFlowKotlassClient.State.Success<List<IFlowKotlassClient.ScheduleEntry>>)
             .data[scheduleEntryIndex]
 
-        if (scheduleEntry !is CompassApiClient.ScheduleEntry.ActivityEntry) return
+        if (scheduleEntry !is IFlowKotlassClient.ScheduleEntry.ActivityEntry) return
 
-        if (scheduleEntry is CompassApiClient.ScheduleEntry.Lesson)
+        if (scheduleEntry is IFlowKotlassClient.ScheduleEntry.Lesson)
             compass.loadLessonPlan(scheduleEntry)
 
         compass.setViewedEntry(scheduleEntryIndex, schedule)
@@ -104,9 +105,9 @@ class RootComponent(
 
     private fun onClickLearningTaskByName(name: String) {
         // terrible way of finding the associated task
-        if (compass.defaultLearningTasks.state.value !is CompassApiClient.State.Success) return
+        if (compass.defaultLearningTasks.state.value !is IFlowKotlassClient.State.Success) return
 
-        val associatedTaskIndex = (compass.defaultLearningTasks.state.value as CompassApiClient.State.Success<List<LearningTask>>)
+        val associatedTaskIndex = (compass.defaultLearningTasks.state.value as IFlowKotlassClient.State.Success<List<LearningTask>>)
             .data.indexOfFirst { it.name == name }
 
         if (associatedTaskIndex == -1) return
@@ -127,7 +128,6 @@ class RootComponent(
     private fun child(config: Config, componentContext: ComponentContext): Child =
         when (config) {
             is Config.Login -> Child.LoginChild(LoginComponent(
-                componentContext = componentContext,
                 onFinishLogin = ::onFinishLogin
             ))
             is Config.Home -> Child.HomeChild(HomeComponent(

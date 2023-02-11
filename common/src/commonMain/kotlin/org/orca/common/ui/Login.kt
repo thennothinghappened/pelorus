@@ -1,5 +1,6 @@
 package org.orca.common.ui
 
+import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,15 +14,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
-import com.arkivanov.decompose.ComponentContext
-import org.orca.common.data.getClientCredentials
-import org.orca.kotlass.CompassClientCredentials
-import java.util.prefs.Preferences
+import org.orca.kotlass.KotlassClient.CompassClientCredentials
 
 class LoginComponent(
-    componentContext: ComponentContext,
     val onFinishLogin: (CompassClientCredentials) -> Boolean
-) : ComponentContext by componentContext
+)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -76,4 +73,10 @@ fun LoginContent(
             Text("Login")
         }
     }
+}
+
+@Preview
+@Composable
+private fun PreviewLogin() {
+    LoginContent(LoginComponent { true })
 }

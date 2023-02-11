@@ -22,7 +22,7 @@ import org.orca.common.data.formatAsDateTime
 import org.orca.common.data.utils.collectAsStateAndLifecycle
 import org.orca.common.ui.components.FlairedCard
 import org.orca.common.ui.components.NetStates
-import org.orca.kotlass.CompassApiClient
+import org.orca.kotlass.IFlowKotlassClient
 import org.orca.kotlass.data.LearningTask
 import org.orca.kotlass.data.LearningTaskSubmissionStatus
 
@@ -68,13 +68,12 @@ fun LearningTasksContent(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LearningTaskCard(
     learningTask: LearningTask,
     learningTaskIndex: Int,
     onClickLearningTask: (Int) -> Unit,
-    categories: CompassApiClient.TaskCategories
+    categories: IFlowKotlassClient.Pollable.TaskCategories
 ) {
     FlairedCard(
         modifier = Modifier

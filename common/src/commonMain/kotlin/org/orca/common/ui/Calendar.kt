@@ -23,12 +23,12 @@ import org.orca.common.ui.components.ShortDivider
 import org.orca.common.ui.components.calendar.ClassList
 import org.orca.common.ui.components.calendar.DueLearningTasks
 import org.orca.common.ui.utils.WindowSize
-import org.orca.kotlass.CompassApiClient
+import org.orca.kotlass.IFlowKotlassClient
 
 class CalendarComponent(
     componentContext: ComponentContext,
     val compass: Compass,
-    val onClickActivity: (Int, CompassApiClient.Schedule) -> Unit,
+    val onClickActivity: (Int, IFlowKotlassClient.Pollable.Schedule) -> Unit,
     val onClickLearningTask: (String) -> Unit
 ) : ComponentContext by componentContext {
 
