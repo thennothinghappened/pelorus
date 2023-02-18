@@ -1,6 +1,5 @@
 package org.orca.common.ui
 
-import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -73,10 +72,4 @@ fun LoginContent(
             Text("Login")
         }
     }
-}
-
-@Preview
-@Composable
-private fun PreviewLogin() {
-    LoginContent(LoginComponent { true })
 }

@@ -1,6 +1,5 @@
 package org.orca.common.ui
 
-import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
@@ -138,13 +137,4 @@ fun Newsfeed(
             }
         }
     }
-}
-
-@Preview
-@Composable
-fun previewHome() {
-    val compass = createDummyFlowsClient(Dispatchers.IO)
-    compass.manualPoll(compass.defaultSchedule)
-    compass.manualPoll(compass.defaultNewsfeed)
-
 }
