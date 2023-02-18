@@ -91,10 +91,9 @@ class RootComponent(
     private fun onClickActivity(scheduleEntryIndex: Int, schedule: IFlowKotlassClient.Pollable.Schedule) {
         if (schedule.state.value !is IFlowKotlassClient.State.Success) return
 
+        // filter to only grab entries which have associated activities
         val scheduleEntry = (schedule.state.value as IFlowKotlassClient.State.Success<List<IFlowKotlassClient.ScheduleEntry>>)
-            .data[scheduleEntryIndex]
-
-        if (scheduleEntry !is IFlowKotlassClient.ScheduleEntry.ActivityEntry) return
+            .data.filterIsInstance<IFlowKotlassClient.ScheduleEntry.ActivityEntry>()[scheduleEntryIndex]
 
         if (scheduleEntry is IFlowKotlassClient.ScheduleEntry.Lesson)
             compass.loadLessonPlan(scheduleEntry)

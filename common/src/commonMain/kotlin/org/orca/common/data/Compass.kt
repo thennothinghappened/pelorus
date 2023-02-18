@@ -36,9 +36,9 @@ class Compass(
     fun setViewedEntry(scheduleEntryIndex: Int, schedule: Pollable.Schedule = defaultSchedule) {
         if (schedule.state.value !is State.Success) return
 
-        _viewedEntry.value =
-            @Suppress("UNCHECKED_CAST") // we always know the entry index supplied is an ActivityEntry.
-            (schedule.state.value as State.Success<List<ScheduleEntry.ActivityEntry>>).data[scheduleEntryIndex]
+        // make sure to filter to only grab things which hold activities!
+        _viewedEntry.value = (schedule.state.value as State.Success<List<ScheduleEntry>>).data
+            .filterIsInstance<ScheduleEntry.ActivityEntry>()[scheduleEntryIndex]
     }
 
 }
