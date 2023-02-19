@@ -87,9 +87,10 @@ fun LearningTaskViewContent(
                         ) {
                             LazyColumn {
                                 item {
-                                    Material3RichText(
-                                        modifier = Modifier.padding(16.dp)
-                                    ) { HtmlText(Jsoup.parse(task.description)) }
+                                    HtmlText(
+                                        task.description,
+                                        Modifier.padding(16.dp)
+                                    )
                                 }
                             }
                         }
