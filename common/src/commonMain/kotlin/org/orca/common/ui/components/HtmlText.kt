@@ -1,5 +1,6 @@
 package org.orca.common.ui.components
 
+import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -7,6 +8,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -24,7 +26,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.flowlayout.FlowRow
-import com.halilibo.richtext.ui.*
 import io.kamel.image.KamelImage
 import io.kamel.image.lazyPainterResource
 import org.jsoup.Jsoup
@@ -32,6 +33,8 @@ import org.jsoup.nodes.Element
 import org.jsoup.nodes.Node
 import org.jsoup.nodes.TextNode
 import org.orca.common.ui.theme.AppTheme
+import java.net.URLEncoder
+import java.nio.charset.Charset
 
 @Composable
 fun HtmlText(
@@ -43,15 +46,13 @@ fun HtmlText(
 ) {
     val html = Jsoup.parse(document)
 
-    RichText {
-        FlowRow(modifier) {
-            HtmlText(html, style = style, uriHandler = uriHandler, domain = domain)
-        }
+    FlowRow(modifier) {
+        HtmlText(html, style = style, uriHandler = uriHandler, domain = domain)
     }
 }
 
 @Composable
-fun RichTextScope.HtmlText(
+private fun HtmlText(
     node: Node,
     modifier: Modifier = Modifier,
     style: TextStyle = TextStyle(),
@@ -65,29 +66,29 @@ fun RichTextScope.HtmlText(
 
                 when (it.nodeName()) {
                     "strong" ->
-                        HtmlText(it, modifier, style.copy(fontWeight = FontWeight.Bold))
+                        HtmlText(it, modifier, style.copy(fontWeight = FontWeight.Bold), uriHandler, domain)
                     "b" ->
-                        HtmlText(it, modifier, style.copy(fontWeight = FontWeight.Bold))
+                        HtmlText(it, modifier, style.copy(fontWeight = FontWeight.Bold), uriHandler, domain)
                     "i" ->
-                        HtmlText(it, modifier, style.copy(fontStyle = FontStyle.Italic))
+                        HtmlText(it, modifier, style.copy(fontStyle = FontStyle.Italic), uriHandler, domain)
                     "em" ->
-                        HtmlText(it, modifier, style.copy(fontStyle = FontStyle.Italic))
+                        HtmlText(it, modifier, style.copy(fontStyle = FontStyle.Italic), uriHandler, domain)
                     "blockquote" ->
-                        BlockQuote {
-                            HtmlText(it, modifier, style)
+                        HtmlBlockQuote {
+                            HtmlText(it, modifier, style, uriHandler, domain)
                         }
-                    "br" -> LineBreak()
-                    "ol" -> HtmlList(it, ListType.Ordered, modifier, style)
-                    "ul" -> HtmlList(it, ListType.Unordered, modifier, style)
-                    "hr" -> HorizontalRule()
-                    "p" -> Paragraph {
-                        HtmlText(it, modifier, style)
+                    "br" -> HtmlLineBreak()
+                    "ol" -> HtmlList(it, HtmlListType.ORDERED, modifier, style)
+                    "ul" -> HtmlList(it, HtmlListType.UNORDERED, modifier, style)
+                    "hr" -> Divider()
+                    "p" -> HtmlParagraph {
+                        HtmlText(it, modifier, style, uriHandler, domain)
                     }
                     "img" -> HtmlImage(it, domain = domain)
-                    "table" -> HtmlTable(it)
+                    "table" -> HtmlTable(it, modifier, style, uriHandler, domain)
                     "a" -> HtmlLink(it, modifier, style, uriHandler, domain)
 
-                    else -> HtmlText(it, modifier, style)
+                    else -> HtmlText(it, modifier, style, uriHandler, domain)
                 }
             }
         }
@@ -95,7 +96,7 @@ fun RichTextScope.HtmlText(
 }
 
 @Composable
-fun RichTextScope.HtmlImage(
+private fun HtmlImage(
     node: Element,
     modifier: Modifier = Modifier,
     domain: String? = null
@@ -103,11 +104,12 @@ fun RichTextScope.HtmlImage(
     val source = node.attr("src")
     if (source == "") return
 
-    val url = validateUrl(source) ?: return
+    val url = validateUrl(source, domain) ?: return
 
     KamelImage(
         lazyPainterResource(url),
         node.attr("alt") ?: "No description.",
+        modifier,
         contentScale = ContentScale.Inside
     )
 }
@@ -117,59 +119,105 @@ private fun validateUrl(
     domain: String? = null
 ): String? {
 
+    if (domain != null && url.startsWith("/")) return domain + url.replace(" ", "%20")
     if (!url.startsWith("http")) return null
-    if (domain != null && url.startsWith("/")) return domain + url
-    return url
+    return url.replace(" ", "%20")
 }
 
 @Composable
-fun RichTextScope.HtmlLink(
+private fun HtmlLink(
     node: Element,
     modifier: Modifier = Modifier,
     style: TextStyle = TextStyle(),
     uriHandler: UriHandler = LocalUriHandler.current,
     domain: String? = null
 ) {
-    var href = node.attr("href")
-    if (!href.startsWith("http")) HtmlText(node, modifier, style)
+    val href = node.attr("href")
+    val url = validateUrl(href, domain)
+println(url)
+    if (url == null) HtmlText(node, modifier, style, uriHandler, domain)
     else {
-        if (domain != null && href.startsWith("/")) href = "https://$domain$href"
-        HtmlText(node, modifier.clickable { uriHandler.openUri(href) }, style.copy(color = MaterialTheme.colorScheme.primary, textDecoration = TextDecoration.Underline))
+        HtmlText(
+            node,
+            modifier.clickable { uriHandler.openUri(url) },
+            style.copy(color = MaterialTheme.colorScheme.primary, textDecoration = TextDecoration.Underline)
+        )
     }
 }
 
 @Composable
-fun RichTextScope.LineBreak() {
+private fun HtmlLineBreak() {
     Spacer(Modifier.fillMaxWidth())
 }
 
 @Composable
-fun RichTextScope.Paragraph(content: @Composable () -> Unit) {
-    LineBreak()
-    content()
-    LineBreak()
+private fun HtmlHardLineBreak(style: TextStyle = TextStyle()) {
+    Text("\n")
 }
 
 @Composable
-fun RichTextScope.HtmlList(
+private fun HtmlParagraph(
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit
+) {
+    FlowRow(
+        modifier
+            .fillMaxWidth()
+            .padding(0.dp, 8.dp),
+        content = content
+    )
+}
+
+@Composable
+private fun HtmlBlockQuote(
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit
+) {
+    Row(
+        modifier
+            .padding(start = 8.dp)
+            .height(IntrinsicSize.Min)
+    ) {
+        Divider(
+            Modifier
+                .fillMaxHeight()
+                .width(4.dp)
+        )
+        HtmlParagraph(
+            modifier
+                .padding(start = 8.dp),
+            content
+        )
+    }
+}
+
+private enum class HtmlListType {
+    ORDERED,
+    UNORDERED
+}
+
+@Composable
+private fun HtmlList(
     node: Element,
-    listType: ListType,
+    listType: HtmlListType,
     modifier: Modifier = Modifier,
     style: TextStyle = TextStyle(),
+    uriHandler: UriHandler = LocalUriHandler.current,
+    domain: String? = null
 ) {
 
     val list: List<Node> = node.childNodes().filterNot { it.toString().trim() == "" }
 
-    Paragraph {
-        Column {
+    HtmlParagraph {
+        Column(Modifier.padding(start = 8.dp)) {
             list.forEachIndexed { index, listItem ->
-                FlowRow {
+                Row {
                     when (listType) {
-                        ListType.Ordered -> Text("${index+1}.", style = style)
-                        ListType.Unordered -> Text("•")
+                        HtmlListType.ORDERED -> Text("${index+1}.", style = style)
+                        HtmlListType.UNORDERED -> Text("•")
                     }
                     Text(" ")
-                    HtmlText(listItem, modifier, style)
+                    FlowRow { HtmlText(listItem, modifier, style, uriHandler, domain) }
                 }
             }
         }
@@ -177,7 +225,7 @@ fun RichTextScope.HtmlList(
 }
 
 @Composable
-private fun RichTextScope.HtmlTable(
+private fun HtmlTable(
     node: Element,
     modifier: Modifier = Modifier,
     style: TextStyle = TextStyle(),
@@ -188,7 +236,7 @@ private fun RichTextScope.HtmlTable(
     val children =  node.children()
     val body = children.filter { it.nodeName() == "tbody" }
 
-    Paragraph {
+    HtmlParagraph {
         Column(
             modifier
                 .height(IntrinsicSize.Min)

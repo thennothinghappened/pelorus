@@ -16,7 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.ComponentContext
-import com.halilibo.richtext.ui.material3.Material3RichText
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.jsoup.Jsoup
@@ -89,7 +88,8 @@ fun LearningTaskViewContent(
                                 item {
                                     HtmlText(
                                         task.description,
-                                        Modifier.padding(16.dp)
+                                        Modifier.padding(16.dp),
+                                        domain = component.compass.buildDomainUrlString("")
                                     )
                                 }
                             }
@@ -120,7 +120,8 @@ fun LearningTaskViewContent(
                             ) {
                                 HtmlText(
                                     task.description,
-                                    Modifier.padding(16.dp)
+                                    Modifier.padding(16.dp),
+                                    domain = component.compass.buildDomainUrlString("")
                                 )
                             }
                         }

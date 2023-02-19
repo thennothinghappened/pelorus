@@ -15,8 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.ComponentContext
-import com.halilibo.richtext.ui.Heading
-import com.halilibo.richtext.ui.material3.Material3RichText
 import io.kamel.image.KamelImage
 import io.kamel.image.lazyPainterResource
 import kotlinx.coroutines.Dispatchers
@@ -125,9 +123,9 @@ fun Newsfeed(
                                     .clip(RoundedCornerShape(8.dp))
                             )
                             Spacer(Modifier.size(8.dp))
-                            Material3RichText {
-                                Heading(4, it.title)
-                                Heading(9, "${it.userName} - ${it.postDateTime?.timeAgo()}")
+                            Column {
+                                Text(it.title, style = MaterialTheme.typography.titleMedium)
+                                Text("${it.userName} - ${it.postDateTime?.timeAgo()}", style = MaterialTheme.typography.titleSmall)
                             }
                         }
 

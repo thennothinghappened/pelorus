@@ -75,7 +75,11 @@ fun ActivityContent(
                             { CircularProgressIndicator() },
                             { error -> ErrorRenderer(error) }
                         ) { lp ->
-                            HtmlText(lp ?: "<body>No lesson plan recorded.</body>", Modifier.padding(8.dp))
+                            HtmlText(
+                                lp ?: "<body>No lesson plan recorded.</body>",
+                                Modifier.padding(8.dp),
+                                domain = component.compass.buildDomainUrlString("")
+                            )
                         }
                     }
                 }

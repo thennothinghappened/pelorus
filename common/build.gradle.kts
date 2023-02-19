@@ -17,7 +17,6 @@ kotlin {
     }
     sourceSets {
         val datetimeVersion = "0.4.0"
-        val composeRichtextVersion = "0.16.0"
         val decomposeVersion = "1.0.0-beta-04"
         val kamelVersion = "0.4.0"
         val commonMain by getting {
@@ -27,7 +26,6 @@ kotlin {
                 @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class) api(compose.material3)
                 implementation("org.orca:kotlass:1.0")
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:$datetimeVersion")
-                implementation("com.halilibo.compose-richtext:richtext-ui-material3:$composeRichtextVersion")
                 implementation("org.jsoup:jsoup:1.14.3")
                 implementation("com.arkivanov.decompose:decompose:$decomposeVersion")
                 implementation("com.arkivanov.decompose:extensions-compose-jetbrains:$decomposeVersion")
