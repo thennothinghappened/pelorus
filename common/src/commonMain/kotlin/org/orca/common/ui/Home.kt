@@ -124,6 +124,15 @@ fun Newsfeed(
                         }
 
                         HtmlText(it.content1.toString())
+
+                        Column {
+                            it.attachments.forEach {  attachment ->
+                                CompassAttachment(
+                                    attachment.name,
+                                    compass.buildDomainUrlString(attachment.uiLink)
+                                )
+                            }
+                        }
                     }
                 }
             }

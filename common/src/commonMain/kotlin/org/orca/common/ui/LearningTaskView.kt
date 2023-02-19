@@ -2,6 +2,8 @@ package org.orca.common.ui
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
@@ -15,10 +17,12 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.orca.common.data.*
 import org.orca.common.data.utils.collectAsStateAndLifecycle
+import org.orca.common.ui.components.CompassAttachment
 import org.orca.common.ui.components.FlairedCard
 import org.orca.htmltext.HtmlText
 import org.orca.common.ui.components.NetStates
 import org.orca.common.ui.utils.WindowSize
+import org.orca.kotlass.data.LearningTaskAttachment
 import org.orca.kotlass.data.LearningTaskStudentSubmission
 import org.orca.kotlass.data.LearningTaskSubmissionItem
 
@@ -88,16 +92,30 @@ fun LearningTaskViewContent(
                             }
                         }
 
-                        Card(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(8.dp)
-                                .weight(0.6f)
-                        ) {
-                            LearningTaskSubmissionList(
-                                task.students[0].submissions,
-                                task.submissionItems
-                            )
+                        LazyColumn(Modifier.weight(0.6f)) {
+                            item {
+                                Card(
+                                    modifier = Modifier
+                                        .padding(8.dp)
+                                ) {
+                                    LearningTaskSubmissionList(
+                                        task.students[0].submissions,
+                                        task.submissionItems
+                                    )
+                                }
+                            }
+
+                            item {
+                                Card(
+                                    modifier = Modifier
+                                        .padding(8.dp)
+                                ) {
+                                    LearningTaskAttachments(
+                                        task.attachments,
+                                        component.compass::buildDomainUrlString
+                                    )
+                                }
+                            }
                         }
 
                     }
@@ -131,9 +149,43 @@ fun LearningTaskViewContent(
                                 )
                             }
                         }
+
+                        item {
+                            Card(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(8.dp)
+                            ) {
+                                LearningTaskAttachments(
+                                    task.attachments,
+                                    component.compass::buildDomainUrlString
+                                )
+                            }
+                        }
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun LearningTaskAttachments(
+    attachments: List<LearningTaskAttachment>?,
+    urlBuilder: (String) -> String
+) {
+    Column(
+        Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+    ) {
+        if (attachments == null)
+            Text("No attachments", style = MaterialTheme.typography.bodySmall)
+        else attachments.forEach {
+            CompassAttachment(
+                it.name,
+                urlBuilder("/Services/FileAssets.svc/DownloadFile?id=${it.id}&originalFileName=${it.fileName}") //todo: move this into kotlass
+            )
         }
     }
 }
@@ -143,20 +195,26 @@ private fun LearningTaskSubmissionList(
     submissions: List<LearningTaskStudentSubmission>?,
     submissionItems: List<LearningTaskSubmissionItem>?
 ) {
-    submissionItems?.forEach { submissionItem ->
-        ElevatedCard(
-            Modifier
-                .padding(8.dp)
-                .fillMaxWidth()
-        ) {
-            Column(Modifier.padding(8.dp)) {
-                Text(submissionItem.name, style = MaterialTheme.typography.titleSmall)
+    Column(
+        Modifier.fillMaxWidth().padding(8.dp)
+    ) {
+        if (submissionItems == null)
+            Text("Submission disabled.", style = MaterialTheme.typography.bodySmall)
+        else submissionItems.forEach { submissionItem ->
+            ElevatedCard(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp)
+            ) {
+                Column(Modifier.padding(8.dp)) {
+                    Text(submissionItem.name, style = MaterialTheme.typography.titleSmall)
 
-                if (submissions == null)
-                    Text("No submissions uploaded", style = MaterialTheme.typography.bodySmall)
-                else submissions
-                    .filter { it.taskSubmissionItemId == submissionItem.id }
-                    .forEach { submission -> LearningTaskSubmission(submission) }
+                    if (submissions == null)
+                        Text("No submissions uploaded", style = MaterialTheme.typography.bodySmall)
+                    else submissions
+                        .filter { it.taskSubmissionItemId == submissionItem.id }
+                        .forEach { submission -> LearningTaskSubmission(submission) }
+                }
             }
         }
     }
