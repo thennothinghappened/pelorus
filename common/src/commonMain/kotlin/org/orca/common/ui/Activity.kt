@@ -70,13 +70,13 @@ fun ActivityContent(
                     Card(
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                    NetStates(
-                        lessonPlan,
-                        { CircularProgressIndicator() },
-                        { error -> ErrorRenderer(error) }
-                    ) { lp ->
-                        HtmlText(lp ?: "<body>No lesson plan recorded.</body>", Modifier.padding(8.dp))
-                    }
+                        NetStates(
+                            lessonPlan,
+                            { CircularProgressIndicator() },
+                            { error -> ErrorRenderer(error) }
+                        ) { lp ->
+                            HtmlText(lp ?: "<body>No lesson plan recorded.</body>", Modifier.padding(8.dp))
+                        }
                     }
                 }
             }

@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.UriHandler
 import androidx.compose.ui.text.*
@@ -24,6 +25,8 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.flowlayout.FlowRow
 import com.halilibo.richtext.ui.*
+import io.kamel.image.KamelImage
+import io.kamel.image.lazyPainterResource
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.jsoup.nodes.Node
@@ -41,8 +44,8 @@ fun HtmlText(
     val html = Jsoup.parse(document)
 
     RichText {
-        FlowRow {
-            HtmlText(html, modifier, style, uriHandler, domain)
+        FlowRow(modifier) {
+            HtmlText(html, style = style, uriHandler = uriHandler, domain = domain)
         }
     }
 }
@@ -80,6 +83,7 @@ fun RichTextScope.HtmlText(
                     "p" -> Paragraph {
                         HtmlText(it, modifier, style)
                     }
+                    "img" -> HtmlImage(it, domain = domain)
                     "table" -> HtmlTable(it)
                     "a" -> HtmlLink(it, modifier, style, uriHandler, domain)
 
@@ -88,6 +92,34 @@ fun RichTextScope.HtmlText(
             }
         }
     }
+}
+
+@Composable
+fun RichTextScope.HtmlImage(
+    node: Element,
+    modifier: Modifier = Modifier,
+    domain: String? = null
+) {
+    val source = node.attr("src")
+    if (source == "") return
+
+    val url = validateUrl(source) ?: return
+
+    KamelImage(
+        lazyPainterResource(url),
+        node.attr("alt") ?: "No description.",
+        contentScale = ContentScale.Inside
+    )
+}
+
+private fun validateUrl(
+    url: String,
+    domain: String? = null
+): String? {
+
+    if (!url.startsWith("http")) return null
+    if (domain != null && url.startsWith("/")) return domain + url
+    return url
 }
 
 @Composable
