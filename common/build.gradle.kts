@@ -18,18 +18,17 @@ kotlin {
     sourceSets {
         val datetimeVersion = "0.4.0"
         val decomposeVersion = "1.0.0-beta-04"
-        val kamelVersion = "0.4.0"
         val commonMain by getting {
             dependencies {
                 api(compose.runtime)
                 api(compose.foundation)
                 @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class) api(compose.material3)
                 implementation("org.orca:kotlass:1.0")
+                implementation("org.orca.htmltext:common:1.0-SNAPSHOT")
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:$datetimeVersion")
-                implementation("org.jsoup:jsoup:1.14.3")
                 implementation("com.arkivanov.decompose:decompose:$decomposeVersion")
                 implementation("com.arkivanov.decompose:extensions-compose-jetbrains:$decomposeVersion")
-                implementation("com.alialbaali.kamel:kamel-image:$kamelVersion")
+                implementation("com.alialbaali.kamel:kamel-image:0.4.0")
                 implementation("ca.gosyer:accompanist-flowlayout:0.25.2")
             }
         }

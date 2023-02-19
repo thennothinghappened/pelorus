@@ -18,7 +18,7 @@ import org.orca.common.data.Platform
 import org.orca.common.data.getPlatform
 import org.orca.common.data.utils.collectAsStateAndLifecycle
 import org.orca.common.ui.components.ErrorRenderer
-import org.orca.common.ui.components.HtmlText
+import org.orca.htmltext.HtmlText
 import org.orca.common.ui.components.NetStates
 import org.orca.common.ui.utils.WindowSize
 import org.orca.kotlass.IFlowKotlassClient

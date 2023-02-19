@@ -2,26 +2,20 @@ package org.orca.common.ui
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.material3.CardDefaults.shape
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.ComponentContext
 import io.kamel.image.KamelImage
 import io.kamel.image.lazyPainterResource
-import kotlinx.coroutines.Dispatchers
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import org.jsoup.Jsoup
 import org.orca.common.data.Compass
 import org.orca.common.data.formatAsVisualDate
 import org.orca.common.data.timeAgo
@@ -32,7 +26,7 @@ import org.orca.common.ui.components.calendar.DueLearningTasks
 import org.orca.common.ui.utils.WindowSize
 import org.orca.kotlass.IFlowKotlassClient
 import org.orca.kotlass.data.NewsItem
-import org.orca.kotlass.dummy.createDummyFlowsClient
+import org.orca.htmltext.HtmlText
 
 class HomeComponent(
     componentContext: ComponentContext,
