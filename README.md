@@ -1,7 +1,7 @@
 # Pelorus
  A custom Compose Multiplatform-based client for the [Compass](https://www.compass.education/) API! \
- API handling using [Kotlass](https://github.com/thennothinghappened/kotlass). Currently in alpha
- and not very feature-rich, but functional, and much faster!
+ API handling using [Kotlass](https://github.com/thennothinghappened/kotlass), HTML rendering using [HtmlText](https://github.com/thennothinghappened/HtmlText).
+ Currently in alpha and not very feature-rich, but functional, and much faster!
  
 ## Compiling
  Using either [Intellij Idea](https://www.jetbrains.com/idea/download) or [Android Studio](https://developer.android.com/studio/)
