@@ -11,10 +11,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.ComponentContext
-import com.halilibo.richtext.ui.RichText
 import io.kamel.image.KamelImage
 import io.kamel.image.lazyPainterResource
-import org.jsoup.Jsoup
 import org.orca.common.data.Compass
 import org.orca.common.data.Platform
 import org.orca.common.data.getPlatform
@@ -24,7 +22,6 @@ import org.orca.common.ui.components.HtmlText
 import org.orca.common.ui.components.NetStates
 import org.orca.common.ui.utils.WindowSize
 import org.orca.kotlass.IFlowKotlassClient
-import org.orca.kotlass.data.Activity
 
 class ActivityComponent(
     componentContext: ComponentContext,
@@ -78,9 +75,7 @@ fun ActivityContent(
                         { CircularProgressIndicator() },
                         { error -> ErrorRenderer(error) }
                     ) { lp ->
-                        RichText(modifier = Modifier.padding(8.dp)) {
-                            HtmlText(Jsoup.parse(lp ?: "<body>No lesson plan recorded.</body>"))
-                        }
+                        HtmlText(lp ?: "<body>No lesson plan recorded.</body>", Modifier.padding(8.dp))
                     }
                     }
                 }

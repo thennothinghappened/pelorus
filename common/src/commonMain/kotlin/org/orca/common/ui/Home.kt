@@ -116,7 +116,7 @@ fun Newsfeed(
         NetStates(newsfeedState) { list ->
             list.forEach {
                 Card(modifier = Modifier.fillMaxWidth()) {
-                    Material3RichText(modifier = Modifier.padding(16.dp)) {
+                    Column(Modifier.padding(16.dp)) {
                         Row {
                             KamelImage(
                                 lazyPainterResource(compass.buildDomainUrlString(it.userImageUrl)),
@@ -125,13 +125,13 @@ fun Newsfeed(
                                     .clip(RoundedCornerShape(8.dp))
                             )
                             Spacer(Modifier.size(8.dp))
-                            Column {
+                            Material3RichText {
                                 Heading(4, it.title)
                                 Heading(9, "${it.userName} - ${it.postDateTime?.timeAgo()}")
                             }
                         }
 
-                        HtmlText(Jsoup.parse(it.content1.toString()).body())
+                        HtmlText(it.content1.toString())
                     }
                 }
             }

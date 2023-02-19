@@ -13,15 +13,13 @@ repositories {
     jcenter()
 }
 
-val material3Version = "1.1.0-alpha05" // https://issuetracker.google.com/issues/258907850
-val decomposeVersion = "1.0.0-beta-04"
 dependencies {
     implementation(project(":common"))
     implementation("androidx.activity:activity-compose:1.6.1")
     implementation("com.google.accompanist:accompanist-systemuicontroller:0.29.1-alpha")
     implementation("androidx.window:window:1.0.0")
-    implementation("androidx.compose.material3:material3:$material3Version")
-    implementation("com.arkivanov.decompose:decompose:$decomposeVersion")
+    implementation("androidx.compose.material3:material3:1.1.0-alpha06") // https://issuetracker.google.com/issues/258907850
+    implementation("com.arkivanov.decompose:decompose:1.0.0-beta-04")
 }
 
 android {
