@@ -7,8 +7,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.ComponentContext
@@ -58,6 +57,9 @@ fun CalendarContent(
     windowSize: WindowSize
 ) {
     val viewedDay by component.compass.calendarSchedule.startDate.collectAsStateAndLifecycle()
+//    var datePickerVisible by remember { mutableStateOf(true) }
+//
+//    DatePickerDialog(visible = datePickerVisible, onClose = { datePickerVisible = false }) { datePickerVisible = false }
 
     Scaffold(
         bottomBar = {

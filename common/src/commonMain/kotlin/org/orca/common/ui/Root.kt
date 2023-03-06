@@ -2,10 +2,7 @@ package org.orca.common.ui
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -189,7 +186,7 @@ class RootComponent(
 
 }
 
-@OptIn(ExperimentalDecomposeApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RootContent(
     component: RootComponent,
@@ -249,6 +246,12 @@ fun RootContent(
                 bottomBar = {
                     NavigationBar(modifier = Modifier.fillMaxWidth()) {
                         NavItem(
+                            activeComponent is RootComponent.Child.SettingsChild,
+                            { component.goToNavItem(RootComponent.Config.Settings) },
+                            Icons.Default.Settings,
+                            "Settings"
+                        )
+                        NavItem(
                             activeComponent is RootComponent.Child.CalendarChild,
                             { component.goToNavItem(RootComponent.Config.Calendar) },
                             Icons.Default.DateRange,
@@ -261,10 +264,16 @@ fun RootContent(
                             "Home"
                         )
                         NavItem(
-                                activeComponent is RootComponent.Child.LearningTasksChild,
-                        { component.goToNavItem(RootComponent.Config.LearningTasks) },
-                        Icons.Default.Edit,
-                        "Tasks"
+                            activeComponent is RootComponent.Child.LearningTasksChild,
+                            { component.goToNavItem(RootComponent.Config.LearningTasks) },
+                            Icons.Default.Edit,
+                            "Tasks"
+                        )
+                        NavItem(
+                            false,
+                            {  },
+                            Icons.Default.Person,
+                            "Profile"
                         )
                     }
                 }
@@ -312,15 +321,6 @@ fun ColumnScope.NavItem(
     )
 }
 
-@Composable
-private fun RootScaffoldNav(
-    component: RootComponent,
-    windowSize: WindowSize
-) {
-
-}
-
-@OptIn(ExperimentalDecomposeApi::class)
 @Composable
 private fun RootChildSwitcher(
     component: RootComponent,

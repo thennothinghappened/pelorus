@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -36,16 +37,25 @@ fun SettingsContent(
     LazyColumn(
         contentPadding = PaddingValues(16.dp)
     ) {
-        item { Text("Verify login credentials on startup") }
-        item { Switch(
-            verifyCredentials,
-            { verifyCredentials = it; changeMade = true }
-        ) }
-        item { Text("Use experimental class layout") }
-        item { Switch(
-            experimentalClassList,
-            { experimentalClassList = it; changeMade = true }
-        ) }
+        item {
+            Text("Verify login credentials on startup")
+            Switch(
+                verifyCredentials,
+                { verifyCredentials = it; changeMade = true }
+            )
+        }
+        item {
+            Text("Use experimental class layout")
+            Text(
+                "(Does not support cases where classes overlap, so don't rely on this always!)",
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.secondaryContainer
+            )
+            Switch(
+                experimentalClassList,
+                { experimentalClassList = it; changeMade = true }
+            )
+        }
         item { Button(
             {
                 // set the new preference values

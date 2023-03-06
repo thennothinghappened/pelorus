@@ -42,7 +42,7 @@ fun ClassList(
 
             if (!experimentalClassList) {
                 classes.forEachIndexed { index, it ->
-                    ClassCard(it, Modifier.height(60.dp)) {
+                    ClassCard(it, Modifier.height(65.dp)) {
                         onClickActivity(index, schedule)
                     }
                 }
