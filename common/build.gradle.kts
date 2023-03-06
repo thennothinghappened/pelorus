@@ -17,7 +17,7 @@ kotlin {
     }
     sourceSets {
         val datetimeVersion = "0.4.0"
-        val decomposeVersion = "1.0.0-beta-04"
+        val decomposeVersion = "1.0.0"
         val commonMain by getting {
             dependencies {
                 api(compose.runtime)

@@ -12,10 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.ComponentContext
-import kotlinx.datetime.DateTimeUnit
-import kotlinx.datetime.LocalDate
-import kotlinx.datetime.minus
-import kotlinx.datetime.plus
+import kotlinx.datetime.*
 import org.orca.common.data.Compass
 import org.orca.common.data.formatAsVisualDate
 import org.orca.common.data.utils.collectAsStateAndLifecycle
@@ -29,7 +26,9 @@ class CalendarComponent(
     componentContext: ComponentContext,
     val compass: Compass,
     val onClickActivity: (Int, IFlowKotlassClient.Pollable.Schedule) -> Unit,
-    val onClickLearningTask: (String) -> Unit
+    val onClickLearningTask: (String) -> Unit,
+    val experimentalClassList: Boolean,
+    val schoolStartTime: LocalTime
 ) : ComponentContext by componentContext {
 
     fun poll() =
@@ -103,7 +102,10 @@ fun CalendarContent(
                     ClassList(
                         windowSize = windowSize,
                         schedule = component.compass.calendarSchedule,
-                        onClickActivity = component.onClickActivity
+                        onClickActivity = component.onClickActivity,
+                        experimentalClassList = component.experimentalClassList,
+                        _schoolStartTime = component.schoolStartTime,
+                        date = viewedDay!!
                     )
                 }
                 item { ShortDivider() }

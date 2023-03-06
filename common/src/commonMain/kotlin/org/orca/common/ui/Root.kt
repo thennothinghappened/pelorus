@@ -15,8 +15,6 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.Children
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.fade
-import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.plus
-import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.scale
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import com.arkivanov.decompose.router.stack.*
@@ -133,13 +131,17 @@ class RootComponent(
                 componentContext = componentContext,
                 compass,
                 ::onClickActivity,
-                ::onClickLearningTaskByName
+                ::onClickLearningTaskByName,
+                preferences.get(DefaultPreferences.App.experimentalClassList),
+                preferences.get(DefaultPreferences.Credentials.schoolStartTime)
             ))
             is Config.Calendar -> Child.CalendarChild(CalendarComponent(
                 componentContext = componentContext,
                 compass,
                 ::onClickActivity,
-                ::onClickLearningTaskByName
+                ::onClickLearningTaskByName,
+                preferences.get(DefaultPreferences.App.experimentalClassList),
+                preferences.get(DefaultPreferences.Credentials.schoolStartTime)
             ))
             is Config.LearningTasks -> Child.LearningTasksChild(LearningTasksComponent(
                 componentContext = componentContext,

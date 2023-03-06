@@ -8,7 +8,7 @@ actual class Preferences(
 
     private val e = p.edit()
 
-    actual fun get(key: String, def: String): String =
+    actual fun getString(key: String, def: String): String =
         p.getString(key, def)!!
 
     actual fun getInt(key: String, def: Int): Int =
@@ -17,7 +17,7 @@ actual class Preferences(
     actual fun getBoolean(key: String, def: Boolean): Boolean =
         p.getBoolean(key, def)
 
-    actual fun put(key: String, value: String) {
+    actual fun putString(key: String, value: String) {
         e.putString(key, value)
         e.commit()
     }

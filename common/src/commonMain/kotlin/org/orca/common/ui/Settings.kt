@@ -30,6 +30,7 @@ fun SettingsContent(
     windowSize: WindowSize
 ) {
     var verifyCredentials by rememberSaveable { mutableStateOf(component.preferences.get(DefaultPreferences.Api.verifyCredentials)) }
+    var experimentalClassList by rememberSaveable { mutableStateOf(component.preferences.get(DefaultPreferences.App.experimentalClassList)) }
     var changeMade by rememberSaveable { mutableStateOf(false) }
 
     LazyColumn(
@@ -40,10 +41,18 @@ fun SettingsContent(
             verifyCredentials,
             { verifyCredentials = it; changeMade = true }
         ) }
+        item { Text("Use experimental class layout") }
+        item { Switch(
+            experimentalClassList,
+            { experimentalClassList = it; changeMade = true }
+        ) }
         item { Button(
             {
+                // set the new preference values
                 component.preferences.put(DefaultPreferences.Api.verifyCredentials, verifyCredentials)
+                component.preferences.put(DefaultPreferences.App.experimentalClassList, experimentalClassList)
 
+                // reset if change was made
                 changeMade = false
             },
             enabled = changeMade

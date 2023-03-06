@@ -42,6 +42,11 @@ fun LocalDate.formatAsVisualDate(): String =
 fun LocalDateTime.formatAsDateTime(): String =
     time.formatAsHourMinute() + " " + date.formatAsDate()
 
+fun LocalTime.toInstant(date: LocalDate): Instant {
+    return LocalDateTime(date, this)
+        .toInstant(TimeZone.currentSystemDefault())
+}
+
 private fun getDaySuffix(day: Int) = when(day) {
     1 -> "st"
     21 -> "st"

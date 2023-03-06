@@ -14,6 +14,7 @@ import com.arkivanov.decompose.ComponentContext
 import io.kamel.image.KamelImage
 import io.kamel.image.lazyPainterResource
 import kotlinx.datetime.Clock
+import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.orca.common.data.Compass
@@ -32,7 +33,9 @@ class HomeComponent(
     componentContext: ComponentContext,
     val compass: Compass,
     val onClickActivity: (Int, IFlowKotlassClient.Pollable.Schedule) -> Unit,
-    val onClickLearningTask: (String) -> Unit
+    val onClickLearningTask: (String) -> Unit,
+    val experimentalClassList: Boolean,
+    val schoolStartTime: LocalTime
 ) : ComponentContext by componentContext
 
 
@@ -57,7 +60,10 @@ fun HomeContent(
                             ClassList(
                                 windowSize = windowSize,
                                 schedule = component.compass.defaultSchedule,
-                                onClickActivity = component.onClickActivity
+                                onClickActivity = component.onClickActivity,
+                                experimentalClassList = component.experimentalClassList,
+                                _schoolStartTime = component.schoolStartTime,
+                                date = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
                             )
                             ShortDivider()
                             DueLearningTasks(
@@ -74,7 +80,10 @@ fun HomeContent(
                     ClassList(
                         windowSize = windowSize,
                         schedule = component.compass.defaultSchedule,
-                        onClickActivity = component.onClickActivity
+                        onClickActivity = component.onClickActivity,
+                        experimentalClassList = component.experimentalClassList,
+                        _schoolStartTime = component.schoolStartTime,
+                        date = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
                     )
                 }
                 item { ShortDivider() }

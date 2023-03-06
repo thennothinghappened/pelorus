@@ -1,8 +1,10 @@
 package org.orca.common.ui.components
 
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -13,6 +15,7 @@ import org.orca.kotlass.data.Activity
 @Composable
 fun ClassCard(
     scheduleEntry: IFlowKotlassClient.ScheduleEntry.ActivityEntry,
+    modifier: Modifier = Modifier,
     onClick: () -> Unit = {}
 ) {
     val activity by scheduleEntry.activity.collectAsState()
@@ -49,6 +52,7 @@ fun ClassCard(
         "Room $room",
         teacher,
         time,
+        modifier.fillMaxWidth(),
         onClick = onClick,
         colors = colors
     )
