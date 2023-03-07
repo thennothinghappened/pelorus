@@ -45,7 +45,7 @@ fun ClassCard(
     if (activity is IFlowKotlassClient.State.Success<Activity>) {
         title = (activity as IFlowKotlassClient.State.Success<Activity>).data.subjectName ?: (activity as IFlowKotlassClient.State.Success<Activity>).data.activityDisplayName
         teacher = (activity as IFlowKotlassClient.State.Success<Activity>).data.managerTextReadable
-        room = (activity as IFlowKotlassClient.State.Success<Activity>).data.locationName
+        room = (activity as IFlowKotlassClient.State.Success<Activity>).data.locationDetails?.longName ?: (activity as IFlowKotlassClient.State.Success<Activity>).data.locationName
     }
     CornersCard(
         title,

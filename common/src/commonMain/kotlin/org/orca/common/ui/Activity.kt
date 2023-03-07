@@ -56,14 +56,34 @@ fun ActivityContent(
 
         item {
             NetStates(activity) { activity ->
+                Card(modifier = Modifier.fillMaxWidth()) {
+                    Row {
+                        KamelImage(
+                            lazyPainterResource(
+                                component.compass.buildDomainUrlString(
+                                    activity.coveringPhotoId ?: activity.managerPhotoPath
+                                )
+                            ),
+                            contentDescription = "Teacher Photo",
+                            modifier = Modifier
+                                .padding(8.dp)
+                                .clip(CircleShape)
+                        )
+                        Column(modifier = Modifier.padding(8.dp)) {
+                            Text(
+                                activity.subjectName ?: activity.activityDisplayName,
+                                style = MaterialTheme.typography.titleMedium
+                            )
+                            Text(
+                                activity.managerTextReadable + "\n" +
+                                        "Room ${activity.locationDetails?.longName ?: activity.locationName}",
+                                style = MaterialTheme.typography.labelLarge
+                            )
+                        }
+                    }
+                }
 
-                Text(activity.subjectName ?: activity.activityDisplayName)
-                Text("${activity.managerTextReadable} - Room ${activity.locationName}")
-                KamelImage(
-                    lazyPainterResource(component.compass.buildDomainUrlString(activity.managerPhotoPath)),
-                    contentDescription = "Teacher Photo",
-                    modifier = Modifier.clip(CircleShape)
-                )
+                Spacer(Modifier.height(16.dp))
 
                 if (entry is IFlowKotlassClient.ScheduleEntry.Lesson) {
                     val lessonPlan by (entry as IFlowKotlassClient.ScheduleEntry.Lesson).lessonPlan.collectAsStateAndLifecycle()
