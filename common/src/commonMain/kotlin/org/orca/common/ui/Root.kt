@@ -34,8 +34,10 @@ import org.orca.kotlass.FlowKotlassClient
 import org.orca.common.data.utils.Preferences
 import org.orca.common.data.utils.get
 import org.orca.kotlass.IFlowKotlassClient
+import org.orca.kotlass.IKotlassClient
 import org.orca.kotlass.KotlassClient
 import org.orca.kotlass.data.LearningTask
+import org.orca.kotlass.data.NetResponse
 
 class RootComponent(
     componentContext: ComponentContext,
@@ -59,16 +61,14 @@ class RootComponent(
     val compass: Compass
         get() = instanceKeeper.getOrCreate { Compass(compassClientCredentials) }
 
-    private fun onFinishLogin(credentials: KotlassClient.CompassClientCredentials, enableVerify: Boolean = true): Boolean {
+    private fun onFinishLogin(credentials: KotlassClient.CompassClientCredentials, enableVerify: Boolean = true): NetResponse<Unit?> {
         if (enableVerify) {
             // make sure the credentials are valid!
             val _compass = FlowKotlassClient(credentials, CoroutineScope(Dispatchers.Main))
             val valid = _compass.validateCredentials()
 
-            if (!valid) {
-//            clearClientCredentials(preferences)
-                // we shouldnt clear credentials just because they failed this time until kotlass can return *why* it failed
-                return false
+            if (valid !is NetResponse.Success) {
+                return valid
             }
         }
 
@@ -76,7 +76,7 @@ class RootComponent(
         setClientCredentials(preferences, compassClientCredentials)
         navigation.bringToFront(Config.Home)
 
-        return true
+        return NetResponse.Success(null)
     }
 
     fun goToNavItem(config: Config) {
