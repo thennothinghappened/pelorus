@@ -1,7 +1,36 @@
 # Pelorus
  A custom Compose Multiplatform-based client for the [Compass](https://www.compass.education/) API! \
  API handling using [Kotlass](https://github.com/thennothinghappened/kotlass), HTML rendering using [HtmlText](https://github.com/thennothinghappened/HtmlText).
- Currently in alpha and not very feature-rich, but functional, and much faster!
+ Currently in beta!
+ 
+## Features
+Unticked are planned features. You can also suggest features in *Issues*!
+ - [x] Schedule
+   - [x] (Experimental) desktop-style view (time between classes & class length)
+ - [x] Calendar
+   - [x] Day based navigation
+   - [ ] Date picker
+ - [x] Class view
+   - [x] Lesson plan
+   - [ ] Resources
+   - [ ] Click for class-filtered learning tasks
+ - [x] Newsfeed
+   - [x] Attachments
+ - [x] Learning Tasks
+   - [x] Basic sorting (WIP)
+   - [ ] Search
+   - [x] Status
+   - [x] Attachments
+   - [ ] Upload
+   - [ ] Feedback
+   - [ ] Comments
+ - [ ] Event view
+ - [ ] Alerts
+   - [ ] Coursework Notifications
+ - [ ] Profile page
+   - [ ] Reports
+   - [ ] Tasks
+ 
  
 ## Installation
  For Android, precompiled APKs are available in Releases. On Desktop for now, see *Compiling*.
