@@ -44,7 +44,7 @@ import org.orca.kotlass.data.NetResponse
 class RootComponent(
     componentContext: ComponentContext,
     private val preferences: Preferences,
-    private val webViewBridge: IWebViewBridge? // only needed for mobile
+    private val webViewBridge: IWebViewBridge? = null // only needed for mobile
 ) : ComponentContext by componentContext {
 
     private val navigation = StackNavigation<Config>()
