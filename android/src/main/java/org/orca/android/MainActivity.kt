@@ -26,16 +26,17 @@ import org.orca.common.ui.utils.WindowSize
 @ExperimentalMaterial3Api
 class MainActivity : AppCompatActivity() {
 
-    private val _pauseStatus: MutableStateFlow<Boolean> = MutableStateFlow(false) // todo
-    val pauseStatus: StateFlow<Boolean> = _pauseStatus
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val root = RootComponent(
             componentContext = defaultComponentContext(),
-            Preferences(getSharedPreferences("data", MODE_PRIVATE)),
-            pauseStatus
+            preferences = Preferences(getSharedPreferences("data", MODE_PRIVATE)),
+            webViewBridge = WebViewBridge(
+                "https://schools.compass.education/",
+                false,
+                true
+            )
         )
 
         setContent {
@@ -53,12 +54,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-    }
-
-    override fun onPause() {
-        super.onPause()
-
-
     }
 }
 

@@ -55,7 +55,7 @@ class CalendarComponent(
 fun CalendarContent(
     component: CalendarComponent,
     windowSize: WindowSize
-) {
+) { 
     val viewedDay by component.compass.calendarSchedule.startDate.collectAsStateAndLifecycle()
 //    var datePickerVisible by remember { mutableStateOf(true) }
 //

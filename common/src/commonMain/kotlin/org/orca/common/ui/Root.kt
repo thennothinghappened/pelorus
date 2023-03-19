@@ -23,6 +23,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import kotlinx.datetime.*
 import org.orca.common.data.Compass
 import org.orca.common.data.clearClientCredentials
@@ -33,6 +34,7 @@ import org.orca.common.ui.utils.WindowSize
 import org.orca.kotlass.FlowKotlassClient
 import org.orca.common.data.utils.Preferences
 import org.orca.common.data.utils.get
+import org.orca.common.ui.components.IWebViewBridge
 import org.orca.kotlass.IFlowKotlassClient
 import org.orca.kotlass.IKotlassClient
 import org.orca.kotlass.KotlassClient
@@ -42,7 +44,7 @@ import org.orca.kotlass.data.NetResponse
 class RootComponent(
     componentContext: ComponentContext,
     private val preferences: Preferences,
-    private val pauseStatus: StateFlow<Boolean> = MutableStateFlow(false) // only needed for mobile
+    private val webViewBridge: IWebViewBridge? // only needed for mobile
 ) : ComponentContext by componentContext {
 
     private val navigation = StackNavigation<Config>()
@@ -61,7 +63,11 @@ class RootComponent(
     val compass: Compass
         get() = instanceKeeper.getOrCreate { Compass(compassClientCredentials) }
 
-    private fun onFinishLogin(credentials: KotlassClient.CompassClientCredentials, enableVerify: Boolean = true): NetResponse<Unit?> {
+    private fun onFinishLogin(
+        credentials: KotlassClient.CompassClientCredentials,
+        enableVerify: Boolean = true,
+        mainThread: Boolean
+    ): NetResponse<Unit?> {
         if (enableVerify) {
             // make sure the credentials are valid!
             val _compass = FlowKotlassClient(credentials, CoroutineScope(Dispatchers.Main))
@@ -70,11 +76,20 @@ class RootComponent(
             if (valid !is NetResponse.Success) {
                 return valid
             }
+
         }
 
         compassClientCredentials = credentials
         setClientCredentials(preferences, compassClientCredentials)
-        navigation.bringToFront(Config.Home)
+
+        if (!mainThread) {
+            // We launch this in a scope since this function can get called from a coroutine in Browser login.
+            CoroutineScope(Dispatchers.Main).launch {
+                navigation.bringToFront(Config.Home)
+            }
+        } else {
+            navigation.bringToFront(Config.Home)
+        }
 
         return NetResponse.Success(null)
     }
@@ -115,14 +130,15 @@ class RootComponent(
     init {
         val credentials = getClientCredentials(preferences)
         if (credentials != null) {
-            onFinishLogin(credentials, preferences.get(DefaultPreferences.Api.verifyCredentials))
+            onFinishLogin(credentials, preferences.get(DefaultPreferences.Api.verifyCredentials), true)
         }
     }
 
     private fun child(config: Config, componentContext: ComponentContext): Child =
         when (config) {
             is Config.Login -> Child.LoginChild(LoginComponent(
-                onFinishLogin = ::onFinishLogin
+                onFinishLogin = ::onFinishLogin,
+                webViewBridge = webViewBridge
             ))
             is Config.Home -> Child.HomeChild(HomeComponent(
                 componentContext = componentContext,

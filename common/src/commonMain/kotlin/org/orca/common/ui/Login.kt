@@ -13,11 +13,13 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
+import org.orca.common.ui.components.IWebViewBridge
 import org.orca.kotlass.KotlassClient.CompassClientCredentials
 import org.orca.kotlass.data.NetResponse
 
 class LoginComponent(
-    val onFinishLogin: (CompassClientCredentials) -> NetResponse<Unit?>
+    val onFinishLogin: (CompassClientCredentials, Boolean, Boolean) -> NetResponse<Unit?>,
+    val webViewBridge: IWebViewBridge? = null
 ) {
     companion object {
         const val credentialsInvalidMessage = "Credentials are invalid."
@@ -26,9 +28,14 @@ class LoginComponent(
     }
 }
 
+@Composable
+expect fun LoginContent(
+    component: LoginComponent
+)
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginContent(
+fun CookieLoginContent(
     component: LoginComponent
 ) {
     var cookie by rememberSaveable { mutableStateOf("") }
@@ -67,7 +74,7 @@ fun LoginContent(
                         override val cookie = cookie
                         override val userId = userId.toInt()
                         override val domain = domain
-                    }
+                    }, true, true
                 )
 
                 when (reply) {

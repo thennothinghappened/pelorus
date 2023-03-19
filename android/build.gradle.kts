@@ -20,6 +20,7 @@ dependencies {
     implementation("androidx.window:window:1.0.0")
     implementation("androidx.compose.material3:material3:1.1.0-alpha07") // https://issuetracker.google.com/issues/258907850
     implementation("com.arkivanov.decompose:decompose:1.0.0")
+    implementation("com.google.accompanist:accompanist-webview:0.29.2-rc")
 }
 
 android {
