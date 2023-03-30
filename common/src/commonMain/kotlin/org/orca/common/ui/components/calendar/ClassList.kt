@@ -16,12 +16,17 @@ import org.orca.common.ui.utils.WindowSize
 import org.orca.kotlass.IFlowKotlassClient
 import java.lang.Integer.max
 
+enum class ScheduleHolderType {
+    allDay,
+    normal
+}
+
 @Composable
 fun ClassList(
     modifier: Modifier = Modifier,
     windowSize: WindowSize,
     schedule: IFlowKotlassClient.Pollable.Schedule,
-    onClickActivity: (Int, IFlowKotlassClient.Pollable.Schedule) -> Unit,
+    onClickActivity: (Int, ScheduleHolderType, IFlowKotlassClient.Pollable.Schedule) -> Unit,
     experimentalClassList: Boolean,
     _schoolStartTime: LocalTime,
     date: LocalDate
@@ -33,17 +38,24 @@ fun ClassList(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text("Schedule", style = MaterialTheme.typography.labelMedium)
-        NetStates(scheduleState) { entries ->
-            val classes = entries.filterIsInstance<IFlowKotlassClient.ScheduleEntry.ActivityEntry>()
 
-            if (classes.isEmpty()) {
+        NetStates(scheduleState) { state ->
+
+            if (state.normal.isEmpty() && state.allDay.isEmpty()) {
                 Text("None today!", style = MaterialTheme.typography.bodySmall)
+                return@NetStates
+            }
+
+            state.allDay.forEachIndexed { index, current ->
+                ClassCard(current, Modifier.height(48.dp)) {
+                    onClickActivity(index, ScheduleHolderType.allDay, schedule)
+                }
             }
 
             if (!experimentalClassList) {
-                classes.forEachIndexed { index, it ->
-                    ClassCard(it, Modifier.height(65.dp)) {
-                        onClickActivity(index, schedule)
+                state.normal.forEachIndexed { index, current ->
+                    ClassCard(current, Modifier.height(65.dp)) {
+                        onClickActivity(index, ScheduleHolderType.normal, schedule)
                     }
                 }
             } else {
@@ -51,7 +63,7 @@ fun ClassList(
                 val schoolStartTime = _schoolStartTime.toInstant(date)
 
                 // calculate spacing based on time between classes
-                val spacing = classes.mapIndexed { index, current ->
+                val spacing = state.normal.mapIndexed { index, current ->
 
                     if (current.event.start == null || current.event.finish == null)
                         return@mapIndexed listOf(0.dp, 0.dp)
@@ -64,7 +76,7 @@ fun ClassList(
                         )
 
                     // get the previous class
-                    val previous = classes[index-1].event
+                    val previous = state.normal[index-1].event
 
                     // make sure it has a finish time
                     if (previous.finish == null) return@mapIndexed listOf(
@@ -80,12 +92,12 @@ fun ClassList(
 
                 }
 
-                classes.forEachIndexed { index, it ->
+                state.normal.forEachIndexed { index, it ->
                     ClassCard(it, Modifier
                         .padding(top = spacing[index][0])
                         .height(spacing[index][1])
                     ) {
-                        onClickActivity(index, schedule)
+                        onClickActivity(index, ScheduleHolderType.normal, schedule)
                     }
                 }
             }

@@ -45,12 +45,8 @@ class Compass(
         manualPoll(defaultTaskCategories)
     }
 
-    fun setViewedEntry(scheduleEntryIndex: Int, schedule: Pollable.Schedule = defaultSchedule) {
-        if (schedule.state.value !is State.Success) return
-
-        // make sure to filter to only grab things which hold activities!
-        _viewedEntry.value = (schedule.state.value as State.Success<List<ScheduleEntry>>).data
-            .filterIsInstance<ScheduleEntry.ActivityEntry>()[scheduleEntryIndex]
+    fun setViewedEntry(scheduleEntry: ScheduleEntry.ActivityEntry) {
+        _viewedEntry.value = scheduleEntry
     }
 
 }

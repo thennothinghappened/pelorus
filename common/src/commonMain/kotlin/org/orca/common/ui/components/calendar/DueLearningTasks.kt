@@ -38,19 +38,18 @@ fun DueLearningTasks(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text("Due Tasks", style = MaterialTheme.typography.labelMedium)
-        NetStates(scheduleState) { entries ->
-            val tasks = entries.filterIsInstance<IFlowKotlassClient.ScheduleEntry.LearningTask>()
+        NetStates(scheduleState) { state ->
 
-            if (tasks.isEmpty()) {
+            if (state.learningTasks.isEmpty()) {
                 Text("None today!", style = MaterialTheme.typography.bodySmall)
             }
 
-            tasks.forEach { task ->
+            state.learningTasks.forEach { task ->
                 val event = task.event
 
                 CornersCard(
                     event.title,
-                    event.description,
+                    "",
                     "Due ${event.start?.toLocalDateTime(TimeZone.currentSystemDefault())?.time?.formatAsHourMinute()}",
                     "",
                     modifier = Modifier.height(65.dp),

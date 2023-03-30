@@ -24,6 +24,7 @@ import org.orca.common.data.utils.collectAsStateAndLifecycle
 import org.orca.common.ui.components.*
 import org.orca.common.ui.components.calendar.ClassList
 import org.orca.common.ui.components.calendar.DueLearningTasks
+import org.orca.common.ui.components.calendar.ScheduleHolderType
 import org.orca.common.ui.utils.WindowSize
 import org.orca.kotlass.IFlowKotlassClient
 import org.orca.kotlass.data.NewsItem
@@ -32,7 +33,7 @@ import org.orca.htmltext.HtmlText
 class HomeComponent(
     componentContext: ComponentContext,
     val compass: Compass,
-    val onClickActivity: (Int, IFlowKotlassClient.Pollable.Schedule) -> Unit,
+    val onClickActivity: (Int, ScheduleHolderType, IFlowKotlassClient.Pollable.Schedule) -> Unit,
     val onClickLearningTask: (String) -> Unit,
     val experimentalClassList: Boolean,
     val schoolStartTime: LocalTime

@@ -9,23 +9,22 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.orca.common.data.formatAsHourMinute
+import org.orca.common.data.utils.collectAsStateAndLifecycle
 import org.orca.kotlass.IFlowKotlassClient
 import org.orca.kotlass.data.Activity
 
 @Composable
 fun ClassCard(
-    scheduleEntry: IFlowKotlassClient.ScheduleEntry.ActivityEntry,
+    scheduleEntry: IFlowKotlassClient.ScheduleEntry,
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {}
 ) {
-    val activity by scheduleEntry.activity.collectAsState()
-    val bannerUrl by scheduleEntry.bannerUrl.collectAsState()
 
     val startTime = scheduleEntry.event.start?.toLocalDateTime(TimeZone.currentSystemDefault())?.time?.formatAsHourMinute()
     val endTime = scheduleEntry.event.finish?.toLocalDateTime(TimeZone.currentSystemDefault())?.time?.formatAsHourMinute()
 
     var title = scheduleEntry.event.longTitleWithoutTime
-    val time = "$startTime - $endTime"
+    val time = if (scheduleEntry.event.allDay) "All Day" else "$startTime - $endTime"
     var teacher = ""
     var room = ""
     var colors = CardDefaults.cardColors()
@@ -42,14 +41,23 @@ fun ClassCard(
             contentColor = MaterialTheme.colorScheme.background
         )
 
-    if (activity is IFlowKotlassClient.State.Success<Activity>) {
-        title = (activity as IFlowKotlassClient.State.Success<Activity>).data.subjectName ?: (activity as IFlowKotlassClient.State.Success<Activity>).data.activityDisplayName
-        teacher = (activity as IFlowKotlassClient.State.Success<Activity>).data.managerTextReadable
-        room = (activity as IFlowKotlassClient.State.Success<Activity>).data.locationDetails?.longName ?: (activity as IFlowKotlassClient.State.Success<Activity>).data.locationName
+    if (scheduleEntry is IFlowKotlassClient.ScheduleEntry.ActivityEntry) {
+
+        val activity by scheduleEntry.activity.collectAsStateAndLifecycle()
+//        val bannerUrl by scheduleEntry.bannerUrl.collectAsStateAndLifecycle()
+
+        if (activity is IFlowKotlassClient.State.Success<Activity>) {
+            title = (activity as IFlowKotlassClient.State.Success<Activity>).data.subjectName
+                ?: (activity as IFlowKotlassClient.State.Success<Activity>).data.activityDisplayName
+            teacher = (activity as IFlowKotlassClient.State.Success<Activity>).data.managerTextReadable
+            room = (activity as IFlowKotlassClient.State.Success<Activity>).data.locationDetails?.longName
+                ?: (activity as IFlowKotlassClient.State.Success<Activity>).data.locationName
+        }
     }
+
     CornersCard(
         title,
-        "Room $room",
+        room,
         teacher,
         time,
         modifier.fillMaxWidth(),

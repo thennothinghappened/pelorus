@@ -35,6 +35,7 @@ import org.orca.kotlass.FlowKotlassClient
 import org.orca.common.data.utils.Preferences
 import org.orca.common.data.utils.get
 import org.orca.common.ui.components.IWebViewBridge
+import org.orca.common.ui.components.calendar.ScheduleHolderType
 import org.orca.kotlass.IFlowKotlassClient
 import org.orca.kotlass.IKotlassClient
 import org.orca.kotlass.KotlassClient
@@ -98,17 +99,30 @@ class RootComponent(
         navigation.replaceAll(config)
     }
 
-    private fun onClickActivity(scheduleEntryIndex: Int, schedule: IFlowKotlassClient.Pollable.Schedule) {
+    private fun onClickActivity(
+        scheduleEntryIndex: Int,
+        scheduleHolderType: ScheduleHolderType,
+        schedule: IFlowKotlassClient.Pollable.Schedule
+    ) {
         if (schedule.state.value !is IFlowKotlassClient.State.Success) return
 
-        // filter to only grab entries which have associated activities
-        val scheduleEntry = (schedule.state.value as IFlowKotlassClient.State.Success<List<IFlowKotlassClient.ScheduleEntry>>)
-            .data.filterIsInstance<IFlowKotlassClient.ScheduleEntry.ActivityEntry>()[scheduleEntryIndex]
+
+        val scheduleStateHolder =
+            (schedule.state.value as IFlowKotlassClient.State.Success<IFlowKotlassClient.Pollable.Schedule.ScheduleStateHolder>).data
+
+        val subschedule = when(scheduleHolderType) {
+            ScheduleHolderType.allDay -> scheduleStateHolder.allDay
+            ScheduleHolderType.normal -> scheduleStateHolder.normal
+        }
+
+        val scheduleEntry = subschedule[scheduleEntryIndex]
+
+        if (scheduleEntry !is IFlowKotlassClient.ScheduleEntry.ActivityEntry) return
 
         if (scheduleEntry is IFlowKotlassClient.ScheduleEntry.Lesson)
             compass.loadLessonPlan(scheduleEntry)
 
-        compass.setViewedEntry(scheduleEntryIndex, schedule)
+        compass.setViewedEntry(scheduleEntry)
         navigation.push(Config.Activity(scheduleEntryIndex))
     }
 
