@@ -18,6 +18,7 @@ Unticked are planned features. You can also suggest features in *Issues*!
    - [x] Attachments
  - [x] Learning Tasks
    - [x] Basic sorting (WIP)
+   - [x] Sort by class
    - [ ] Search
    - [x] Status
    - [x] Attachments
