@@ -29,7 +29,8 @@ import org.orca.kotlass.data.LearningTaskSubmissionItem
 class LearningTaskViewComponent(
     componentContext: ComponentContext,
     val compass: Compass,
-    val taskIndex: Int,
+    val learningTaskActivityId: Int,
+    val learningTaskId: Int,
     val onBackPress: () -> Unit
 ) : ComponentContext by componentContext
 
@@ -41,7 +42,7 @@ fun LearningTaskViewContent(
     val learningTasksState by component.compass.defaultLearningTasks.state.collectAsStateAndLifecycle()
 
     NetStates(learningTasksState) { list ->
-        val task = list[component.taskIndex]
+        val task = list[component.learningTaskActivityId]!!.find { it.id == component.learningTaskId }!!
 
         Column(modifier = Modifier.padding(8.dp)) {
             if (getPlatform() == Platform.DESKTOP) {
@@ -180,7 +181,7 @@ private fun LearningTaskAttachments(
             .padding(8.dp)
     ) {
         if (attachments == null)
-            Text("No attachments", style = MaterialTheme.typography.bodySmall)
+            Text("No attachments.", style = MaterialTheme.typography.bodySmall)
         else attachments.forEach {
             CompassAttachment(
                 it.name,
@@ -210,7 +211,7 @@ private fun LearningTaskSubmissionList(
                     Text(submissionItem.name, style = MaterialTheme.typography.titleSmall)
 
                     if (submissions == null)
-                        Text("No submissions uploaded", style = MaterialTheme.typography.bodySmall)
+                        Text("No submissions uploaded.", style = MaterialTheme.typography.bodySmall)
                     else submissions
                         .filter { it.taskSubmissionItemId == submissionItem.id }
                         .forEach { submission -> LearningTaskSubmission(submission) }

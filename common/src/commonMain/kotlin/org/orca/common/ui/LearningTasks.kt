@@ -1,12 +1,12 @@
 package org.orca.common.ui
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -29,37 +29,53 @@ import org.orca.kotlass.data.LearningTaskSubmissionStatus
 class LearningTasksComponent(
     componentContext: ComponentContext,
     val compass: Compass,
-    val onClickLearningTask: (Int) -> Unit
+    val onClickLearningTask: (Int, Int) -> Unit
 ) : ComponentContext by componentContext
 
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun LearningTasksContent(
     component: LearningTasksComponent
 ) {
     val learningTasksState by component.compass.defaultLearningTasks.state.collectAsStateAndLifecycle()
+    var searchQuery by rememberSaveable { mutableStateOf("") }
 
-    LazyColumn(
-        contentPadding = PaddingValues(16.dp)
-    ) {
-        item {
-            NetStates(learningTasksState) { taskList ->
-                Column {
-                    // get the categories
-                    val subjects = taskList.map { it.activityId }.distinct()
-                    var currentIndex = 0
+    Scaffold(
+//        topBar = {
+//            OutlinedTextField(
+//                searchQuery,
+//                { searchQuery = it }
+//            )
+//        }
+    ) { paddingValues ->
 
-                    subjects.forEach { subject ->
-                        val list = taskList.filter { it.activityId == subject }
+        NetStates(learningTasksState) { taskList ->
+            LazyColumn(
+                modifier = Modifier.padding(paddingValues),
+                contentPadding = PaddingValues(16.dp)
+            ) {
 
-                        Text(list[0].subjectName)
-                        list.forEach { task ->
+                taskList.forEach { subject ->
+
+                    stickyHeader {
+                        ElevatedCard(
+                            Modifier
+                                .fillMaxWidth()
+                        ) {
+                            Text(
+                                subject.value[0].subjectName,
+                                Modifier.padding(4.dp)
+                            )
+                        }
+                    }
+
+                    subject.value.forEach { task ->
+                        item {
                             LearningTaskCard(
                                 task,
-                                currentIndex,
                                 component.onClickLearningTask,
                                 component.compass.defaultTaskCategories
-                                )
-                            currentIndex ++
+                            )
                         }
                     }
                 }
@@ -71,17 +87,15 @@ fun LearningTasksContent(
 @Composable
 fun LearningTaskCard(
     learningTask: LearningTask,
-    learningTaskIndex: Int,
-    onClickLearningTask: (Int) -> Unit,
+    onClickLearningTask: (Int, Int) -> Unit,
     categories: IFlowKotlassClient.Pollable.TaskCategories
 ) {
     FlairedCard(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(0.dp, 16.dp)
-        ,
+            .padding(0.dp, 16.dp),
         flairColor = getLearningTaskColours(learningTask.students[0].submissionStatus).copy(0.6f),
-        onClick = { onClickLearningTask(learningTaskIndex) }
+        onClick = { onClickLearningTask(learningTask.activityId, learningTask.id) }
     ) {
         Column(
             modifier = Modifier.padding(8.dp)

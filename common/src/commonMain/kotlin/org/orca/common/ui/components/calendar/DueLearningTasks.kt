@@ -52,7 +52,7 @@ fun DueLearningTasks(
                     "",
                     "Due ${event.start?.toLocalDateTime(TimeZone.currentSystemDefault())?.time?.formatAsHourMinute()}",
                     "",
-                    modifier = Modifier.height(65.dp),
+                    modifier = Modifier.height(60.dp),
                     colors = CardDefaults.cardColors(
                         containerColor = MaterialTheme.colorScheme.primaryContainer,
                         contentColor = MaterialTheme.colorScheme.onPrimaryContainer

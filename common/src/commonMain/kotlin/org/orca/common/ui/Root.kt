@@ -130,15 +130,19 @@ class RootComponent(
         // terrible way of finding the associated task
         if (compass.defaultLearningTasks.state.value !is IFlowKotlassClient.State.Success) return
 
-        val associatedTaskIndex = (compass.defaultLearningTasks.state.value as IFlowKotlassClient.State.Success<List<LearningTask>>)
-            .data.indexOfFirst { it.name == name }
+        // run on all of them to get the task which matches
+        val indexList = (compass.defaultLearningTasks.state.value as IFlowKotlassClient.State.Success<Map<Int, List<LearningTask>>>)
+            .data.map { subject -> subject.key to subject.value.find { it.name == name } }
 
-        if (associatedTaskIndex == -1) return
-        onClickLearningTaskById(associatedTaskIndex)
+        // find the one that returned the task
+        val index = indexList.find { it.second != null } ?: return
+
+        // run our ID based one
+        onClickLearningTaskById(index.first, index.second!!.id)
     }
 
-    private fun onClickLearningTaskById(id: Int) {
-        navigation.push(Config.LearningTaskView(id))
+    private fun onClickLearningTaskById(learningTaskActivityId: Int, learningTaskId: Int) {
+        navigation.push(Config.LearningTaskView(learningTaskActivityId, learningTaskId))
     }
 
     init {
@@ -178,7 +182,8 @@ class RootComponent(
             is Config.LearningTaskView -> Child.LearningTaskViewChild(LearningTaskViewComponent(
                 componentContext = componentContext,
                 compass,
-                config.learningTaskIndex,
+                config.learningTaskActivityId,
+                config.learningTaskId,
                 navigation::pop
             ))
             is Config.Settings -> Child.SettingsChild(SettingsComponent(
@@ -208,7 +213,7 @@ class RootComponent(
         object Home : Config
         object Calendar : Config
         object LearningTasks : Config
-        data class LearningTaskView(val learningTaskIndex: Int) : Config
+        data class LearningTaskView(val learningTaskActivityId: Int, val learningTaskId: Int) : Config
         object Settings : Config
         data class Activity(val scheduleEntryIndex: Int) : Config
     }
