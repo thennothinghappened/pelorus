@@ -13,7 +13,7 @@ Unticked are planned features. You can also suggest features in *Issues*!
  - [x] Class view
    - [x] Lesson plan
    - [ ] Resources
-   - [ ] Click for class-filtered learning tasks
+   - [x] Click for class-filtered learning tasks
  - [x] Newsfeed
    - [x] Attachments
  - [x] Learning Tasks
