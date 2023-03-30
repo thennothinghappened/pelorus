@@ -57,6 +57,6 @@ object DefaultPreferences {
 
     object App {
         private const val url = "app/"
-        val experimentalClassList = Preference.BooleanPreference(url + "experimentalClassList", false)
+        val experimentalClassList = Preference.BooleanPreference(url + "experimentalClassList", true)
     }
 }
