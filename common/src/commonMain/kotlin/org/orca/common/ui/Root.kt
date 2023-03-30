@@ -70,7 +70,7 @@ class RootComponent(
     ): NetResponse<Unit?> {
         if (enableVerify) {
             // make sure the credentials are valid!
-            val _compass = FlowKotlassClient(credentials, CoroutineScope(Dispatchers.Main))
+            val _compass = KotlassClient(credentials)
             val valid = _compass.validateCredentials()
 
             if (valid !is NetResponse.Success) {

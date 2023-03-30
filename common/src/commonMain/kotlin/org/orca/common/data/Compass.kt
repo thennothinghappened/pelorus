@@ -10,11 +10,23 @@ import kotlinx.datetime.toLocalDateTime
 import org.orca.kotlass.FlowKotlassClient
 import org.orca.kotlass.IFlowKotlassClient.*
 import org.orca.kotlass.KotlassClient
+import org.orca.kotlass.dummy.DummyKotlassClient
 
+/**
+ * Extended Kotlass client for Pelorus-specific features.
+ * @param credentials Client credentials
+ * @param scope Coroutine scope to execute async features within.
+ * @param dummy Should the client use the Kotlass Dummy client? (for testing)
+ */
 class Compass(
     credentials: KotlassClient.CompassClientCredentials,
-    scope: CoroutineScope = CoroutineScope(Dispatchers.IO)
-) : FlowKotlassClient(credentials, scope), InstanceKeeper.Instance {
+    scope: CoroutineScope = CoroutineScope(Dispatchers.IO),
+    dummy: Boolean = false
+) : FlowKotlassClient(
+    credentials = credentials,
+    scope = scope,
+    kotlassClient = if (dummy) DummyKotlassClient("example.com") else KotlassClient(credentials)
+), InstanceKeeper.Instance {
     override fun onDestroy() {
         TODO("Not yet implemented")
     }
