@@ -13,8 +13,6 @@ fun getClientCredentials(
     val domain = preferences.get(DefaultPreferences.Credentials.domain)
     val userId = preferences.get(DefaultPreferences.Credentials.userId)
 
-    println("$cookie, $domain, $userId")
-
     if (
         cookie == "" ||
         domain == "" ||
