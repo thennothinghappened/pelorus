@@ -1,20 +1,21 @@
 package org.orca.common.ui
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.essenty.parcelable.Parcelable
+import com.arkivanov.essenty.parcelable.Parcelize
+import com.arkivanov.essenty.statekeeper.consume
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.orca.common.data.Compass
@@ -29,8 +30,26 @@ import org.orca.kotlass.data.LearningTaskSubmissionStatus
 class LearningTasksComponent(
     componentContext: ComponentContext,
     val compass: Compass,
-    val onClickLearningTask: (Int, Int) -> Unit
-) : ComponentContext by componentContext
+    val onClickLearningTask: (Int, Int) -> Unit,
+    activityFilter: Int? = null
+) : ComponentContext by componentContext {
+
+    private val _state = stateKeeper.consume("LEARNING_TASKS_STATE") ?: State(MutableStateFlow(activityFilter))
+    val activityFilter: StateFlow<Int?> = _state.activityFilter
+
+    fun setActivityFilter(value: Int?) {
+        _state.activityFilter.value = value
+    }
+
+    init {
+        stateKeeper.register("LEARNING_TASKS_STATE") { State(MutableStateFlow(activityFilter)) }
+    }
+
+    @Parcelize
+    private class State(
+        val activityFilter: MutableStateFlow<Int?>
+    ) : Parcelable
+}
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -38,39 +57,86 @@ fun LearningTasksContent(
     component: LearningTasksComponent
 ) {
     val learningTasksState by component.compass.defaultLearningTasks.state.collectAsStateAndLifecycle()
-    var searchQuery by rememberSaveable { mutableStateOf("") }
+    val activityFilter by component.activityFilter.collectAsStateAndLifecycle()
 
-    Scaffold(
-//        topBar = {
-//            OutlinedTextField(
-//                searchQuery,
-//                { searchQuery = it }
-//            )
-//        }
-    ) { paddingValues ->
+    NetStates(learningTasksState) { taskList ->
 
-        NetStates(learningTasksState) { taskList ->
+        val subjectNames = taskList
+            .map { it.key to it.value[0].subjectName }
+            .associate { it.first to it.second }
+
+        Scaffold(
+            topBar = {
+                var dropdownExpanded by remember { mutableStateOf(false) }
+
+                // Dropdown to choose a subject to filter by.
+                Box {
+                    TextField(
+                        value = if (activityFilter == null) "All"
+                                else subjectNames[activityFilter]!!,
+                        onValueChange = {  },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                dropdownExpanded = !dropdownExpanded
+                            },
+                        enabled = false
+                    )
+
+                    DropdownMenu(
+                        dropdownExpanded,
+                        { dropdownExpanded = false },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        DropdownMenuItem(
+                            { Text("All") },
+                            {
+                                dropdownExpanded = false
+                                component.setActivityFilter(null)
+                            }
+                        )
+
+                        subjectNames.forEach { subject ->
+                            DropdownMenuItem(
+                                { Text(subject.value) },
+                                {
+                                    dropdownExpanded = false
+                                    component.setActivityFilter(subject.key)
+                                }
+                            )
+                        }
+                    }
+                }
+            }
+        ) { paddingValues ->
+
+            val filteredTaskList =
+                if (activityFilter != null) taskList.filter { it.key == activityFilter }
+                else taskList
+
             LazyColumn(
                 modifier = Modifier.padding(paddingValues),
                 contentPadding = PaddingValues(16.dp)
             ) {
 
-                taskList.forEach { subject ->
+                filteredTaskList.forEach { subject ->
 
+                    // Header for each subject
                     stickyHeader {
                         ElevatedCard(
                             Modifier
                                 .fillMaxWidth()
                         ) {
                             Text(
-                                subject.value[0].subjectName,
+                                subjectNames[subject.key]!!,
                                 Modifier.padding(4.dp)
                             )
                         }
                     }
 
+                    // TODO: weird behaviour here, sometimes items don't appear until recomposition triggered by user.
                     subject.value.forEach { task ->
-                        item {
+                        item(task.id) {
                             LearningTaskCard(
                                 task,
                                 component.onClickLearningTask,
