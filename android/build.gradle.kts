@@ -15,10 +15,10 @@ repositories {
 
 dependencies {
     implementation(project(":common"))
-    implementation("androidx.activity:activity-compose:1.6.1")
+    implementation("androidx.activity:activity-compose:1.7.0")
     implementation("com.google.accompanist:accompanist-systemuicontroller:0.29.1-alpha")
     implementation("androidx.window:window:1.0.0")
-    implementation("androidx.compose.material3:material3:1.1.0-alpha07") // https://issuetracker.google.com/issues/258907850
+    implementation("androidx.compose.material3:material3:1.1.0-beta01") // https://issuetracker.google.com/issues/258907850
     implementation("com.arkivanov.decompose:decompose:1.0.0")
     implementation("com.google.accompanist:accompanist-webview:0.29.2-rc")
 }

@@ -30,6 +30,8 @@ kotlin {
                 implementation("com.arkivanov.decompose:extensions-compose-jetbrains:$decomposeVersion")
                 implementation("com.alialbaali.kamel:kamel-image:0.4.0")
                 implementation("ca.gosyer:accompanist-flowlayout:0.25.2")
+                implementation("me.xdrop:fuzzywuzzy:1.4.0")
+
             }
         }
         val commonTest by getting {
@@ -41,8 +43,8 @@ kotlin {
             dependencies {
                 api("androidx.appcompat:appcompat:1.6.1")
                 api("androidx.core:core-ktx:1.9.0")
-                api("androidx.compose.material3:material3:1.1.0-alpha06")
-                implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.0-beta01")
+                api("androidx.compose.material3:material3:1.1.0-beta01")
+                implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.1")
             }
         }
         val androidUnitTest by getting {
