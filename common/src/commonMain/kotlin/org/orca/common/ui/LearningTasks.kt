@@ -34,20 +34,23 @@ class LearningTasksComponent(
     activityFilter: Int? = null
 ) : ComponentContext by componentContext {
 
-    private val _state = stateKeeper.consume("LEARNING_TASKS_STATE") ?: State(MutableStateFlow(activityFilter))
-    val activityFilter: StateFlow<Int?> = _state.activityFilter
+    private val _state = stateKeeper.consume("LEARNING_TASKS_STATE") ?: State(activityFilter)
+
+    private val _activityFilter: MutableStateFlow<Int?> = MutableStateFlow(_state.activityFilter)
+    val activityFilter: StateFlow<Int?> = _activityFilter
 
     fun setActivityFilter(value: Int?) {
-        _state.activityFilter.value = value
+        _state.activityFilter = value
+        _activityFilter.value = value
     }
 
     init {
-        stateKeeper.register("LEARNING_TASKS_STATE") { State(MutableStateFlow(activityFilter)) }
+        stateKeeper.register("LEARNING_TASKS_STATE") { State(activityFilter) }
     }
 
     @Parcelize
     private class State(
-        val activityFilter: MutableStateFlow<Int?>
+        var activityFilter: Int?
     ) : Parcelable
 }
 
