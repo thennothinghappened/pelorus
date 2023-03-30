@@ -1,5 +1,6 @@
 package org.orca.common.ui
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
@@ -11,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.ComponentContext
+import com.google.accompanist.flowlayout.FlowRow
 import io.kamel.image.KamelImage
 import io.kamel.image.lazyPainterResource
 import org.orca.common.data.Compass
@@ -26,9 +28,11 @@ import org.orca.kotlass.IFlowKotlassClient
 class ActivityComponent(
     componentContext: ComponentContext,
     val compass: Compass,
-    val onBackPress: () -> Unit
+    val onBackPress: () -> Unit,
+    val onClickLearningTasks: (Int) -> Unit
 ) : ComponentContext by componentContext
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ActivityContent(
     component: ActivityComponent,
@@ -80,6 +84,28 @@ fun ActivityContent(
                                 style = MaterialTheme.typography.labelLarge
                             )
                         }
+                    }
+                }
+
+                FlowRow {
+                    Card(
+                        onClick = { component.onClickLearningTasks(activity.activityId.toInt()) }
+                    ) {
+                        Text(
+                            "Learning Tasks",
+                            Modifier.padding(8.dp)
+                        )
+                    }
+
+                    Spacer(Modifier.width(8.dp))
+
+                    Card(
+                        onClick = {  }
+                    ) {
+                        Text(
+                            "Resources (placeholder)",
+                            Modifier.padding(8.dp)
+                        )
                     }
                 }
 

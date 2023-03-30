@@ -65,6 +65,11 @@ fun LearningTasksContent(
             .map { it.key to it.value[0].subjectName }
             .associate { it.first to it.second }
 
+        // ensure activityFilter is valid
+        if (activityFilter != null && subjectNames[activityFilter] == null) {
+            component.setActivityFilter(null)
+        }
+
         Scaffold(
             topBar = {
                 var dropdownExpanded by remember { mutableStateOf(false) }
@@ -73,7 +78,7 @@ fun LearningTasksContent(
                 Box {
                     TextField(
                         value = if (activityFilter == null) "All"
-                                else subjectNames[activityFilter]!!,
+                                else subjectNames[activityFilter] ?: "All",
                         onValueChange = {  },
                         modifier = Modifier
                             .fillMaxWidth()

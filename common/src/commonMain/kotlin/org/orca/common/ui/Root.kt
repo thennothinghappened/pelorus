@@ -145,6 +145,10 @@ class RootComponent(
         navigation.push(Config.LearningTaskView(learningTaskActivityId, learningTaskId))
     }
 
+    private fun onClickLearningTasksFromActivity(learningTaskActivityId: Int) {
+        navigation.push(Config.LearningTasks(learningTaskActivityId))
+    }
+
     init {
         val credentials = getClientCredentials(preferences)
         if (credentials != null) {
@@ -177,7 +181,8 @@ class RootComponent(
             is Config.LearningTasks -> Child.LearningTasksChild(LearningTasksComponent(
                 componentContext = componentContext,
                 compass,
-                ::onClickLearningTaskById
+                ::onClickLearningTaskById,
+                config.activityFilter
             ))
             is Config.LearningTaskView -> Child.LearningTaskViewChild(LearningTaskViewComponent(
                 componentContext = componentContext,
@@ -193,7 +198,8 @@ class RootComponent(
             is Config.Activity -> Child.ActivityChild(ActivityComponent(
                 componentContext = componentContext,
                 compass,
-                navigation::pop
+                navigation::pop,
+                ::onClickLearningTasksFromActivity
             ))
         }
 
@@ -212,7 +218,7 @@ class RootComponent(
         object Login : Config
         object Home : Config
         object Calendar : Config
-        object LearningTasks : Config
+        data class LearningTasks(val activityFilter: Int? = null) : Config
         data class LearningTaskView(val learningTaskActivityId: Int, val learningTaskId: Int) : Config
         object Settings : Config
         data class Activity(val scheduleEntryIndex: Int) : Config
@@ -259,7 +265,7 @@ fun RootContent(
                     )
                     NavItem(
                         activeComponent is RootComponent.Child.LearningTasksChild,
-                        { component.goToNavItem(RootComponent.Config.LearningTasks) },
+                        { component.goToNavItem(RootComponent.Config.LearningTasks()) },
                         Icons.Default.Edit,
                         "Tasks"
                     )
@@ -300,7 +306,7 @@ fun RootContent(
                         )
                         NavItem(
                             activeComponent is RootComponent.Child.LearningTasksChild,
-                            { component.goToNavItem(RootComponent.Config.LearningTasks) },
+                            { component.goToNavItem(RootComponent.Config.LearningTasks()) },
                             Icons.Default.Edit,
                             "Tasks"
                         )
