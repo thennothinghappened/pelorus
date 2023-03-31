@@ -1,5 +1,5 @@
 group "org.orca"
-version "1.0-SNAPSHOT"
+version "b3.1"
 
 allprojects {
     repositories {
