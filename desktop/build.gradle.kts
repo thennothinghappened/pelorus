@@ -5,9 +5,6 @@ plugins {
     id("org.jetbrains.compose")
 }
 
-group = "org.orca"
-version = "1.0-SNAPSHOT"
-
 kotlin {
     jvm {
         compilations.all {
@@ -34,7 +31,7 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "pelorus"
-            packageVersion = "1.0.0"
+            packageVersion = version.toString().split("-")[0] // Deb files are super picky
         }
     }
 }

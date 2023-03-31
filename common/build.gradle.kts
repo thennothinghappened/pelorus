@@ -5,9 +5,6 @@ plugins {
     id("kotlin-parcelize")
 }
 
-group = "org.orca"
-version = "1.0-SNAPSHOT"
-
 kotlin {
     android()
     jvm("desktop") {

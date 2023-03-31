@@ -57,6 +57,9 @@ android {
                     "proguard-rules.txt"
                 )
             }
+            getByName("debug") {
+                versionNameSuffix = "DEBUG"
+            }
         }
     }
 }

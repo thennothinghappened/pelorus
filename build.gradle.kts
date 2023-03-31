@@ -1,7 +1,7 @@
-group "org.orca"
-version "b3.1"
-
 allprojects {
+    group = "org.orca"
+    version = "1.4.0-BETA"
+
     repositories {
         mavenLocal()
         google()
