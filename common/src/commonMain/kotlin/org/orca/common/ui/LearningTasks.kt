@@ -79,7 +79,7 @@ fun LearningTasksContent(
 
                 // Dropdown to choose a subject to filter by.
                 Box {
-                    TextField(
+                    OutlinedTextField(
                         value = if (activityFilter == null) "All"
                                 else subjectNames[activityFilter] ?: "All",
                         onValueChange = {  },
@@ -88,8 +88,9 @@ fun LearningTasksContent(
                             .clickable {
                                 dropdownExpanded = !dropdownExpanded
                             },
-                        enabled = false
-                    )
+                        enabled = false,
+                        label = { Text("Subject") }
+                        )
 
                     DropdownMenu(
                         dropdownExpanded,
