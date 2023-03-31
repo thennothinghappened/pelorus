@@ -1,4 +1,4 @@
-package org.orca.common.ui
+package org.orca.common.ui.views
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn

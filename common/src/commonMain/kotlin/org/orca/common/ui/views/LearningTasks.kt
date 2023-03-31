@@ -1,4 +1,4 @@
-package org.orca.common.ui
+package org.orca.common.ui.views
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable

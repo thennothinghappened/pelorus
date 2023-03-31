@@ -8,8 +8,8 @@ import androidx.compose.ui.window.rememberWindowState
 import com.arkivanov.decompose.DefaultComponentContext
 import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 import org.orca.common.data.utils.Preferences
-import org.orca.common.ui.RootComponent
-import org.orca.common.ui.RootContent
+import org.orca.common.ui.views.RootComponent
+import org.orca.common.ui.views.RootContent
 import org.orca.common.ui.theme.AppTheme
 import org.orca.common.ui.utils.WindowSize
 

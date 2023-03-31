@@ -1,4 +1,4 @@
-package org.orca.common.ui
+package org.orca.common.ui.views
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

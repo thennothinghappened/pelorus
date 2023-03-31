@@ -1,4 +1,4 @@
-package org.orca.common.ui.components
+package org.orca.common.ui.components.calendar
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.CardDefaults
@@ -10,6 +10,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.orca.common.data.formatAsHourMinute
 import org.orca.common.data.utils.collectAsStateAndLifecycle
+import org.orca.common.ui.components.CornersCard
 import org.orca.kotlass.IFlowKotlassClient
 import org.orca.kotlass.data.Activity
 

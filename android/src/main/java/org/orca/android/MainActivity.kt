@@ -15,11 +15,9 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.window.layout.WindowMetricsCalculator
 import com.arkivanov.decompose.defaultComponentContext
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import org.orca.common.data.utils.Preferences
-import org.orca.common.ui.RootComponent
-import org.orca.common.ui.RootContent
+import org.orca.common.ui.views.RootComponent
+import org.orca.common.ui.views.RootContent
 import org.orca.common.ui.theme.AppTheme
 import org.orca.common.ui.utils.WindowSize
 

@@ -1,6 +1,5 @@
-package org.orca.common.ui
+package org.orca.common.ui.views
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
@@ -87,8 +86,8 @@ fun ActivityContent(
                     }
                 }
 
-                FlowRow {
-                    Card(
+                FlowRow(Modifier.padding(vertical = 8.dp)) {
+                    FilledTonalButton(
                         onClick = { component.onClickLearningTasks(activity.activityId.toInt()) }
                     ) {
                         Text(
@@ -99,7 +98,7 @@ fun ActivityContent(
 
                     Spacer(Modifier.width(8.dp))
 
-                    Card(
+                    FilledTonalButton(
                         onClick = {  }
                     ) {
                         Text(
@@ -109,7 +108,7 @@ fun ActivityContent(
                     }
                 }
 
-                Spacer(Modifier.height(16.dp))
+                Spacer(Modifier.height(8.dp))
 
                 if (entry is IFlowKotlassClient.ScheduleEntry.Lesson) {
                     val lessonPlan by (entry as IFlowKotlassClient.ScheduleEntry.Lesson).lessonPlan.collectAsStateAndLifecycle()
