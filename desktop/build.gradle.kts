@@ -16,7 +16,7 @@ kotlin {
         withJava()
     }
     sourceSets {
-        val decomposeVersion = "1.0.0-beta-04"
+        val decomposeVersion = "1.0.0"
         val jvmMain by getting {
             dependencies {
                 implementation(project(":common"))
