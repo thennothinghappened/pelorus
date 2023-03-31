@@ -6,8 +6,8 @@ plugins {
     kotlin("android")
 }
 
-group "org.orca"
-version "1.0-SNAPSHOT"
+//group "org.orca"
+//version "1.0-SNAPSHOT"
 
 repositories {
     jcenter()
@@ -29,8 +29,8 @@ android {
         applicationId = "org.orca.android"
         minSdk = 23
         targetSdk = 33
-        versionCode = 1
-        versionName = "1.0-SNAPSHOT"
+        versionCode = 13
+        versionName = version.toString()
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
