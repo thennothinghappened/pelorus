@@ -17,6 +17,7 @@ import org.orca.common.data.formatAsVisualDate
 import org.orca.common.data.utils.collectAsStateAndLifecycle
 import org.orca.common.ui.components.ShortDivider
 import org.orca.common.ui.components.calendar.ClassList
+import org.orca.common.ui.components.calendar.DatePickerDialog
 import org.orca.common.ui.components.calendar.DueLearningTasks
 import org.orca.common.ui.components.calendar.ScheduleHolderType
 import org.orca.common.ui.utils.WindowSize
@@ -58,9 +59,12 @@ fun CalendarContent(
     windowSize: WindowSize
 ) { 
     val viewedDay by component.compass.calendarSchedule.startDate.collectAsStateAndLifecycle()
-//    var datePickerVisible by remember { mutableStateOf(true) }
-//
-//    DatePickerDialog(visible = datePickerVisible, onClose = { datePickerVisible = false }) { datePickerVisible = false }
+    var datePickerVisible by remember { mutableStateOf(false) }
+
+    DatePickerDialog(visible = datePickerVisible, onClose = { datePickerVisible = false }) {
+        component.setDay(it)
+        datePickerVisible = false
+    }
 
     Scaffold(
         bottomBar = {
@@ -75,7 +79,7 @@ fun CalendarContent(
                 )
                 NavigationBarItem(
                     false,
-                    {},
+                    { datePickerVisible = true },
                     { Icon(
                         imageVector = Icons.Default.DateRange,
                         contentDescription = "Select"

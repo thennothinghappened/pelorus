@@ -28,6 +28,7 @@ kotlin {
                 implementation("com.alialbaali.kamel:kamel-image:0.4.0")
                 implementation("ca.gosyer:accompanist-flowlayout:0.25.2")
                 implementation("me.xdrop:fuzzywuzzy:1.4.0")
+                implementation("com.wakaztahir:datetime:1.0.8")
 
             }
         }

@@ -1,6 +1,7 @@
 # Pelorus
  A custom Compose Multiplatform-based client for the [Compass](https://www.compass.education/) API! \
- API handling using [Kotlass](https://github.com/thennothinghappened/kotlass), HTML rendering using [HtmlText](https://github.com/thennothinghappened/HtmlText).
+ API handling using [Kotlass](https://github.com/thennothinghappened/kotlass), HTML rendering using [HtmlText](https://github.com/thennothinghappened/HtmlText). \
+ Thanks to [Qawaz's fork](https://github.com/Qawaz/compose-datetime) of the Material Datepicker for making it so easy to set that up in Multiplatform! \
  Currently in beta!
  
 ## Features
@@ -9,7 +10,7 @@ Unticked are planned features. You can also suggest features in *Issues*!
    - [x] (Experimental) desktop-style view (time between classes & class length)
  - [x] Calendar
    - [x] Day based navigation
-   - [ ] Date picker
+   - [x] Date picker
  - [x] Class view
    - [x] Lesson plan
    - [x] Resources
@@ -50,7 +51,7 @@ Unticked are planned features. You can also suggest features in *Issues*!
 ## Compiling
  Using either [Intellij Idea](https://www.jetbrains.com/idea/download) or [Android Studio](https://developer.android.com/studio/)
  with the Multiplatform plugin, clone and import the repo and let Gradle install dependencies. \
- You'll get some errors, since you won't have Kotlass or HtmlText. Make sure to clone these too, and run their `:maven:publishToMavenLocal` task first. \
+ You'll get some errors, since you won't have [Kotlass](https://github.com/thennothinghappened/kotlass), [HtmlText](https://github.com/thennothinghappened/HtmlText) or [compose-datetime](https://github.com/thennothinghappened/compose-datetime). Make sure to clone these too, and run their `:maven:publishToMavenLocal` task first. \
  Once the project sync is finished, run the `:desktop:compose desktop:run` gradle task to make sure it works. \
  Next, you can compile the APK through `:android:build:assemble`.
 
