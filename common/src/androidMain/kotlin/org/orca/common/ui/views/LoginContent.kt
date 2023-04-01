@@ -1,15 +1,13 @@
 package org.orca.common.ui.views
 
 import androidx.activity.OnBackPressedDispatcher
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.arkivanov.essenty.backhandler.BackHandler
 import org.orca.common.data.utils.collectAsStateAndLifecycle
 import org.orca.kotlass.KotlassClient
@@ -33,22 +31,21 @@ actual fun LoginContent(component: LoginComponent) {
     when (loginTypeChosen) {
         LoginTypeChosen.None -> {
             Column(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                Text("Login")
+                Text("Welcome to Pelorus!", style = MaterialTheme.typography.titleLarge)
+                Text("Login to Compass:", style = MaterialTheme.typography.titleMedium)
 
-                Button({
+                LoginOption("Normal", "Login using the Compass website, recommended!", Modifier.fillMaxWidth()) {
                     loginTypeChosen = LoginTypeChosen.Web
-                }) {
-                    Text("Web (Recommended)")
                 }
 
-                Button({
+                LoginOption("Fallback", "Login with manual data entry. Only use if the first option is unavailable.", Modifier.fillMaxWidth()) {
                     loginTypeChosen = LoginTypeChosen.Cookie
-                }) {
-                    Text("Cookie (Fallback)")
                 }
             }
         }
@@ -59,6 +56,25 @@ actual fun LoginContent(component: LoginComponent) {
         LoginTypeChosen.Cookie -> {
             BackHandler(onBackPressedDispatcher = onBackPressedDispatcher)
             CookieLoginContent(component)
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun LoginOption(
+    name: String,
+    description: String,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
+    Card(
+        modifier = modifier,
+        onClick = onClick
+    ) {
+        Column(Modifier.padding(16.dp)) {
+            Text(name, style = MaterialTheme.typography.titleLarge)
+            Text(description, style = MaterialTheme.typography.bodyMedium)
         }
     }
 }
