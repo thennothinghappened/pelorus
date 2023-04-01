@@ -18,6 +18,7 @@ import org.orca.common.data.Compass
 import org.orca.common.data.Platform
 import org.orca.common.data.getPlatform
 import org.orca.common.data.utils.collectAsStateAndLifecycle
+import org.orca.common.ui.components.DesktopBackButton
 import org.orca.common.ui.components.ErrorRenderer
 import org.orca.htmltext.HtmlText
 import org.orca.common.ui.components.NetStates
@@ -28,10 +29,10 @@ class ActivityComponent(
     componentContext: ComponentContext,
     val compass: Compass,
     val onBackPress: () -> Unit,
-    val onClickLearningTasks: (Int) -> Unit
+    val onClickLearningTasks: (Int) -> Unit,
+    val onClickResources: (Int) -> Unit
 ) : ComponentContext by componentContext
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ActivityContent(
     component: ActivityComponent,
@@ -49,13 +50,7 @@ fun ActivityContent(
     LazyColumn(
         contentPadding = PaddingValues(16.dp)
     ) {
-        if (getPlatform() == Platform.DESKTOP) {
-            item {
-                Button(onClick = component.onBackPress) {
-                    Icon(Icons.Default.ArrowBack, "Back")
-                }
-            }
-        }
+        item { DesktopBackButton(component.onBackPress) }
 
         item {
             NetStates(activity) { activity ->
@@ -79,7 +74,7 @@ fun ActivityContent(
                             )
                             Text(
                                 activity.managerTextReadable + "\n" +
-                                        "Room ${activity.locationDetails?.longName ?: activity.locationName}",
+                                        (activity.locationDetails?.longName ?: activity.locationName),
                                 style = MaterialTheme.typography.labelLarge
                             )
                         }
@@ -99,10 +94,10 @@ fun ActivityContent(
                     Spacer(Modifier.width(8.dp))
 
                     FilledTonalButton(
-                        onClick = {  }
+                        onClick = { component.onClickResources(activity.activityId.toInt()) }
                     ) {
                         Text(
-                            "Resources (placeholder)",
+                            "Resources",
                             Modifier.padding(8.dp)
                         )
                     }

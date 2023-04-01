@@ -143,6 +143,11 @@ class RootComponent(
         navigation.push(Config.LearningTasks(learningTaskActivityId))
     }
 
+    private fun onClickResourcesFromActivity(resourcesActivityId: Int) {
+        compass.loadActivityResources(resourcesActivityId)
+        navigation.push(Config.Resources(resourcesActivityId))
+    }
+
     init {
         val credentials = getClientCredentials(preferences)
         if (credentials != null) {
@@ -206,7 +211,16 @@ class RootComponent(
                     componentContext = componentContext,
                     compass,
                     navigation::pop,
-                    ::onClickLearningTasksFromActivity
+                    ::onClickLearningTasksFromActivity,
+                    ::onClickResourcesFromActivity
+                )
+            )
+            is Config.Resources -> Child.ResourcesChild(
+                ResourcesComponent(
+                    componentContext = componentContext,
+                    compass,
+                    config.activityId,
+                    navigation::pop
                 )
             )
         }
@@ -219,6 +233,7 @@ class RootComponent(
         class LearningTaskViewChild(val component: LearningTaskViewComponent) : Child
         class SettingsChild(val component: SettingsComponent) : Child
         class ActivityChild(val component: ActivityComponent) : Child
+        class ResourcesChild(val component: ResourcesComponent) : Child
     }
 
     @Parcelize
@@ -230,6 +245,7 @@ class RootComponent(
         data class LearningTaskView(val learningTaskActivityId: Int, val learningTaskId: Int) : Config
         object Settings : Config
         data class Activity(val scheduleEntryIndex: Int) : Config
+        data class Resources(val activityId: Int) : Config
     }
 
 
@@ -405,7 +421,11 @@ private fun RootChildSwitcher(
                 component = child.component,
                 windowSize = windowSize
             )
-            else -> {}
+            is RootComponent.Child.ResourcesChild -> ResourcesContent(
+                component = child.component,
+                windowSize = windowSize
+            )
+            else -> {  }
         }
     }
 }
