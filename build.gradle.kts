@@ -1,6 +1,6 @@
 allprojects {
     group = "org.orca"
-    version = "1.5.2-BETA"
+    version = "1.5.3-BETA"
 
     repositories {
         mavenLocal()

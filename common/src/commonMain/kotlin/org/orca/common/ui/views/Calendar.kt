@@ -61,7 +61,7 @@ fun CalendarContent(
     val viewedDay by component.compass.calendarSchedule.startDate.collectAsStateAndLifecycle()
     var datePickerVisible by remember { mutableStateOf(false) }
 
-    DatePickerDialog(visible = datePickerVisible, onClose = { datePickerVisible = false }) {
+    DatePickerDialog(visible = datePickerVisible, onClose = { datePickerVisible = false }, startDate = viewedDay!!) {
         component.setDay(it)
         datePickerVisible = false
     }

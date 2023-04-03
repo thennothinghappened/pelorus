@@ -112,9 +112,6 @@ fun ResourcesContent(
         NetStates(
             resourcesState
         ) { topNode ->
-            // hacky solution to prevent bug when leaving a FileNode
-            var lastFileNode: ResourceNode? = null
-
             Children(
                 stack = component.stack,
                 animation = stackAnimation(fade() + scale(
@@ -122,20 +119,28 @@ fun ResourcesContent(
                     backFactor = 1.15f
                 ))
             ) {
-                var node = topNode
-                    .find(
-                        component.stack.value.items
-                            .drop(1) // we don't need the top level node, as we start searching it first!
-                            .map { child -> (child.configuration as ResourcesComponent.Config).id }
-                    )
+                val nodeTree = component.stack.value.items
+                    .map { child -> (child.configuration as ResourcesComponent.Config).id }
+                    .toMutableList()
 
-                if (node == null) {
-                    node = topNode
-                    component.top()
+                val ourNodeId = (it.configuration as ResourcesComponent.Config).id
+
+                var ourNodeIndex = nodeTree.indexOf(ourNodeId)
+
+                if (ourNodeIndex == -1) {
+                    nodeTree.add(ourNodeId)
+                    ourNodeIndex = nodeTree.size - 1
                 }
 
-                if (node.fileType != FileType.Folder) {
-                    lastFileNode = node
+                val node = topNode.find(
+                    nodeTree
+                        .drop(1)
+                        .take(ourNodeIndex)
+                )
+
+                if (node == null) {
+                    component.up()
+                    return@Children
                 }
 
                 when (it.instance) {
@@ -161,7 +166,7 @@ fun ResourcesContent(
                     )
                     is ResourcesComponent.Child.FileChild -> {
                         File(
-                            lastFileNode!!,
+                            node,
                             component.compass::buildDomainUrlString,
                             component.compass::buildDomainFileDownloadString,
                             component::up,

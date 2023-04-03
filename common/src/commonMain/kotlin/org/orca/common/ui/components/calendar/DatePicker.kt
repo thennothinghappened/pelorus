@@ -19,6 +19,7 @@ import org.orca.common.ui.components.DialogBox
 @Composable
 fun DatePickerDialog(
     visible: Boolean,
+    startDate: LocalDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date,
     onClose: () -> Unit,
     onComplete: (LocalDate) -> Unit
 ) {
@@ -26,7 +27,7 @@ fun DatePickerDialog(
         onCloseRequest = onClose,
         visible = visible
     ) {
-        val datePickerState = rememberDatePickerState()
+        val datePickerState = rememberDatePickerState(startDate)
 
         Surface {
             Column {
