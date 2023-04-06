@@ -30,6 +30,7 @@ fun SettingsContent(
 ) {
     var verifyCredentials by rememberSaveable { mutableStateOf(component.preferences.get(DefaultPreferences.Api.verifyCredentials)) }
     var experimentalClassList by rememberSaveable { mutableStateOf(component.preferences.get(DefaultPreferences.App.experimentalClassList)) }
+    var useDevMode by rememberSaveable { mutableStateOf(component.preferences.get(DefaultPreferences.Api.useDevMode)) }
     var changeMade by rememberSaveable { mutableStateOf(false) }
 
     LazyColumn(
@@ -46,12 +47,22 @@ fun SettingsContent(
             Text("Use experimental class layout")
             Text(
                 "(Does not support cases where classes overlap, so don't rely on this always!)",
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.secondaryContainer
+                style = MaterialTheme.typography.labelSmall
             )
             Switch(
                 experimentalClassList,
                 { experimentalClassList = it; changeMade = true }
+            )
+        }
+        item {
+            Text("Use Kotlass Dev mode")
+            Text(
+                "Not useful for most users, this will cause instability by disabling input leniency.",
+                style = MaterialTheme.typography.labelSmall
+            )
+            Switch(
+                useDevMode,
+                { useDevMode = it; changeMade = true }
             )
         }
         item { Button(

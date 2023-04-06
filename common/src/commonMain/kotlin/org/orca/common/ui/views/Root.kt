@@ -56,7 +56,7 @@ class RootComponent(
 
     // weird workaround for null pointer at runtime if getting directly from other components
     val compass: Compass
-        get() = instanceKeeper.getOrCreate { Compass(compassClientCredentials) }
+        get() = instanceKeeper.getOrCreate { Compass(compassClientCredentials, devMode = preferences.get(DefaultPreferences.Api.useDevMode)) }
 
     private fun onFinishLogin(
         credentials: KotlassClient.CompassClientCredentials,

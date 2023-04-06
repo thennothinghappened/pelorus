@@ -21,11 +21,12 @@ import org.orca.kotlass.dummy.DummyKotlassClient
 class Compass(
     credentials: KotlassClient.CompassClientCredentials,
     scope: CoroutineScope = CoroutineScope(Dispatchers.IO),
-    dummy: Boolean = false
+    dummy: Boolean = false,
+    devMode: Boolean = false
 ) : FlowKotlassClient(
     credentials = credentials,
     scope = scope,
-    kotlassClient = if (dummy) DummyKotlassClient("example.com") else KotlassClient(credentials)
+    kotlassClient = if (dummy) DummyKotlassClient("example.com") else KotlassClient(credentials, devMode = devMode)
 ), InstanceKeeper.Instance {
     override fun onDestroy() {
         TODO("Not yet implemented")

@@ -53,6 +53,7 @@ object DefaultPreferences {
     object Api {
         private const val url = "api/"
         val verifyCredentials = Preference.BooleanPreference(url + "verifyCredentials", true)
+        val useDevMode = Preference.BooleanPreference(url + "useDevMode", false)
     }
 
     object App {
