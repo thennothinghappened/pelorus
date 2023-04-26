@@ -2,14 +2,12 @@ package org.orca.common.ui.views
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Switch
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.ComponentContext
+import org.orca.common.data.clearClientCredentials
 import org.orca.common.data.utils.DefaultPreferences
 import org.orca.common.data.utils.Preferences
 import org.orca.common.data.utils.get
@@ -63,6 +61,19 @@ fun SettingsContent(
             Switch(
                 useDevMode,
                 { useDevMode = it; changeMade = true }
+            )
+        }
+        item {
+            FilledTonalButton(
+                {
+                    clearClientCredentials(component.preferences)
+                }
+            ) {
+                Text("Logout")
+            }
+            Text(
+                "(Requires restart)",
+                style = MaterialTheme.typography.labelSmall
             )
         }
         item { Button(
