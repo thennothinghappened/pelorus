@@ -69,12 +69,8 @@ fun SettingsContent(
                     clearClientCredentials(component.preferences)
                 }
             ) {
-                Text("Logout")
+                Text("Logout (Requires restart)")
             }
-            Text(
-                "(Requires restart)",
-                style = MaterialTheme.typography.labelSmall
-            )
         }
         item { Button(
             {
