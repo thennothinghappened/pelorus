@@ -1,10 +1,17 @@
 package org.orca.common.ui.views
 
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.onClick
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.ComponentContext
 import org.orca.common.data.clearClientCredentials
@@ -29,63 +36,96 @@ fun SettingsContent(
     var verifyCredentials by rememberSaveable { mutableStateOf(component.preferences.get(DefaultPreferences.Api.verifyCredentials)) }
     var experimentalClassList by rememberSaveable { mutableStateOf(component.preferences.get(DefaultPreferences.App.experimentalClassList)) }
     var useDevMode by rememberSaveable { mutableStateOf(component.preferences.get(DefaultPreferences.Api.useDevMode)) }
-    var changeMade by rememberSaveable { mutableStateOf(false) }
 
     LazyColumn(
         contentPadding = PaddingValues(16.dp)
     ) {
-        item {
-            Text("Verify login credentials on startup")
-            Switch(
-                verifyCredentials,
-                { verifyCredentials = it; changeMade = true }
-            )
-        }
-        item {
-            Text("Use experimental class layout")
-            Text(
-                "(Does not support cases where classes overlap, so don't rely on this always!)",
-                style = MaterialTheme.typography.labelSmall
-            )
-            Switch(
-                experimentalClassList,
-                { experimentalClassList = it; changeMade = true }
-            )
-        }
-        item {
-            Text("Use Kotlass Dev mode")
-            Text(
-                "Not useful for most users, this will cause instability by disabling input leniency.",
-                style = MaterialTheme.typography.labelSmall
-            )
-            Switch(
-                useDevMode,
-                { useDevMode = it; changeMade = true }
-            )
-        }
-        item {
-            FilledTonalButton(
-                {
-                    clearClientCredentials(component.preferences)
-                }
+        item { SwitchSetting(
+            "Verify login credentials on startup",
+            "Small startup speed boost, causes issues if credentials invalidated.",
+            verifyCredentials
             ) {
-                Text("Logout (Requires restart)")
+                verifyCredentials = it
+                component.preferences.put(DefaultPreferences.Api.verifyCredentials, verifyCredentials)
             }
         }
-        item { Button(
-            {
-                // set the new preference values
-                component.preferences.put(DefaultPreferences.Api.verifyCredentials, verifyCredentials)
+        item { SwitchSetting(
+            "Use experimental class layout",
+            "(Warning: does not support overlapping classes!)",
+            experimentalClassList
+            ) {
+                experimentalClassList = it
                 component.preferences.put(DefaultPreferences.App.experimentalClassList, experimentalClassList)
+            }
+        }
+        item { SwitchSetting(
+            "Use Kotlass Dev mode",
+            "Not useful for most users, this causes instability!",
+            useDevMode
+            ) {
+                useDevMode = it;
+                component.preferences.put(DefaultPreferences.Api.useDevMode, useDevMode)
+            }
+        }
+        item { Setting(
+            "Logout",
+            "(Requires restart)",
+            { clearClientCredentials(component.preferences) }
+        ) }
+    }
+}
 
-                // reset if change was made
-                changeMade = false
-            },
-            enabled = changeMade
-        ) {
-            Text("Save")
-        } }
+@Composable
+private fun Setting(
+    title: String,
+    description: String? = null,
+    onClick: (() -> Unit)? = null,
+    content: (@Composable () -> Unit)? = null
+) {
+    var columnModifier: Modifier = Modifier
+    if (onClick != null) {
+        columnModifier = columnModifier.clickable(
+            onClick = onClick,
+            indication = rememberRipple(),
+            interactionSource = remember { MutableInteractionSource() }
+        )
     }
 
+    Column(
+        columnModifier
+    ) {
+        Box(
+            Modifier
+                .fillMaxWidth()
+                .padding(4.dp)
+        ) {
+            Column(Modifier.align(Alignment.CenterStart)) {
+                Text(title, style = MaterialTheme.typography.titleMedium)
+                if (description != null) {
+                    Text(
+                        description,
+                        style = MaterialTheme.typography.labelMedium.copy(color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    )
+                }
+            }
+            if (content != null) {
+                Column(Modifier.align(Alignment.CenterEnd)) {
+                    content()
+                }
+            }
+        }
+        Divider()
+    }
+}
 
+@Composable
+private fun SwitchSetting(
+    title: String,
+    description: String? = null,
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit
+) {
+    Setting(title, description) {
+        Switch(checked, onCheckedChange)
+    }
 }
