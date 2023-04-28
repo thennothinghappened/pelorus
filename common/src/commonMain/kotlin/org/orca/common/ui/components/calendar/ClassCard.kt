@@ -1,14 +1,15 @@
 package org.orca.common.ui.components.calendar
 
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import kotlinx.datetime.Clock
+import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import org.orca.common.data.formatAsHourMinute
 import org.orca.common.data.utils.collectAsStateAndLifecycle
 import org.orca.common.ui.components.CornersCard
 import org.orca.kotlass.IFlowKotlassClient
@@ -21,11 +22,10 @@ fun ClassCard(
     onClick: () -> Unit = {}
 ) {
 
-    val startTime = scheduleEntry.event.start?.toLocalDateTime(TimeZone.currentSystemDefault())?.time?.formatAsHourMinute()
-    val endTime = scheduleEntry.event.finish?.toLocalDateTime(TimeZone.currentSystemDefault())?.time?.formatAsHourMinute()
+    val startTime = scheduleEntry.event.start?.toLocalDateTime(TimeZone.currentSystemDefault())?.time
+    val endTime = scheduleEntry.event.finish?.toLocalDateTime(TimeZone.currentSystemDefault())?.time
 
     var title = scheduleEntry.event.longTitleWithoutTime
-    val time = if (scheduleEntry.event.allDay) "All Day" else "$startTime - $endTime"
     var teacher = ""
     var room = ""
     var colors = CardDefaults.cardColors()
@@ -45,7 +45,6 @@ fun ClassCard(
     if (scheduleEntry is IFlowKotlassClient.ScheduleEntry.ActivityEntry) {
 
         val activity by scheduleEntry.activity.collectAsStateAndLifecycle()
-//        val bannerUrl by scheduleEntry.bannerUrl.collectAsStateAndLifecycle()
 
         if (activity is IFlowKotlassClient.State.Success<Activity>) {
             title = (activity as IFlowKotlassClient.State.Success<Activity>).data.subjectName
@@ -56,11 +55,36 @@ fun ClassCard(
         }
     }
 
+    ClassCard(
+        title,
+        room,
+        teacher,
+        startTime,
+        endTime,
+        scheduleEntry.event.allDay,
+        onClick,
+        modifier,
+        colors
+    )
+}
+
+@Composable
+private fun ClassCard(
+    title: String,
+    room: String,
+    teacher: String,
+    startTime: LocalTime?,
+    endTime: LocalTime?,
+    allDay: Boolean = false,
+    onClick: () -> Unit = {},
+    modifier: Modifier = Modifier,
+    colors: CardColors = CardDefaults.cardColors()
+) {
     CornersCard(
         title,
         room,
         teacher,
-        time,
+        if (allDay) "All Day" else "$startTime - $endTime",
         modifier.fillMaxWidth(),
         onClick = onClick,
         colors = colors

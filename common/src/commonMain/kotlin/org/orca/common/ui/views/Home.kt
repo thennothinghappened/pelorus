@@ -9,14 +9,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.ComponentContext
+import io.kamel.core.Resource
 import io.kamel.image.KamelImage
 import io.kamel.image.lazyPainterResource
-import kotlinx.datetime.Clock
-import kotlinx.datetime.LocalTime
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
+import kotlinx.datetime.*
 import org.orca.common.data.Compass
 import org.orca.common.data.formatAsVisualDate
 import org.orca.common.data.timeAgo
@@ -104,46 +103,77 @@ fun HomeContent(
 }
 
 @Composable
-fun Newsfeed(
+private fun Newsfeed(
     modifier: Modifier = Modifier,
     newsfeedState: IFlowKotlassClient.State<List<NewsItem>>,
     compass: Compass
 ) {
+    Newsfeed(modifier) {
+        NetStates(newsfeedState) { list ->
+            list.forEach {
+                NewsfeedItem(
+                    it.title,
+                    it.userName,
+                    lazyPainterResource(compass.buildDomainUrlString(it.userImageUrl)),
+                    it.postDateTime,
+                    it.content1.toString(),
+                    it.attachments.map { Pair(it.name, compass.buildDomainUrlString(it.uiLink)) }
+                )
+            }
+        }
+    }
+}
 
+@Composable
+fun Newsfeed(
+    modifier: Modifier = Modifier,
+    feedContent: @Composable () -> Unit
+) {
     Column(
         modifier = modifier.padding(8.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text("Newsfeed", style = MaterialTheme.typography.labelMedium)
-        NetStates(newsfeedState) { list ->
-            list.forEach {
-                Card(modifier = Modifier.fillMaxWidth()) {
-                    Column(Modifier.padding(16.dp)) {
-                        Row {
-                            KamelImage(
-                                lazyPainterResource(compass.buildDomainUrlString(it.userImageUrl)),
-                                contentDescription = "Teacher Image",
-                                modifier = Modifier
-                                    .clip(RoundedCornerShape(8.dp))
-                            )
-                            Spacer(Modifier.size(8.dp))
-                            Column {
-                                Text(it.title, style = MaterialTheme.typography.titleMedium)
-                                Text("${it.userName} - ${it.postDateTime?.timeAgo()}", style = MaterialTheme.typography.titleSmall)
-                            }
-                        }
+        feedContent()
+    }
+}
 
-                        HtmlText(it.content1.toString())
+@Composable
+fun NewsfeedItem(
+    title: String,
+    poster: String,
+    posterImage: Resource<Painter>? = null,
+    postDateTime: Instant?,
+    content: String,
+    attachments: List<Pair<String, String>>
+) {
+    Card(modifier = Modifier.fillMaxWidth()) {
+        Column(Modifier.padding(16.dp)) {
+            Row {
+                if (posterImage != null) {
+                    KamelImage(
+                        posterImage,
+                        contentDescription = "Teacher Image",
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(8.dp))
+                    )
+                    Spacer(Modifier.size(8.dp))
+                }
 
-                        Column {
-                            it.attachments.forEach {  attachment ->
-                                CompassAttachment(
-                                    attachment.name,
-                                    compass.buildDomainUrlString(attachment.uiLink)
-                                )
-                            }
-                        }
-                    }
+                Column {
+                    Text(title, style = MaterialTheme.typography.titleMedium)
+                    Text("$poster - ${postDateTime?.timeAgo()}", style = MaterialTheme.typography.titleSmall)
+                }
+            }
+
+            HtmlText(content)
+
+            Column {
+                attachments.forEach { attachment ->
+                    CompassAttachment(
+                        attachment.first,
+                        attachment.second
+                    )
                 }
             }
         }
