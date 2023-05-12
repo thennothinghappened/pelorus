@@ -26,6 +26,7 @@ fun NewsfeedItem(
     content: String,
     attachments: List<Pair<String, String>>
 ) {
+
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(Modifier.padding(16.dp)) {
             Row {

@@ -34,15 +34,22 @@ class ActivityComponent(
 ) : ComponentContext by componentContext
 
 @Composable
-fun ActivityContent(
+internal fun ActivityContent(
     component: ActivityComponent,
     windowSize: WindowSize
 ) {
 
     val entry by component.compass.viewedEntry.collectAsStateAndLifecycle()
-    val activity = entry?.activity?.collectAsStateAndLifecycle()?.value
+    val activityState = entry?.activity?.collectAsStateAndLifecycle()?.value
+    val lessonPlan =
+        if (entry is IFlowKotlassClient.ScheduleEntry.Lesson)
+            (entry as IFlowKotlassClient.ScheduleEntry.Lesson)
+                .lessonPlan
+                .collectAsStateAndLifecycle().value
+        else null
 
-    if (activity == null) {
+
+    if (activityState == null) {
         Text("something has gone very, very wrong")
         return
     }
@@ -51,78 +58,109 @@ fun ActivityContent(
         contentPadding = PaddingValues(16.dp)
     ) {
         item { DesktopBackButton(component.onBackPress) }
-
         item {
-            NetStates(activity) { activity ->
-                Card(modifier = Modifier.fillMaxWidth()) {
-                    Row {
-                        KamelImage(
-                            lazyPainterResource(
-                                component.compass.buildDomainUrlString(
-                                    activity.coveringPhotoId ?: activity.managerPhotoPath
+            NetStates(activityState) { activity ->
+                ActivityContent(
+                    teacherPhotoUrl = component.compass.buildDomainUrlString(
+                        activity.coveringPhotoId ?: activity.managerPhotoPath
+                    ),
+                    teacherName = activity.managers[0].managerName,
+                    replacementTeacherName = activity.managers[0].coveringName,
+                    activityName = activity.subjectName ?: activity.activityDisplayName,
+                    locationName = activity.locationDetails?.longName ?: activity.locationName,
+                    replacementLocationName = if (activity.locations.isNotEmpty()) activity.locations[0].coveringLocationDetails?.longName else null,
+                    onClickLearningTasks = if (entry !is IFlowKotlassClient.ScheduleEntry.Lesson) null else { { component.onClickLearningTasks(activity.activityId.toInt()) } },
+                    onClickResources = if (entry !is IFlowKotlassClient.ScheduleEntry.Lesson) null else { { component.onClickResources(activity.activityId.toInt()) } },
+                    lessonPlan = if (lessonPlan == null) null else {
+                        {
+                            NetStates(
+                                lessonPlan,
+                                { CircularProgressIndicator() },
+                                { error -> ErrorRenderer(error) }
+                            ) { lp ->
+                                HtmlText(
+                                    lp ?: "<body>No lesson plan recorded.</body>",
+                                    domain = component.compass.buildDomainUrlString("")
                                 )
-                            ),
-                            contentDescription = "Teacher Photo",
-                            modifier = Modifier
-                                .padding(8.dp)
-                                .clip(CircleShape)
-                        )
-                        Column(modifier = Modifier.padding(8.dp)) {
-                            Text(
-                                activity.subjectName ?: activity.activityDisplayName,
-                                style = MaterialTheme.typography.titleMedium
-                            )
-                            Text(
-                                activity.managerTextReadable + "\n" +
-                                        (activity.locationDetails?.longName ?: activity.locationName),
-                                style = MaterialTheme.typography.labelLarge
-                            )
+                            }
                         }
-                    }
+                    },
+                    windowSize = windowSize
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun ActivityContent(
+    teacherPhotoUrl: String,
+    teacherName: String,
+    replacementTeacherName: String? = null,
+    activityName: String,
+    locationName: String,
+    replacementLocationName: String? = null,
+    onClickLearningTasks: (() -> Unit)? = null,
+    onClickResources: (() -> Unit)? = null,
+    lessonPlan: @Composable (() -> Unit)? = null,
+    windowSize: WindowSize? = null
+) {
+    Card(modifier = Modifier.fillMaxWidth()) {
+        Row {
+            KamelImage(
+                lazyPainterResource(teacherPhotoUrl),
+                contentDescription = "Teacher Photo",
+                modifier = Modifier
+                    .padding(8.dp)
+                    .clip(CircleShape)
+            )
+            Column(modifier = Modifier.padding(8.dp)) {
+                Text(
+                    activityName,
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Text(
+                    "${replacementTeacherName ?: teacherName}\n${replacementLocationName ?: locationName}",
+                    style = MaterialTheme.typography.labelLarge
+                )
+            }
+        }
+    }
+
+    if (onClickLearningTasks != null || onClickResources != null) {
+        FlowRow(Modifier.padding(vertical = 8.dp)) {
+            if (onClickLearningTasks != null) {
+                FilledTonalButton(
+                    onClick = onClickLearningTasks
+                ) {
+                    Text(
+                        "Learning Tasks",
+                        Modifier.padding(8.dp)
+                    )
                 }
+            }
 
-                FlowRow(Modifier.padding(vertical = 8.dp)) {
-                    FilledTonalButton(
-                        onClick = { component.onClickLearningTasks(activity.activityId.toInt()) }
-                    ) {
-                        Text(
-                            "Learning Tasks",
-                            Modifier.padding(8.dp)
-                        )
-                    }
-
-                    Spacer(Modifier.width(8.dp))
-
-                    FilledTonalButton(
-                        onClick = { component.onClickResources(activity.activityId.toInt()) }
-                    ) {
-                        Text(
-                            "Resources",
-                            Modifier.padding(8.dp)
-                        )
-                    }
+            if (onClickResources != null) {
+                Spacer(Modifier.width(8.dp))
+                FilledTonalButton(
+                    onClick = onClickResources
+                ) {
+                    Text(
+                        "Resources",
+                        Modifier.padding(8.dp)
+                    )
                 }
+            }
+        }
+    }
 
-                Spacer(Modifier.height(8.dp))
-
-                if (entry is IFlowKotlassClient.ScheduleEntry.Lesson) {
-                    val lessonPlan by (entry as IFlowKotlassClient.ScheduleEntry.Lesson).lessonPlan.collectAsStateAndLifecycle()
-                    Card(
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        NetStates(
-                            lessonPlan,
-                            { CircularProgressIndicator() },
-                            { error -> ErrorRenderer(error) }
-                        ) { lp ->
-                            HtmlText(
-                                lp ?: "<body>No lesson plan recorded.</body>",
-                                Modifier.padding(8.dp),
-                                domain = component.compass.buildDomainUrlString("")
-                            )
-                        }
-                    }
-                }
+    if (lessonPlan != null) {
+        Spacer(Modifier.height(8.dp))
+        Card(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Column(Modifier.padding(8.dp)) {
+                lessonPlan()
             }
         }
     }
