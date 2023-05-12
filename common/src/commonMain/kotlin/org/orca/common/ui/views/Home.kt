@@ -24,6 +24,8 @@ import org.orca.common.ui.components.*
 import org.orca.common.ui.components.calendar.ClassList
 import org.orca.common.ui.components.calendar.DueLearningTasks
 import org.orca.common.ui.components.calendar.ScheduleHolderType
+import org.orca.common.ui.components.newsfeed.NewsfeedItem
+import org.orca.common.ui.components.newsfeed.Newsfeed
 import org.orca.common.ui.utils.WindowSize
 import org.orca.kotlass.IFlowKotlassClient
 import org.orca.kotlass.data.NewsItem
@@ -119,62 +121,6 @@ private fun Newsfeed(
                     it.content1.toString(),
                     it.attachments.map { Pair(it.name, compass.buildDomainUrlString(it.uiLink)) }
                 )
-            }
-        }
-    }
-}
-
-@Composable
-fun Newsfeed(
-    modifier: Modifier = Modifier,
-    feedContent: @Composable () -> Unit
-) {
-    Column(
-        modifier = modifier.padding(8.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        Text("Newsfeed", style = MaterialTheme.typography.labelMedium)
-        feedContent()
-    }
-}
-
-@Composable
-fun NewsfeedItem(
-    title: String,
-    poster: String,
-    posterImage: Resource<Painter>? = null,
-    postDateTime: Instant?,
-    content: String,
-    attachments: List<Pair<String, String>>
-) {
-    Card(modifier = Modifier.fillMaxWidth()) {
-        Column(Modifier.padding(16.dp)) {
-            Row {
-                if (posterImage != null) {
-                    KamelImage(
-                        posterImage,
-                        contentDescription = "Teacher Image",
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(8.dp))
-                    )
-                    Spacer(Modifier.size(8.dp))
-                }
-
-                Column {
-                    Text(title, style = MaterialTheme.typography.titleMedium)
-                    Text("$poster - ${postDateTime?.timeAgo()}", style = MaterialTheme.typography.titleSmall)
-                }
-            }
-
-            HtmlText(content)
-
-            Column {
-                attachments.forEach { attachment ->
-                    CompassAttachment(
-                        attachment.first,
-                        attachment.second
-                    )
-                }
             }
         }
     }

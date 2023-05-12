@@ -3,13 +3,12 @@ package org.orca.common.ui.preview
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.runtime.Composable
 import io.kamel.image.lazyPainterResource
-import org.orca.common.ui.views.Newsfeed
-import org.orca.common.ui.views.NewsfeedItem
+import org.orca.common.ui.components.newsfeed.Newsfeed
+import org.orca.common.ui.components.newsfeed.NewsfeedItem
 
 @Preview
 @Composable
 private fun NewsfeedPreview() {
-
     Newsfeed {
         NewsfeedItem(
             "Test Newsfeed Item",

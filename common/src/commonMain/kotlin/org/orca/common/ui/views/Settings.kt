@@ -26,6 +26,7 @@ class SettingsComponent(
 
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsContent(
     component: SettingsComponent,
@@ -73,6 +74,7 @@ fun SettingsContent(
     }
 }
 
+@ExperimentalMaterial3Api
 @Composable
 private fun Setting(
     title: String,
@@ -80,42 +82,33 @@ private fun Setting(
     onClick: (() -> Unit)? = null,
     content: (@Composable () -> Unit)? = null
 ) {
-    var columnModifier: Modifier = Modifier
-    if (onClick != null) {
-        columnModifier = columnModifier.clickable(
-            onClick = onClick,
-            indication = rememberRipple(),
-            interactionSource = remember { MutableInteractionSource() }
-        )
-    }
-
-    Column(
-        columnModifier
-    ) {
-        Box(
-            Modifier
-                .fillMaxWidth()
-                .padding(4.dp)
-        ) {
-            Column(Modifier.align(Alignment.CenterStart)) {
+    Column {
+        ListItem(
+            headlineText = {
                 Text(title, style = MaterialTheme.typography.titleMedium)
-                if (description != null) {
+            },
+            supportingText = if (description == null) {
+                null
+            } else {
+                {
                     Text(
                         description,
                         style = MaterialTheme.typography.labelMedium.copy(color = MaterialTheme.colorScheme.onSurfaceVariant)
                     )
                 }
-            }
-            if (content != null) {
-                Column(Modifier.align(Alignment.CenterEnd)) {
-                    content()
-                }
-            }
-        }
+            },
+            trailingContent = content,
+            modifier = if (onClick == null) Modifier else Modifier.clickable(
+                onClick = onClick,
+                indication = rememberRipple(),
+                interactionSource = remember { MutableInteractionSource() }
+            )
+        )
         Divider()
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SwitchSetting(
     title: String,
