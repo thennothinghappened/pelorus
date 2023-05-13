@@ -16,6 +16,7 @@ import org.orca.common.data.utils.DefaultPreferences
 import org.orca.common.data.utils.Preferences
 import org.orca.common.data.utils.get
 import org.orca.common.data.utils.put
+import org.orca.common.ui.components.ListItemWorkaround
 import org.orca.common.ui.utils.WindowSize
 
 class SettingsComponent(
@@ -82,7 +83,7 @@ private fun Setting(
     content: (@Composable () -> Unit)? = null
 ) {
     Column {
-        ListItem(
+        ListItemWorkaround(
             headlineText = {
                 Text(title, style = MaterialTheme.typography.titleMedium)
             },
