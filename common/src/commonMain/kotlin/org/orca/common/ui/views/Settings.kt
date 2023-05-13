@@ -22,9 +22,7 @@ import org.orca.common.ui.utils.WindowSize
 class SettingsComponent(
     componentContext: ComponentContext,
     val preferences: Preferences
-) : ComponentContext by componentContext {
-
-}
+) : ComponentContext by componentContext
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
