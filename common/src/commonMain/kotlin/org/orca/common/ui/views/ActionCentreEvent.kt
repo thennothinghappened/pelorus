@@ -1,6 +1,5 @@
 package org.orca.common.ui.views
 
-import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -130,26 +129,4 @@ private fun EventSubheading(
     }
 
     Spacer(Modifier.height(16.dp))
-}
-
-@Preview
-@Composable
-fun ActionCentreEventComponentPreview() {
-    AppTheme {
-        Surface(Modifier.fillMaxSize()) {
-            ActionCentreEventComponent(
-                "To do stuff",
-                listOf(
-                    ActionCentreEventSession(
-                        "Somewhere",
-                        LocalDateTime(2023, 1, 1, 1, 0, 0, 0),
-                        LocalDateTime(2023, 1, 1, 2, 0, 0, 0)
-                    )
-                ),
-                "We gonna do some stuff.",
-                "Anything",
-                "Nothing"
-            )
-        }
-    }
 }
