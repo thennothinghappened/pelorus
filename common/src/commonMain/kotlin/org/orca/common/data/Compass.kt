@@ -44,6 +44,7 @@ class Compass(
         beginPolling(defaultLearningTasks)
         manualPoll(calendarSchedule)
         manualPoll(defaultTaskCategories)
+        manualPoll(defaultActionCentreEvents)
     }
 
     fun setViewedEntry(scheduleEntry: ScheduleEntry.ActivityEntry) {

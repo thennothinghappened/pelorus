@@ -93,23 +93,34 @@ class RootComponent(
         navigation.replaceAll(config)
     }
 
+    private fun getScheduleEntry(
+        scheduleEntryIndex: Int,
+        scheduleHolderType: ScheduleHolderType,
+        schedule: IFlowKotlassClient.Pollable.Schedule
+    ): IFlowKotlassClient.ScheduleEntry? {
+        if (schedule.state.value !is IFlowKotlassClient.State.Success) return null
+
+        val scheduleStateHolder =
+            (schedule.state.value as IFlowKotlassClient.State.Success<IFlowKotlassClient.Pollable.Schedule.ScheduleStateHolder>).data
+
+        val subSchedule = when(scheduleHolderType) {
+            ScheduleHolderType.allDay -> scheduleStateHolder.allDay
+            ScheduleHolderType.normal -> scheduleStateHolder.normal
+        }
+
+        return subSchedule[scheduleEntryIndex]
+    }
+
     private fun onClickActivity(
         scheduleEntryIndex: Int,
         scheduleHolderType: ScheduleHolderType,
         schedule: IFlowKotlassClient.Pollable.Schedule
     ) {
-        if (schedule.state.value !is IFlowKotlassClient.State.Success) return
-
-
-        val scheduleStateHolder =
-            (schedule.state.value as IFlowKotlassClient.State.Success<IFlowKotlassClient.Pollable.Schedule.ScheduleStateHolder>).data
-
-        val subschedule = when(scheduleHolderType) {
-            ScheduleHolderType.allDay -> scheduleStateHolder.allDay
-            ScheduleHolderType.normal -> scheduleStateHolder.normal
-        }
-
-        val scheduleEntry = subschedule[scheduleEntryIndex]
+        val scheduleEntry = getScheduleEntry(
+            scheduleEntryIndex,
+            scheduleHolderType,
+            schedule
+        )
 
         if (scheduleEntry !is IFlowKotlassClient.ScheduleEntry.ActivityEntry) return
 
@@ -148,6 +159,41 @@ class RootComponent(
         navigation.push(Config.Resources(resourcesActivityId))
     }
 
+    private fun onClickActionCentreEvent(eventId: Int) {
+        navigation.push(Config.ActionCentreEvent(eventId))
+    }
+
+    private fun onClickActionCentreEventByScheduleEntry(
+        scheduleEntryIndex: Int,
+        scheduleHolderType: ScheduleHolderType,
+        schedule: IFlowKotlassClient.Pollable.Schedule
+    ) {
+        if (compass.defaultActionCentreEvents.state.value !is IFlowKotlassClient.State.Success) return
+
+        val scheduleEntry = getScheduleEntry(
+            scheduleEntryIndex,
+            scheduleHolderType,
+            schedule
+        )
+
+        if (scheduleEntry !is IFlowKotlassClient.ScheduleEntry.Event) return
+
+        // Attempt to locate the entry
+        val indexList = (compass.defaultActionCentreEvents.state.value as IFlowKotlassClient.State.Success)
+            .data.filter { it.name.trim() == scheduleEntry.event.title.trim() }
+
+        if (indexList.isEmpty()) return
+
+        // Track it down *exactly* by instanceId.
+        val index = indexList.find { event ->
+            event.sessions.find { session ->
+                session.instanceId == scheduleEntry.event.instanceId
+            } != null
+        } ?: return
+
+        onClickActionCentreEvent(index.id)
+    }
+
     init {
         val credentials = getClientCredentials(preferences)
         if (credentials != null) {
@@ -168,6 +214,7 @@ class RootComponent(
                     componentContext = componentContext,
                     compass,
                     ::onClickActivity,
+                    ::onClickActionCentreEventByScheduleEntry,
                     ::onClickLearningTaskByName,
                     preferences.get(DefaultPreferences.App.experimentalClassList),
                     preferences.get(DefaultPreferences.Credentials.schoolStartTime)
@@ -178,6 +225,7 @@ class RootComponent(
                     componentContext = componentContext,
                     compass,
                     ::onClickActivity,
+                    ::onClickActionCentreEventByScheduleEntry,
                     ::onClickLearningTaskByName,
                     preferences.get(DefaultPreferences.App.experimentalClassList),
                     preferences.get(DefaultPreferences.Credentials.schoolStartTime)
@@ -223,6 +271,19 @@ class RootComponent(
                     navigation::pop
                 )
             )
+            is Config.Profile -> Child.ProfileChild(
+                ProfileComponent(
+                    compass,
+                    ::onClickActionCentreEvent
+                )
+            )
+            is Config.ActionCentreEvent -> Child.ActionCentreEventChild(
+                ActionCentreEventComponent(
+                    compass,
+                    config.eventId,
+                    navigation::pop
+                )
+            )
         }
 
     sealed interface Child {
@@ -234,6 +295,8 @@ class RootComponent(
         class SettingsChild(val component: SettingsComponent) : Child
         class ActivityChild(val component: ActivityComponent) : Child
         class ResourcesChild(val component: ResourcesComponent) : Child
+        class ProfileChild(val component: ProfileComponent) : Child
+        class ActionCentreEventChild(val component: ActionCentreEventComponent) : Child
     }
 
     @Parcelize
@@ -246,6 +309,8 @@ class RootComponent(
         object Settings : Config
         data class Activity(val scheduleEntryIndex: Int) : Config
         data class Resources(val activityId: Int) : Config
+        object Profile : Config
+        data class ActionCentreEvent(val eventId: Int) : Config
     }
 
 
@@ -294,6 +359,12 @@ fun RootContent(
                         "Tasks"
                     )
                     NavItem(
+                        false,
+                        { component.goToNavItem(RootComponent.Config.Profile) },
+                        Icons.Default.Person,
+                        "Profile"
+                    )
+                    NavItem(
                         activeComponent is RootComponent.Child.SettingsChild,
                         { component.goToNavItem(RootComponent.Config.Settings) },
                         Icons.Default.Settings,
@@ -336,7 +407,7 @@ fun RootContent(
                         )
                         NavItem(
                             false,
-                            {  },
+                            { component.goToNavItem(RootComponent.Config.Profile) },
                             Icons.Default.Person,
                             "Profile"
                         )
@@ -386,6 +457,7 @@ fun ColumnScope.NavItem(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun RootChildSwitcher(
     component: RootComponent,
@@ -424,6 +496,12 @@ private fun RootChildSwitcher(
             is RootComponent.Child.ResourcesChild -> ResourcesContent(
                 component = child.component,
                 windowSize = windowSize
+            )
+            is RootComponent.Child.ProfileChild -> ProfileContent(
+                component = child.component
+            )
+            is RootComponent.Child.ActionCentreEventChild -> ActionCentreEventContent(
+                component = child.component
             )
             else -> {  }
         }

@@ -27,6 +27,7 @@ class CalendarComponent(
     componentContext: ComponentContext,
     val compass: Compass,
     val onClickActivity: (Int, ScheduleHolderType, IFlowKotlassClient.Pollable.Schedule) -> Unit,
+    val onClickEvent: (Int, ScheduleHolderType, IFlowKotlassClient.Pollable.Schedule) -> Unit,
     val onClickLearningTask: (String) -> Unit,
     val experimentalClassList: Boolean,
     val schoolStartTime: LocalTime
@@ -110,6 +111,7 @@ fun CalendarContent(
                         windowSize = windowSize,
                         schedule = component.compass.calendarSchedule,
                         onClickActivity = component.onClickActivity,
+                        onClickEvent = component.onClickEvent,
                         experimentalClassList = component.experimentalClassList,
                         _schoolStartTime = component.schoolStartTime,
                         date = viewedDay!!

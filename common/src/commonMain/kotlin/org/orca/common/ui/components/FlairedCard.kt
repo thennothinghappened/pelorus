@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun FlairedCard(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     flairColor: Color,
     shape: Shape = CardDefaults.shape,
     colors: CardColors = CardDefaults.cardColors(),
@@ -44,7 +44,7 @@ fun FlairedCard(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FlairedCard(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     flairColor: Color,
     shape: Shape = CardDefaults.shape,
     colors: CardColors = CardDefaults.cardColors(),

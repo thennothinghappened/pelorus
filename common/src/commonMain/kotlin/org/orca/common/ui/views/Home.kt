@@ -35,11 +35,11 @@ class HomeComponent(
     componentContext: ComponentContext,
     val compass: Compass,
     val onClickActivity: (Int, ScheduleHolderType, IFlowKotlassClient.Pollable.Schedule) -> Unit,
+    val onClickEvent: (Int, ScheduleHolderType, IFlowKotlassClient.Pollable.Schedule) -> Unit,
     val onClickLearningTask: (String) -> Unit,
     val experimentalClassList: Boolean,
     val schoolStartTime: LocalTime
 ) : ComponentContext by componentContext
-
 
 @Composable
 fun HomeContent(
@@ -63,6 +63,7 @@ fun HomeContent(
                                 windowSize = windowSize,
                                 schedule = component.compass.defaultSchedule,
                                 onClickActivity = component.onClickActivity,
+                                onClickEvent = component.onClickEvent,
                                 experimentalClassList = component.experimentalClassList,
                                 _schoolStartTime = component.schoolStartTime,
                                 date = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
@@ -83,6 +84,7 @@ fun HomeContent(
                         windowSize = windowSize,
                         schedule = component.compass.defaultSchedule,
                         onClickActivity = component.onClickActivity,
+                        onClickEvent = component.onClickEvent,
                         experimentalClassList = component.experimentalClassList,
                         _schoolStartTime = component.schoolStartTime,
                         date = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date

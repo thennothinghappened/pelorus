@@ -26,6 +26,7 @@ fun ClassList(
     windowSize: WindowSize,
     schedule: IFlowKotlassClient.Pollable.Schedule,
     onClickActivity: (Int, ScheduleHolderType, IFlowKotlassClient.Pollable.Schedule) -> Unit,
+    onClickEvent: (Int, ScheduleHolderType, IFlowKotlassClient.Pollable.Schedule) -> Unit,
     experimentalClassList: Boolean,
     _schoolStartTime: LocalTime,
     date: LocalDate
@@ -46,9 +47,15 @@ fun ClassList(
             }
 
             state.allDay.forEachIndexed { index, current ->
-                ClassCard(current, Modifier.height(48.dp)) {
-                    onClickActivity(index, ScheduleHolderType.allDay, schedule)
-                }
+                ClassCard(
+                    current,
+                    Modifier.height(48.dp),
+                    onClick = if (current is IFlowKotlassClient.ScheduleEntry.Event) {
+                        { onClickEvent(index, ScheduleHolderType.normal, schedule) }
+                    } else {
+                        { onClickActivity(index, ScheduleHolderType.normal, schedule) }
+                    }
+                )
             }
 
             if (!experimentalClassList) {
@@ -94,10 +101,13 @@ fun ClassList(
                 state.normal.forEachIndexed { index, it ->
                     ClassCard(it, Modifier
                         .padding(top = spacing[index][0])
-                        .height(spacing[index][1])
-                    ) {
-                        onClickActivity(index, ScheduleHolderType.normal, schedule)
-                    }
+                        .height(spacing[index][1]),
+                        onClick = if (it is IFlowKotlassClient.ScheduleEntry.Event) {
+                            { onClickEvent(index, ScheduleHolderType.normal, schedule) }
+                        } else {
+                            { onClickActivity(index, ScheduleHolderType.normal, schedule) }
+                        }
+                    )
                 }
             }
         }

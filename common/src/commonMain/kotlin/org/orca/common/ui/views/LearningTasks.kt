@@ -169,7 +169,7 @@ fun LearningTaskCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(0.dp, 16.dp),
-        flairColor = getLearningTaskColours(learningTask.students[0].submissionStatus).copy(0.6f),
+        flairColor = getLearningTaskColours(learningTask.students[0].submissionStatus),
         onClick = { onClickLearningTask(learningTask.activityId, learningTask.id) }
     ) {
         Column(
