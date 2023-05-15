@@ -14,6 +14,7 @@ import org.orca.common.data.formatAsDateTime
 import org.orca.common.data.utils.collectAsStateAndLifecycle
 import org.orca.common.ui.components.common.BackNavIcon
 import org.orca.common.ui.components.common.NetStates
+import org.orca.common.ui.defaults.Colours
 import org.orca.common.ui.defaults.Padding
 import org.orca.htmltext.HtmlText
 
@@ -49,7 +50,10 @@ fun ActionCentreEventContent(
                 },
                 navigationIcon = {
                     BackNavIcon(component.onBackPress)
-                }
+                },
+                colors = TopAppBarDefaults.mediumTopAppBarColors(
+                    containerColor = Colours.topBarBackground
+                )
             )
         }
     ) { paddingValues ->

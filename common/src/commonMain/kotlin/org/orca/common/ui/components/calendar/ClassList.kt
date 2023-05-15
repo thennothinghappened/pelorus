@@ -34,8 +34,7 @@ fun ClassList(
     val scheduleState by schedule.state.collectAsState()
 
     Column(
-        modifier = modifier.padding(8.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        modifier = modifier.padding(8.dp)
     ) {
         Text("Schedule", style = MaterialTheme.typography.labelMedium)
 
@@ -60,9 +59,12 @@ fun ClassList(
 
             if (!experimentalClassList) {
                 state.normal.forEachIndexed { index, current ->
-                    ClassCard(current, Modifier.height(65.dp)) {
-                        onClickActivity(index, ScheduleHolderType.normal, schedule)
+                    Column(Modifier.padding(vertical = 8.dp)) {
+                        ClassCard(current, Modifier.height(65.dp)) {
+                            onClickActivity(index, ScheduleHolderType.normal, schedule)
+                        }
                     }
+
                 }
             } else {
                 // calculate school start time for the day

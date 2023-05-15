@@ -30,6 +30,7 @@ import org.orca.common.data.Compass
 import org.orca.common.data.utils.collectAsStateAndLifecycle
 import org.orca.common.ui.defaults.Animations
 import org.orca.common.ui.components.common.*
+import org.orca.common.ui.defaults.Colours
 import org.orca.common.ui.defaults.Padding
 import org.orca.common.ui.utils.WindowSize
 import org.orca.htmltext.HtmlText
@@ -123,7 +124,10 @@ fun ResourcesContent(
                             Icon(Icons.Default.KeyboardArrowUp, contentDescription = "Go Up")
                         }
                     }
-                }
+                },
+                colors = TopAppBarDefaults.mediumTopAppBarColors(
+                    containerColor = Colours.topBarBackground
+                )
             )
         }
     ) { paddingValues ->

@@ -6,4 +6,5 @@ object Padding {
     val ScaffoldInner = 16.dp
 
     val Divider = 8.dp
+    val SpacerInner = 4.dp
 }

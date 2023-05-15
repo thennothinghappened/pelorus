@@ -24,7 +24,6 @@ fun ActivityPreview() {
                     "",
                     "Teacher TEACHER",
                     "Replacement TEACHER",
-                    "Class",
                     "Room 1",
                     "Room 2",
                     lessonPlan = {
