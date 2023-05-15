@@ -11,7 +11,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.ComponentContext
+import org.orca.common.data.Platform
 import org.orca.common.data.clearClientCredentials
+import org.orca.common.data.getPlatform
 import org.orca.common.data.utils.DefaultPreferences
 import org.orca.common.data.utils.Preferences
 import org.orca.common.data.utils.get
@@ -33,6 +35,7 @@ fun SettingsContent(
     var verifyCredentials by rememberSaveable { mutableStateOf(component.preferences.get(DefaultPreferences.Api.verifyCredentials)) }
     var experimentalClassList by rememberSaveable { mutableStateOf(component.preferences.get(DefaultPreferences.App.experimentalClassList)) }
     var useDevMode by rememberSaveable { mutableStateOf(component.preferences.get(DefaultPreferences.Api.useDevMode)) }
+    var dontReplaceStack by rememberSaveable { mutableStateOf(component.preferences.get(DefaultPreferences.App.dontReplaceStack)) }
 
     LazyColumn(
         contentPadding = PaddingValues(16.dp)
@@ -64,6 +67,14 @@ fun SettingsContent(
                 component.preferences.put(DefaultPreferences.Api.useDevMode, useDevMode)
             }
         }
+        if (getPlatform() == Platform.ANDROID) item { SwitchSetting(
+            "Allow back navigation between Navbar items",
+            "When enabled, presisng the back button will work between sibling main screen tabs.",
+            dontReplaceStack
+        ) {
+            dontReplaceStack = it
+            component.preferences.put(DefaultPreferences.App.dontReplaceStack, dontReplaceStack)
+        } }
         item { Setting(
             "Logout",
             "(Requires restart)",

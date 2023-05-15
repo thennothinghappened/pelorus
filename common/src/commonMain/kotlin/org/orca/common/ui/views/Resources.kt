@@ -125,7 +125,7 @@ fun ResourcesContent(
                     }
                 },
                 colors = TopAppBarDefaults.mediumTopAppBarColors(
-                    containerColor = Colours.topBarBackground
+                    containerColor = Colours.TopBarBackground
                 )
             )
         }

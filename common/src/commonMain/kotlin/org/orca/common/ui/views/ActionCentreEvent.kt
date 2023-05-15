@@ -52,7 +52,7 @@ fun ActionCentreEventContent(
                     BackNavIcon(component.onBackPress)
                 },
                 colors = TopAppBarDefaults.mediumTopAppBarColors(
-                    containerColor = Colours.topBarBackground
+                    containerColor = Colours.TopBarBackground
                 )
             )
         }

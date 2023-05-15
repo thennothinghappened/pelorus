@@ -59,5 +59,6 @@ object DefaultPreferences {
     object App {
         private const val url = "app/"
         val experimentalClassList = Preference.BooleanPreference(url + "experimentalClassList", true)
+        val dontReplaceStack = Preference.BooleanPreference(url + "dontReplaceStack", false)
     }
 }

@@ -11,6 +11,7 @@ import org.orca.kotlass.data.ActionCentreEventAttendanceStatus
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import org.orca.common.ui.defaults.Colours
 
 @ExperimentalMaterial3Api
 @Composable
@@ -26,8 +27,8 @@ fun ActionCentreEventListItem(
             .padding(0.dp, 16.dp),
         flairColor = when (attendanceMode) {
             ActionCentreEventAttendanceStatus.PENDING -> MaterialTheme.colorScheme.inverseOnSurface
-            ActionCentreEventAttendanceStatus.ATTENDING -> Color.Green
-            ActionCentreEventAttendanceStatus.AFTER_CONSENT_DATE -> Color.Red
+            ActionCentreEventAttendanceStatus.ATTENDING -> Colours.Green
+            ActionCentreEventAttendanceStatus.AFTER_CONSENT_DATE -> Colours.Red
         },
         onClick = onClick
     ) {

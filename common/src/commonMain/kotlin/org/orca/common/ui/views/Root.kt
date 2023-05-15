@@ -22,9 +22,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.datetime.*
-import org.orca.common.data.Compass
-import org.orca.common.data.getClientCredentials
-import org.orca.common.data.setClientCredentials
+import org.orca.common.data.*
 import org.orca.common.data.utils.DefaultPreferences
 import org.orca.common.ui.utils.WindowSize
 import org.orca.common.data.utils.Preferences
@@ -83,14 +81,17 @@ class RootComponent(
                 goToNavItem(Config.Home)
             }
         } else {
-            goToNavItem(Config.Home)
+            goToNavItem(Config.Home, true)
         }
 
         return NetResponse.Success(null)
     }
 
-    fun goToNavItem(config: Config) {
-        navigation.replaceAll(config)
+    fun goToNavItem(config: Config, forceReplaceStack: Boolean = false) {
+        if (forceReplaceStack || (getPlatform() == Platform.ANDROID && !preferences.get(DefaultPreferences.App.dontReplaceStack))) {
+            return navigation.replaceAll(config)
+        }
+        navigation.push(config)
     }
 
     private fun getScheduleEntry(

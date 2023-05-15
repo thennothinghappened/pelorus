@@ -5,6 +5,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.luminance
 
 expect fun getAppColourScheme(darkTheme: Boolean, dynamicColour: Boolean): ColorScheme
 expect fun getSystemDarkTheme(): Boolean
@@ -21,7 +22,8 @@ fun AppTheme(
     )
 }
 
-
+@Composable
+fun ColorScheme.isLight() = this.background.luminance() > 0.5
 
 val appDarkColourScheme = darkColorScheme()
 val appLightColourScheme = lightColorScheme()

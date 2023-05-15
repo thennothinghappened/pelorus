@@ -24,6 +24,7 @@ import org.orca.common.data.formatAsDateTime
 import org.orca.common.data.utils.collectAsStateAndLifecycle
 import org.orca.common.ui.components.common.FlairedCard
 import org.orca.common.ui.components.common.NetStates
+import org.orca.common.ui.defaults.Colours
 import org.orca.kotlass.IFlowKotlassClient
 import org.orca.kotlass.data.LearningTask
 import org.orca.kotlass.data.LearningTaskSubmissionStatus
@@ -218,7 +219,7 @@ fun LearningTaskCard(
 fun getLearningTaskColours(submissionStatus: LearningTaskSubmissionStatus): Color =
     when (submissionStatus) {
         LearningTaskSubmissionStatus.PENDING -> MaterialTheme.colorScheme.inverseOnSurface
-        LearningTaskSubmissionStatus.SUBMITTED_LATE -> Color.Yellow
-        LearningTaskSubmissionStatus.SUBMITTED_ON_TIME -> Color.Green
-        LearningTaskSubmissionStatus.OVERDUE -> Color.Red
+        LearningTaskSubmissionStatus.SUBMITTED_LATE -> Colours.Yellow
+        LearningTaskSubmissionStatus.SUBMITTED_ON_TIME -> Colours.Green
+        LearningTaskSubmissionStatus.OVERDUE -> Colours.Red
     }
