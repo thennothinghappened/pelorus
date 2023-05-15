@@ -1,6 +1,5 @@
 package org.orca.common.ui.views
 
-import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -35,20 +34,6 @@ class LearningTaskViewComponent(
     val learningTaskId: Int,
     val onBackPress: () -> Unit
 ) : ComponentContext by componentContext
-
-@Preview
-@Composable
-fun LearningTaskViewContentPreview() {
-    AppTheme {
-        Surface(Modifier.fillMaxSize()) {
-            LearningTaskViewContent(
-                "Test Task",
-                LocalDateTime(2023, 1, 1, 0, 0, 0, 0),
-                {}
-            )
-        }
-    }
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
