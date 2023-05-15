@@ -1,6 +1,7 @@
 package org.orca.common.ui.views
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -21,8 +22,8 @@ import kotlinx.datetime.toLocalDateTime
 import org.orca.common.data.Compass
 import org.orca.common.data.formatAsDateTime
 import org.orca.common.data.utils.collectAsStateAndLifecycle
-import org.orca.common.ui.components.FlairedCard
-import org.orca.common.ui.components.NetStates
+import org.orca.common.ui.components.common.FlairedCard
+import org.orca.common.ui.components.common.NetStates
 import org.orca.kotlass.IFlowKotlassClient
 import org.orca.kotlass.data.LearningTask
 import org.orca.kotlass.data.LearningTaskSubmissionStatus
@@ -124,17 +125,17 @@ fun LearningTasksContent(
                 else taskList
 
             LazyColumn(
-                modifier = Modifier.padding(paddingValues),
-                contentPadding = PaddingValues(16.dp)
+                modifier = Modifier.padding(paddingValues)
             ) {
 
                 filteredTaskList.forEach { subject ->
 
                     // Header for each subject
                     stickyHeader {
-                        ElevatedCard(
-                            Modifier
+                        Box(
+                            modifier = Modifier
                                 .fillMaxWidth()
+                                .background(MaterialTheme.colorScheme.surfaceColorAtElevation(4.dp))
                         ) {
                             Text(
                                 subjectNames[subject.key]!!,
@@ -168,7 +169,7 @@ fun LearningTaskCard(
     FlairedCard(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(0.dp, 16.dp),
+            .padding(16.dp, 16.dp),
         flairColor = getLearningTaskColours(learningTask.students[0].submissionStatus),
         onClick = { onClickLearningTask(learningTask.activityId, learningTask.id) }
     ) {

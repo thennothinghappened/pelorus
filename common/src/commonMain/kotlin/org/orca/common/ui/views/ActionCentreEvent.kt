@@ -1,23 +1,20 @@
 package org.orca.common.ui.views
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.orca.common.data.Compass
 import org.orca.common.data.formatAsDateTime
 import org.orca.common.data.utils.collectAsStateAndLifecycle
-import org.orca.common.ui.components.NetStates
-import org.orca.common.ui.theme.AppTheme
+import org.orca.common.ui.components.common.BackNavIcon
+import org.orca.common.ui.components.common.NetStates
+import org.orca.common.ui.defaults.Padding
 import org.orca.htmltext.HtmlText
 
 data class ActionCentreEventSession(
@@ -51,11 +48,7 @@ fun ActionCentreEventContent(
                     }
                 },
                 navigationIcon = {
-                    IconButton(
-                        onClick = component.onBackPress
-                    ) {
-                        Icon(Icons.Default.ArrowBack, "Back")
-                    }
+                    BackNavIcon(component.onBackPress)
                 }
             )
         }
@@ -120,13 +113,11 @@ private fun EventSubheading(
     text: String,
     domain: String? = null
 ) {
-    Card(Modifier.fillMaxWidth()) {
-        Column(Modifier.padding(8.dp)) {
-            Text(title, style = MaterialTheme.typography.titleLarge)
-            Spacer(Modifier.height(4.dp))
-            HtmlText(text, domain = domain)
-        }
+    Column(Modifier.padding(8.dp)) {
+        Text(title, style = MaterialTheme.typography.titleLarge)
+        Spacer(Modifier.height(4.dp))
+        HtmlText(text, domain = domain)
     }
 
-    Spacer(Modifier.height(16.dp))
+    Divider(Modifier.padding(vertical = Padding.Divider))
 }

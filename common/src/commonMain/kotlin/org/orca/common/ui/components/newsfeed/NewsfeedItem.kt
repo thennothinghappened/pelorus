@@ -14,7 +14,7 @@ import io.kamel.core.Resource
 import io.kamel.image.KamelImage
 import kotlinx.datetime.Instant
 import org.orca.common.data.timeAgo
-import org.orca.common.ui.components.CompassAttachment
+import org.orca.common.ui.components.common.CompassAttachment
 import org.orca.htmltext.HtmlText
 
 @Composable

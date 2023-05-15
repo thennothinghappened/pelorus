@@ -11,7 +11,7 @@ import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.orca.common.data.utils.collectAsStateAndLifecycle
-import org.orca.common.ui.components.CornersCard
+import org.orca.common.ui.components.common.CornersCard
 import org.orca.kotlass.IFlowKotlassClient
 import org.orca.kotlass.data.Activity
 

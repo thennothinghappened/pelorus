@@ -2,34 +2,28 @@ package org.orca.common.ui.views
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.ComponentContext
-import io.kamel.core.Resource
-import io.kamel.image.KamelImage
 import io.kamel.image.lazyPainterResource
 import kotlinx.datetime.*
 import org.orca.common.data.Compass
 import org.orca.common.data.formatAsVisualDate
-import org.orca.common.data.timeAgo
 import org.orca.common.data.utils.collectAsStateAndLifecycle
-import org.orca.common.ui.components.*
 import org.orca.common.ui.components.calendar.ClassList
 import org.orca.common.ui.components.calendar.DueLearningTasks
 import org.orca.common.ui.components.calendar.ScheduleHolderType
+import org.orca.common.ui.components.common.NetStates
+import org.orca.common.ui.components.common.ShortDivider
 import org.orca.common.ui.components.newsfeed.NewsfeedItem
 import org.orca.common.ui.components.newsfeed.Newsfeed
 import org.orca.common.ui.utils.WindowSize
 import org.orca.kotlass.IFlowKotlassClient
 import org.orca.kotlass.data.NewsItem
-import org.orca.htmltext.HtmlText
 
 class HomeComponent(
     componentContext: ComponentContext,

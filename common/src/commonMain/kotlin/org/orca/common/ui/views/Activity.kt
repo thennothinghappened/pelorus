@@ -3,8 +3,6 @@ package org.orca.common.ui.views
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -15,13 +13,11 @@ import com.google.accompanist.flowlayout.FlowRow
 import io.kamel.image.KamelImage
 import io.kamel.image.lazyPainterResource
 import org.orca.common.data.Compass
-import org.orca.common.data.Platform
-import org.orca.common.data.getPlatform
 import org.orca.common.data.utils.collectAsStateAndLifecycle
-import org.orca.common.ui.components.DesktopBackButton
-import org.orca.common.ui.components.ErrorRenderer
+import org.orca.common.ui.components.common.DesktopBackButton
+import org.orca.common.ui.components.common.ErrorRenderer
 import org.orca.htmltext.HtmlText
-import org.orca.common.ui.components.NetStates
+import org.orca.common.ui.components.common.NetStates
 import org.orca.common.ui.utils.WindowSize
 import org.orca.kotlass.IFlowKotlassClient
 

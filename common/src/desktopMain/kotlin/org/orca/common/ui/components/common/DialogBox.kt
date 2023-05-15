@@ -1,7 +1,8 @@
-package org.orca.common.ui.components
+package org.orca.common.ui.components.common
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogWindowScope
 
 @Composable
 actual fun DialogBox(
@@ -9,10 +10,10 @@ actual fun DialogBox(
     onCloseRequest: () -> Unit,
     content: @Composable () -> Unit
 ) {
-    if (visible)
-        Dialog(
-            onDismissRequest = onCloseRequest
-        ) {
-            content()
-        }
+    Dialog(
+        visible = visible,
+        onCloseRequest = onCloseRequest
+    ) {
+        content()
+    }
 }

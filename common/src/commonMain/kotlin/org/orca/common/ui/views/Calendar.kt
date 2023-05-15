@@ -15,7 +15,7 @@ import kotlinx.datetime.*
 import org.orca.common.data.Compass
 import org.orca.common.data.formatAsVisualDate
 import org.orca.common.data.utils.collectAsStateAndLifecycle
-import org.orca.common.ui.components.ShortDivider
+import org.orca.common.ui.components.common.ShortDivider
 import org.orca.common.ui.components.calendar.ClassList
 import org.orca.common.ui.components.calendar.DatePickerDialog
 import org.orca.common.ui.components.calendar.DueLearningTasks

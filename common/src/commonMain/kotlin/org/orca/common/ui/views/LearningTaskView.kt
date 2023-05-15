@@ -1,5 +1,6 @@
 package org.orca.common.ui.views
 
+import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -11,14 +12,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.ComponentContext
+import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.orca.common.data.*
 import org.orca.common.data.utils.collectAsStateAndLifecycle
-import org.orca.common.ui.components.CompassAttachment
-import org.orca.common.ui.components.FlairedCard
+import org.orca.common.ui.components.common.BackNavIcon
+import org.orca.common.ui.components.common.CompassAttachment
+import org.orca.common.ui.components.common.FlairedCard
 import org.orca.htmltext.HtmlText
-import org.orca.common.ui.components.NetStates
+import org.orca.common.ui.components.common.NetStates
+import org.orca.common.ui.theme.AppTheme
 import org.orca.common.ui.utils.WindowSize
 import org.orca.kotlass.data.LearningTaskAttachment
 import org.orca.kotlass.data.LearningTaskStudentSubmission
@@ -31,6 +35,65 @@ class LearningTaskViewComponent(
     val learningTaskId: Int,
     val onBackPress: () -> Unit
 ) : ComponentContext by componentContext
+
+@Preview
+@Composable
+fun LearningTaskViewContentPreview() {
+    AppTheme {
+        Surface(Modifier.fillMaxSize()) {
+            LearningTaskViewContent(
+                "Test Task",
+                LocalDateTime(2023, 1, 1, 0, 0, 0, 0),
+                {}
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun LearningTaskViewContent(
+    name: String,
+    dueDate: LocalDateTime? = null,
+    content: @Composable () -> Unit,
+
+    onBackPress: () -> Unit = {}
+) {
+    Scaffold(
+        topBar = {
+            LargeTopAppBar(
+                title = {
+                    Column {
+                        Text(name, style = MaterialTheme.typography.titleLarge)
+                        Text(
+                            if (dueDate == null) "No due date"
+                            else "Due" + dueDate.formatAsDateTime(),
+                            style = MaterialTheme.typography.titleSmall
+                        )
+                    }
+                },
+                navigationIcon = {
+                    BackNavIcon(onBackPress)
+                },
+                colors = TopAppBarDefaults.largeTopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp)
+                )
+            )
+        }
+    ) {
+        Column {
+            Text("Description", style = MaterialTheme.typography.titleLarge)
+            content()
+        }
+
+        Divider()
+
+        Column {
+            Text("Description", style = MaterialTheme.typography.titleLarge)
+            content()
+        }
+    }
+}
 
 @Composable
 fun LearningTaskViewContent(

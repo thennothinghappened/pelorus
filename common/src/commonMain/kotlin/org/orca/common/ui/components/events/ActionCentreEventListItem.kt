@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import org.orca.common.ui.components.FlairedCard
+import org.orca.common.ui.components.common.FlairedCard
 import org.orca.kotlass.data.ActionCentreEventAttendanceStatus
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight

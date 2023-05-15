@@ -359,7 +359,7 @@ fun RootContent(
                         "Tasks"
                     )
                     NavItem(
-                        false,
+                        activeComponent is RootComponent.Child.ProfileChild,
                         { component.goToNavItem(RootComponent.Config.Profile) },
                         Icons.Default.Person,
                         "Profile"
@@ -406,7 +406,7 @@ fun RootContent(
                             "Tasks"
                         )
                         NavItem(
-                            false,
+                            activeComponent is RootComponent.Child.ProfileChild,
                             { component.goToNavItem(RootComponent.Config.Profile) },
                             Icons.Default.Person,
                             "Profile"

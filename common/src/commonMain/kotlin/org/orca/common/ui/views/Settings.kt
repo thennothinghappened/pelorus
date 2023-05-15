@@ -16,7 +16,7 @@ import org.orca.common.data.utils.DefaultPreferences
 import org.orca.common.data.utils.Preferences
 import org.orca.common.data.utils.get
 import org.orca.common.data.utils.put
-import org.orca.common.ui.components.ListItemWorkaround
+import org.orca.common.ui.components.common.ListItemWorkaround
 import org.orca.common.ui.utils.WindowSize
 
 class SettingsComponent(
@@ -39,7 +39,7 @@ fun SettingsContent(
     ) {
         item { SwitchSetting(
             "Verify login credentials on startup",
-            "Small startup speed boost, causes issues if credentials invalidated.",
+            "Disabling this will marginally improve startup time, but pelorus can't know if credentials are valid.",
             verifyCredentials
             ) {
                 verifyCredentials = it
@@ -47,8 +47,8 @@ fun SettingsContent(
             }
         }
         item { SwitchSetting(
-            "Use experimental class layout",
-            "(Warning: does not support overlapping classes!)",
+            "Use time-based class layout",
+            "Improved class list layout, but doesn't account for class overlap.",
             experimentalClassList
             ) {
                 experimentalClassList = it
@@ -56,8 +56,8 @@ fun SettingsContent(
             }
         }
         item { SwitchSetting(
-            "Use Kotlass Dev mode",
-            "Not useful for most users, this causes instability!",
+            "Use Kotlass Developer mode",
+            "Disables lenient JSON parsing in kotlass. Don't use unless you know what you're doing.",
             useDevMode
             ) {
                 useDevMode = it;

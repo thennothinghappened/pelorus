@@ -1,11 +1,12 @@
 package org.orca.common.ui.views
 
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.onClick
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -15,9 +16,6 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.Children
-import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.fade
-import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.plus
-import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.scale
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.stackAnimation
 import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
@@ -30,8 +28,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import org.orca.common.data.Compass
 import org.orca.common.data.utils.collectAsStateAndLifecycle
-import org.orca.common.ui.components.DesktopBackButton
-import org.orca.common.ui.components.NetStates
+import org.orca.common.ui.defaults.Animations
+import org.orca.common.ui.components.common.*
+import org.orca.common.ui.defaults.Padding
 import org.orca.common.ui.utils.WindowSize
 import org.orca.htmltext.HtmlText
 import org.orca.kotlass.IFlowKotlassClient
@@ -99,51 +98,108 @@ class ResourcesComponent(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ResourcesContent(
+    title: String,
+    onBackPress: () -> Unit,
+    onGoUp: (() -> Unit)? = null,
+    content: @Composable () -> Unit
+) {
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(title, style = MaterialTheme.typography.titleMedium)
+                },
+                navigationIcon = {
+                    BackNavIcon(onBackPress)
+                },
+                actions = if (onGoUp == null) { {} } else {
+                    {
+                        IconButton(
+                            onClick = onGoUp,
+                        ) {
+                            Icon(Icons.Default.KeyboardArrowUp, contentDescription = "Go Up")
+                        }
+                    }
+                }
+            )
+        }
+    ) { paddingValues ->
+        Column(Modifier.padding(paddingValues)) {
+            content()
+        }
+    }
+}
+
 @Composable
 fun ResourcesContent(
     component: ResourcesComponent,
     windowSize: WindowSize
 ) {
-    val resourcesState by component.compass.defaultResources[component.activityId]!!.state.collectAsStateAndLifecycle()
+    val resourcesStateHolder = component.compass.defaultResources[component.activityId]?.state
+    if (resourcesStateHolder == null) {
+        ErrorRenderer(Exception("The Resource state didn't exist"))
+        return
+    }
 
-    Column {
-        DesktopBackButton(component.onBackPress)
+    val resourcesState by resourcesStateHolder.collectAsStateAndLifecycle()
 
-        NetStates(
-            resourcesState
-        ) { topNode ->
-            Children(
-                stack = component.stack,
-                animation = stackAnimation(fade() + scale(
-                    frontFactor = 0.95f,
-                    backFactor = 1.15f
-                ))
+    NetStates(
+        state = resourcesState,
+        loadingState = {
+            ResourcesContent(
+                title = "Loading",
+                onBackPress = component.onBackPress
             ) {
-                val nodeTree = component.stack.value.items
-                    .map { child -> (child.configuration as ResourcesComponent.Config).id }
-                    .toMutableList()
-
-                val ourNodeId = (it.configuration as ResourcesComponent.Config).id
-
-                var ourNodeIndex = nodeTree.indexOf(ourNodeId)
-
-                if (ourNodeIndex == -1) {
-                    nodeTree.add(ourNodeId)
-                    ourNodeIndex = nodeTree.size - 1
+                Box(Modifier.fillMaxSize()) {
+                    CircularProgressIndicator(Modifier.align(Alignment.Center))
                 }
+            }
+        }
+    ) { topNode ->
+        Children(
+            stack = component.stack,
+            animation = stackAnimation(Animations.zoomIn)
+        ) { currentChild ->
 
-                val node = topNode.find(
-                    nodeTree
-                        .drop(1)
-                        .take(ourNodeIndex)
-                )
+            // Grab the tree of node IDs from the stack
+            val nodeTree = component.stack.value.items
+                .map { child -> (child.configuration as ResourcesComponent.Config).id }
+                .toMutableList()
 
-                if (node == null) {
-                    component.up()
-                    return@Children
-                }
+            // Get our node ID for this render
+            val ourNodeId = (currentChild.configuration as ResourcesComponent.Config).id
 
-                when (it.instance) {
+            // Figure out where it is in the nodeTree
+            var ourNodeIndex = nodeTree.indexOf(ourNodeId)
+
+            // If it doesn't exist, add it
+            if (ourNodeIndex == -1) {
+                nodeTree.add(ourNodeId)
+                ourNodeIndex = nodeTree.size - 1
+            }
+
+            // Find which actual node it is in the physical tree
+            val node = topNode.find(
+                nodeTree
+                    .drop(1)
+                    .take(ourNodeIndex)
+            )
+
+            // If it doesn't exist (e.g. resources were refreshed and they deleted it since last time), go up.
+            if (node == null) {
+                component.up()
+                return@Children
+            }
+
+            ResourcesContent(
+                title = node.name,
+                onBackPress = component.onBackPress,
+                onGoUp = if (ourNodeIndex == 0) null else component::up
+            ) {
+                when (currentChild.instance) {
                     is ResourcesComponent.Child.FolderChild -> Folder(
                         node = node,
                         onClickChild = { clickedNode ->
@@ -154,7 +210,6 @@ fun ResourcesContent(
                                 }
                             )
                         },
-                        onClickBack = component::up,
                         imageGenerator = { url, modifier ->
                             KamelImage(
                                 resource = lazyPainterResource(component.compass.buildDomainUrlString(url)),
@@ -164,12 +219,12 @@ fun ResourcesContent(
                             )
                         }
                     )
+
                     is ResourcesComponent.Child.FileChild -> {
                         File(
                             node,
                             component.compass::buildDomainUrlString,
                             component.compass::buildDomainFileDownloadString,
-                            component::up,
                             component::loadFilePreview,
                             component.previewableFile,
                             component.domain
@@ -185,20 +240,11 @@ fun ResourcesContent(
 private fun Folder(
     node: ResourceNode,
     onClickChild: (ResourceNode) -> Unit,
-    onClickBack: () -> Unit,
-    imageGenerator: @Composable (String, Modifier) -> Unit,
-    modifier: Modifier = Modifier
+    imageGenerator: @Composable (String, Modifier) -> Unit
 ) {
     Column {
-        Text(node.name)
         LazyColumn(Modifier.padding(horizontal = 8.dp)) {
-
-            if (node.parentNodeId != null) {
-                item { FolderNode("Back", "", onClick = onClickBack) }
-            }
-
             items(node.children) { childNode ->
-
                 FolderNode(
                     childNode.name,
                     childNode.createdByUsername,
@@ -216,27 +262,18 @@ private fun FolderNode(
     name: String,
     author: String,
     icon: @Composable (Modifier) -> Unit = {},
-    modifier: Modifier = Modifier,
     onClick: () -> Unit,
 ) {
-    Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(IntrinsicSize.Max)
-            .padding(vertical = 8.dp),
-        onClick = onClick
-    ) {
-        Row(
-            Modifier.padding(8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            icon(Modifier.aspectRatio(1f).fillMaxHeight())
-            Column {
-                Text(name, style = MaterialTheme.typography.labelLarge)
-                Text(author, style = MaterialTheme.typography.labelMedium)
-            }
+    ListItemWorkaround(
+        modifier = Modifier.clickable { onClick() },
+        leadingContent = { icon(Modifier.size(32.dp)) },
+        headlineText = {
+            Text(name, style = MaterialTheme.typography.labelLarge)
+        },
+        supportingText = {
+            Text(author, style = MaterialTheme.typography.labelMedium)
         }
-    }
+    )
 }
 
 @Composable
@@ -244,78 +281,66 @@ private fun File(
     node: ResourceNode,
     urlGetter: (String) -> String,
     downloadUrlGetter: (String, String) -> String,
-    onBackPress: () -> Unit,
     fileDownloader: (String) -> Unit,
     fileFlow: StateFlow<IFlowKotlassClient.State<String>>,
-    domain: String? = null,
-    modifier: Modifier = Modifier
+    domain: String? = null
 ) {
     val uriHandler = LocalUriHandler.current
 
     LazyColumn(
-        Modifier
-            .fillMaxSize()
-            .padding(8.dp)
+        Modifier.fillMaxSize()
     ) {
-        item { DesktopBackButton(onBackPress) }
         item {
-            Card {
-                Column(Modifier.padding(8.dp)) {
+            Column(Modifier.padding(Padding.ScaffoldInner)) {
 
-                    Text(node.name, style = MaterialTheme.typography.titleMedium)
-                    Text(node.createdByUsername, style = MaterialTheme.typography.labelMedium)
+                Text(node.name, style = MaterialTheme.typography.titleMedium)
+                Text(node.createdByUsername, style = MaterialTheme.typography.labelMedium)
 
-                    val url = node.getUrl(urlGetter, downloadUrlGetter)
+                Divider(Modifier.padding(vertical = Padding.Divider))
 
-                    when (node.fileType) {
-                        FileType.HTMLDocument -> {
-                            fileDownloader(node.content!!.fileAssetId!!)
+                val url = node.getUrl(urlGetter, downloadUrlGetter)
 
-                            val filePreview by fileFlow.collectAsStateAndLifecycle()
+                when (node.fileType) {
+                    FileType.HTMLDocument -> {
+                        fileDownloader(node.content!!.fileAssetId!!)
 
-                            Card {
-                                NetStates(filePreview) { file ->
-                                    HtmlText(file, domain = domain)
-                                }
+                        val filePreview by fileFlow.collectAsStateAndLifecycle()
+
+                        Column {
+                            NetStates(filePreview) { file ->
+                                HtmlText(file, domain = domain)
                             }
                         }
+                    }
 
-                        FileType.Link -> {
-                            if (url != null) {
-                                Text(url, style = MaterialTheme.typography.labelSmall)
-                                Button(onClick = { uriHandler.openUri(url) }) {
-                                    Text("Open Link")
-                                }
+                    FileType.Link -> {
+                        if (url != null) {
+                            Text(url, style = MaterialTheme.typography.labelSmall)
+                            Button(onClick = { uriHandler.openUri(url) }) {
+                                Text("Open Link")
                             }
                         }
+                    }
 
-                        FileType.Document -> {
-                            if (url != null)
-                                Button(onClick = { uriHandler.openUri(url) }) {
-                                    Text("Download Document")
-                                }
-                        }
+                    FileType.Document -> {
+                        if (url != null)
+                            Button(onClick = { uriHandler.openUri(url) }) {
+                                Text("Download Document")
+                            }
+                    }
 
-                        else -> {
-                            Text("Encountered an unknown filetype ${node.fileType}! Please report this on GitHub with the file extension of this file.")
-                            if (url != null)
-                                Button(onClick = { uriHandler.openUri(url) }) {
-                                    Text("Download file")
-                                }
-                        }
+                    else -> {
+                        Text("Encountered an unknown filetype ${node.fileType}! Please report this on GitHub with the file extension of this file.")
+                        if (url != null)
+                            Button(onClick = { uriHandler.openUri(url) }) {
+                                Text("Download file")
+                            }
                     }
                 }
             }
         }
     }
 }
-
-fun ResourceNode.find(id: Int) = children.find { it.id == id }
-
-fun ResourceNode.find(path: List<Int>) =
-    path.fold<Int, ResourceNode?>(this) { node, i ->
-        return@fold node?.find(i)
-    }
 
 fun ResourceNode.getUrl(
     urlGetter: (String) -> String,

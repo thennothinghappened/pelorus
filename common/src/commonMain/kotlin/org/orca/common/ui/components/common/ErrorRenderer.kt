@@ -1,4 +1,4 @@
-package org.orca.common.ui.components
+package org.orca.common.ui.components.common
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding

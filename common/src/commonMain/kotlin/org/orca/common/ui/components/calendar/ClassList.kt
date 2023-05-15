@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import kotlinx.datetime.*
 import org.orca.common.data.toInstant
-import org.orca.common.ui.components.NetStates
+import org.orca.common.ui.components.common.NetStates
 import org.orca.common.ui.utils.WindowSize
 import org.orca.kotlass.IFlowKotlassClient
 import java.lang.Integer.max

@@ -7,14 +7,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import com.wakaztahir.datetime.date.DatePicker
 import com.wakaztahir.datetime.date.rememberDatePickerState
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import org.orca.common.ui.components.DialogBox
+import org.orca.common.ui.components.common.DialogBox
 
 @Composable
 fun DatePickerDialog(
