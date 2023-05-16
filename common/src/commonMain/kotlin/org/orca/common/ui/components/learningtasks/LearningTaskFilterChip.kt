@@ -1,8 +1,6 @@
 package org.orca.common.ui.components.learningtasks
 
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilterChip
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import org.orca.common.ui.defaults.Font
 
@@ -11,13 +9,15 @@ import org.orca.common.ui.defaults.Font
 fun LearningTaskFilterChip(
     selected: Boolean,
     onClick: () -> Unit,
-    label: String
+    label: String,
+    colors: SelectableChipColors = FilterChipDefaults.filterChipColors()
 ) {
     FilterChip(
         selected = selected,
         onClick = onClick,
         label = {
             Text(label, style = Font.filterChip)
-        }
+        },
+        colors = colors
     )
 }

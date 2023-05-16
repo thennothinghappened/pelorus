@@ -9,8 +9,10 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.ComponentContext
@@ -38,8 +40,13 @@ class LearningTasksComponent(
     componentContext: ComponentContext,
     val compass: Compass,
     val onClickLearningTask: (Int, Int) -> Unit,
-    activityFilter: Set<Int> = emptySet(),
-    statusFilter: Set<LearningTaskSubmissionStatus> = emptySet()
+    activityFilter: Set<Int> = setOf(-1),
+    statusFilter: Set<LearningTaskSubmissionStatus> = setOf(
+        LearningTaskSubmissionStatus.PENDING,
+        LearningTaskSubmissionStatus.SUBMITTED_LATE,
+        LearningTaskSubmissionStatus.SUBMITTED_ON_TIME,
+        LearningTaskSubmissionStatus.OVERDUE
+    )
 ) : ComponentContext by componentContext {
 
     private val _state = stateKeeper.consume("LEARNING_TASKS_STATE") ?: State(activityFilter, statusFilter)
@@ -106,50 +113,96 @@ fun LearningTasksContent(
             .map { it.key to it.value[0].subjectName }
             .associate { it.first to it.second }
 
-        Scaffold(
-            topBar = {
-                Column {
-                    LazyRow(horizontalArrangement = Arrangement.spacedBy(Padding.ChipListSpacing)) {
-                        item {
-                            LearningTaskFilterChip(
-                                selected = activityFilter.containsAll(subjectNames.keys),
-                                onClick = {
-                                    if (activityFilter.containsAll(subjectNames.keys)) {
-                                        component.setActivityFilter(emptySet())
-                                    } else {
-                                        component.setActivityFilter(subjectNames.keys)
-                                    }
-                                },
-                                label = "All"
-                            )
-                        }
-                        items(subjectNames.toList()) { subject ->
-                            LearningTaskFilterChip(
-                                selected = activityFilter.contains(subject.first),
-                                onClick = {
-                                    if (activityFilter.contains(subject.first)) {
-                                        component.removeActivityFilter(subject.first)
-                                    } else {
-                                        component.addActivityFilter(subject.first)
-                                    }
-                                },
-                                label = subject.second
-                            )
-                        }
-                    }
-//                    LazyRow(horizontalArrangement = Arrangement.spacedBy(Padding.ChipListSpacing)) {
-//                        items()
-//                    }
-                }
-            }
-        ) { paddingValues ->
+        if (activityFilter.contains(-1)) {
+            // got default config so add all of them
+            component.setActivityFilter(subjectNames.keys)
+        }
+
+        Scaffold { paddingValues ->
 
             val filteredTaskList =
-                taskList.filter { activityFilter.contains(it.key) }
+                taskList
+                    .filter { activityFilter.contains(it.key) }
+                    .map { subject ->
+                        subject.key to subject.value.filter { task ->
+                            statusFilter.contains(task.students[0].submissionStatus)
+                        }
+                    }
+                    .associate {
+                        it.first to it.second
+                    }
 
             LazyColumn(
                 modifier = Modifier.padding(paddingValues)
             ) {
+
+                item {
+                    Column {
+                        // Subject filtering row //
+                        Box(Modifier.fillMaxWidth()) {
+                            LazyRow(
+                                horizontalArrangement = Arrangement.spacedBy(Padding.ChipListSpacing),
+                                modifier = Modifier.align(Alignment.TopCenter)
+                            ) {
+                                // Select all //
+                                item {
+                                    LearningTaskFilterChip(
+                                        selected = activityFilter.containsAll(subjectNames.keys),
+                                        onClick = {
+                                            if (activityFilter.containsAll(subjectNames.keys)) {
+                                                component.setActivityFilter(emptySet())
+                                            } else {
+                                                component.setActivityFilter(subjectNames.keys)
+                                            }
+                                        },
+                                        label = "All"
+                                    )
+                                }
+                                // All subjects //
+                                items(subjectNames.toList()) { subject ->
+                                    LearningTaskFilterChip(
+                                        selected = activityFilter.contains(subject.first),
+                                        onClick = {
+                                            if (activityFilter.contains(subject.first)) {
+                                                component.removeActivityFilter(subject.first)
+                                            } else {
+                                                component.addActivityFilter(subject.first)
+                                            }
+                                        },
+                                        label = subject.second
+                                    )
+                                }
+                            }
+                        }
+
+                        // Status filtering row //
+                        Box(Modifier.fillMaxWidth()) {
+                            LazyRow(
+                                horizontalArrangement = Arrangement.spacedBy(Padding.ChipListSpacing),
+                                modifier = Modifier.align(Alignment.TopCenter)
+                            ) {
+                                items(LearningTaskSubmissionStatus.values()) { status ->
+                                    LearningTaskFilterChip(
+                                        selected = statusFilter.contains(status),
+                                        onClick = {
+                                            if (statusFilter.contains(status)) {
+                                                component.removeStatusFilter(status)
+                                            } else {
+                                                component.addStatusFilter(status)
+                                            }
+                                        },
+                                        label = learningTaskStatusNames[status]!!,
+                                        colors = FilterChipDefaults.filterChipColors(
+                                            selectedContainerColor = getLearningTaskColours(status),
+                                            selectedLabelColor = if (getLearningTaskColours(status).luminance() >= 0.2)
+                                                Colours.TopBarBackground else MaterialTheme.colorScheme.onSurface
+                                        )
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
 
                 filteredTaskList.forEach { subject ->
 
@@ -236,6 +289,13 @@ fun LearningTaskCard(
         }
     }
 }
+
+private val learningTaskStatusNames = mapOf(
+    LearningTaskSubmissionStatus.PENDING to "Pending",
+    LearningTaskSubmissionStatus.SUBMITTED_LATE to "Late",
+    LearningTaskSubmissionStatus.SUBMITTED_ON_TIME to "On time",
+    LearningTaskSubmissionStatus.OVERDUE to "Overdue"
+)
 
 @Composable
 fun getLearningTaskColours(submissionStatus: LearningTaskSubmissionStatus): Color =

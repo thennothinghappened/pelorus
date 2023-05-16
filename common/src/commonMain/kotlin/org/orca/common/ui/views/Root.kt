@@ -92,7 +92,7 @@ class RootComponent(
 //        if (forceReplaceStack || (getPlatform() == Platform.ANDROID && !preferences.get(DefaultPreferences.App.dontReplaceStack))) {
 //            return navigation.replaceAll(config)
 //        }
-        navigation.push(config)
+        navigation.replaceAll(config)
     }
 
     private fun getScheduleEntry(
