@@ -32,6 +32,7 @@ import org.orca.common.ui.components.calendar.ScheduleHolderType
 import org.orca.kotlass.IFlowKotlassClient
 import org.orca.kotlass.KotlassClient
 import org.orca.kotlass.data.LearningTask
+import org.orca.kotlass.data.LearningTaskSubmissionStatus
 import org.orca.kotlass.data.NetResponse
 
 class RootComponent(
@@ -152,7 +153,7 @@ class RootComponent(
     }
 
     private fun onClickLearningTasksFromActivity(learningTaskActivityId: Int) {
-        navigation.push(Config.LearningTasks(learningTaskActivityId))
+        navigation.push(Config.LearningTasks(setOf(learningTaskActivityId)))
     }
 
     private fun onClickResourcesFromActivity(resourcesActivityId: Int) {
@@ -305,7 +306,10 @@ class RootComponent(
         object Login : Config
         object Home : Config
         object Calendar : Config
-        data class LearningTasks(val activityFilter: Int? = null) : Config
+        data class LearningTasks(
+            val activityFilter: Set<Int> = emptySet(),
+            val statusFilter: Set<LearningTaskSubmissionStatus> = emptySet()
+        ) : Config
         data class LearningTaskView(val learningTaskActivityId: Int, val learningTaskId: Int) : Config
         object Settings : Config
         data class Activity(val scheduleEntryIndex: Int) : Config

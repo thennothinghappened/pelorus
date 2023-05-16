@@ -7,4 +7,6 @@ object Padding {
 
     val Divider = 8.dp
     val SpacerInner = 4.dp
+
+    val ChipListSpacing = 8.dp
 }

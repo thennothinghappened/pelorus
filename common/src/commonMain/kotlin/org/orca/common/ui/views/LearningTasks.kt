@@ -5,6 +5,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -24,7 +26,10 @@ import org.orca.common.data.formatAsDateTime
 import org.orca.common.data.utils.collectAsStateAndLifecycle
 import org.orca.common.ui.components.common.FlairedCard
 import org.orca.common.ui.components.common.NetStates
+import org.orca.common.ui.components.learningtasks.LearningTaskFilterChip
 import org.orca.common.ui.defaults.Colours
+import org.orca.common.ui.defaults.Font
+import org.orca.common.ui.defaults.Padding
 import org.orca.kotlass.IFlowKotlassClient
 import org.orca.kotlass.data.LearningTask
 import org.orca.kotlass.data.LearningTaskSubmissionStatus
@@ -33,26 +38,56 @@ class LearningTasksComponent(
     componentContext: ComponentContext,
     val compass: Compass,
     val onClickLearningTask: (Int, Int) -> Unit,
-    activityFilter: Int? = null
+    activityFilter: Set<Int> = emptySet(),
+    statusFilter: Set<LearningTaskSubmissionStatus> = emptySet()
 ) : ComponentContext by componentContext {
 
-    private val _state = stateKeeper.consume("LEARNING_TASKS_STATE") ?: State(activityFilter)
+    private val _state = stateKeeper.consume("LEARNING_TASKS_STATE") ?: State(activityFilter, statusFilter)
 
-    private val _activityFilter: MutableStateFlow<Int?> = MutableStateFlow(_state.activityFilter)
-    val activityFilter: StateFlow<Int?> = _activityFilter
+    private val _activityFilter: MutableStateFlow<Set<Int>> = MutableStateFlow(_state.activityFilter)
+    val activityFilter: StateFlow<Set<Int>> = _activityFilter
 
-    fun setActivityFilter(value: Int?) {
+    private val _statusFilter: MutableStateFlow<Set<LearningTaskSubmissionStatus>> = MutableStateFlow(_state.statusFilter)
+    val statusFilter: StateFlow<Set<LearningTaskSubmissionStatus>> = _statusFilter
+
+    fun setActivityFilter(value: Set<Int>) {
         _state.activityFilter = value
         _activityFilter.value = value
     }
 
+    fun addActivityFilter(value: Int) {
+        _state.activityFilter = _state.activityFilter.plus(value)
+        _activityFilter.value = _state.activityFilter
+    }
+
+    fun removeActivityFilter(value: Int) {
+        _state.activityFilter = _state.activityFilter.minus(value)
+        _activityFilter.value = _state.activityFilter
+    }
+
+    fun setStatusFilter(value: Set<LearningTaskSubmissionStatus>) {
+        _state.statusFilter = value
+        _statusFilter.value = value
+    }
+
+    fun addStatusFilter(value: LearningTaskSubmissionStatus) {
+        _state.statusFilter = _state.statusFilter.plus(value)
+        _statusFilter.value = _state.statusFilter
+    }
+
+    fun removeStatusFilter(value: LearningTaskSubmissionStatus) {
+        _state.statusFilter = _state.statusFilter.minus(value)
+        _statusFilter.value = _state.statusFilter
+    }
+
     init {
-        stateKeeper.register("LEARNING_TASKS_STATE") { State(activityFilter) }
+        stateKeeper.register("LEARNING_TASKS_STATE") { State(activityFilter, statusFilter) }
     }
 
     @Parcelize
     private class State(
-        var activityFilter: Int?
+        var activityFilter: Set<Int>,
+        var statusFilter: Set<LearningTaskSubmissionStatus>
     ) : Parcelable
 }
 
@@ -63,6 +98,7 @@ fun LearningTasksContent(
 ) {
     val learningTasksState by component.compass.defaultLearningTasks.state.collectAsStateAndLifecycle()
     val activityFilter by component.activityFilter.collectAsStateAndLifecycle()
+    val statusFilter by component.statusFilter.collectAsStateAndLifecycle()
 
     NetStates(learningTasksState) { taskList ->
 
@@ -70,60 +106,46 @@ fun LearningTasksContent(
             .map { it.key to it.value[0].subjectName }
             .associate { it.first to it.second }
 
-        // ensure activityFilter is valid
-        if (activityFilter != null && subjectNames[activityFilter] == null) {
-            component.setActivityFilter(null)
-        }
-
         Scaffold(
             topBar = {
-                var dropdownExpanded by remember { mutableStateOf(false) }
-
-                // Dropdown to choose a subject to filter by.
-                Box {
-                    OutlinedTextField(
-                        value = if (activityFilter == null) "All"
-                                else subjectNames[activityFilter] ?: "All",
-                        onValueChange = {  },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                dropdownExpanded = !dropdownExpanded
-                            },
-                        enabled = false,
-                        label = { Text("Subject") }
-                        )
-
-                    DropdownMenu(
-                        dropdownExpanded,
-                        { dropdownExpanded = false },
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        DropdownMenuItem(
-                            { Text("All") },
-                            {
-                                dropdownExpanded = false
-                                component.setActivityFilter(null)
-                            }
-                        )
-
-                        subjectNames.forEach { subject ->
-                            DropdownMenuItem(
-                                { Text(subject.value) },
-                                {
-                                    dropdownExpanded = false
-                                    component.setActivityFilter(subject.key)
-                                }
+                Column {
+                    LazyRow(horizontalArrangement = Arrangement.spacedBy(Padding.ChipListSpacing)) {
+                        item {
+                            LearningTaskFilterChip(
+                                selected = activityFilter.containsAll(subjectNames.keys),
+                                onClick = {
+                                    if (activityFilter.containsAll(subjectNames.keys)) {
+                                        component.setActivityFilter(emptySet())
+                                    } else {
+                                        component.setActivityFilter(subjectNames.keys)
+                                    }
+                                },
+                                label = "All"
+                            )
+                        }
+                        items(subjectNames.toList()) { subject ->
+                            LearningTaskFilterChip(
+                                selected = activityFilter.contains(subject.first),
+                                onClick = {
+                                    if (activityFilter.contains(subject.first)) {
+                                        component.removeActivityFilter(subject.first)
+                                    } else {
+                                        component.addActivityFilter(subject.first)
+                                    }
+                                },
+                                label = subject.second
                             )
                         }
                     }
+//                    LazyRow(horizontalArrangement = Arrangement.spacedBy(Padding.ChipListSpacing)) {
+//                        items()
+//                    }
                 }
             }
         ) { paddingValues ->
 
             val filteredTaskList =
-                if (activityFilter != null) taskList.filter { it.key == activityFilter }
-                else taskList
+                taskList.filter { activityFilter.contains(it.key) }
 
             LazyColumn(
                 modifier = Modifier.padding(paddingValues)
