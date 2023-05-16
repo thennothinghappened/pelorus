@@ -3,6 +3,8 @@ plugins {
     id("org.jetbrains.compose")
     id("com.android.library")
     id("kotlin-parcelize")
+    id("com.github.gmazzo.buildconfig") version "4.0.4"
+    kotlin("plugin.serialization") version "1.8.0"
 }
 
 kotlin {
@@ -15,6 +17,7 @@ kotlin {
     sourceSets {
         val datetimeVersion = "0.4.0"
         val decomposeVersion = "1.0.0"
+        val ktorVersion = "2.2.2"
         val commonMain by getting {
             dependencies {
                 api(compose.runtime)
@@ -27,8 +30,13 @@ kotlin {
                 implementation("com.arkivanov.decompose:extensions-compose-jetbrains:$decomposeVersion")
                 implementation("com.alialbaali.kamel:kamel-image:0.4.0")
                 implementation("ca.gosyer:accompanist-flowlayout:0.25.2")
-                implementation("me.xdrop:fuzzywuzzy:1.4.0")
+//                implementation("me.xdrop:fuzzywuzzy:1.4.0")
                 implementation("com.wakaztahir:datetime:1.0.8")
+                implementation("io.ktor:ktor-client-core:$ktorVersion")
+                implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
+                implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
+                implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
 
             }
         }
@@ -40,8 +48,8 @@ kotlin {
         val androidMain by getting {
             dependencies {
                 api("androidx.appcompat:appcompat:1.6.1")
-                api("androidx.core:core-ktx:1.9.0")
-                api("androidx.compose.material3:material3:1.1.0-beta01")
+                api("androidx.core:core-ktx:1.10.1")
+                api("androidx.compose.material3:material3:1.1.0")
                 implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.1")
             }
         }
@@ -71,4 +79,8 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+}
+
+buildConfig {
+    buildConfigField("String", "APP_VERSION", "\"${version}\"")
 }

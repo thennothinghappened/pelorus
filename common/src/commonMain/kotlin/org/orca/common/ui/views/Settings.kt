@@ -35,6 +35,7 @@ fun SettingsContent(
     var verifyCredentials by rememberSaveable { mutableStateOf(component.preferences.get(DefaultPreferences.Api.verifyCredentials)) }
     var experimentalClassList by rememberSaveable { mutableStateOf(component.preferences.get(DefaultPreferences.App.experimentalClassList)) }
     var useDevMode by rememberSaveable { mutableStateOf(component.preferences.get(DefaultPreferences.Api.useDevMode)) }
+    var checkForUpdates by rememberSaveable { mutableStateOf(component.preferences.get(DefaultPreferences.App.checkForUpdates)) }
 //    var dontReplaceStack by rememberSaveable { mutableStateOf(component.preferences.get(DefaultPreferences.App.dontReplaceStack)) }
 
     LazyColumn(
@@ -67,6 +68,14 @@ fun SettingsContent(
                 component.preferences.put(DefaultPreferences.Api.useDevMode, useDevMode)
             }
         }
+        item { SwitchSetting(
+            "Check for updates",
+            "Whether Pelorus should check for updates on startup",
+            checkForUpdates
+        ) {
+            checkForUpdates = it
+            component.preferences.put(DefaultPreferences.App.checkForUpdates, checkForUpdates)
+        } }
 //        if (getPlatform() == Platform.ANDROID) item { SwitchSetting(
 //            "Allow back navigation between Navbar items",
 //            "When enabled, presisng the back button will work between sibling main screen tabs.",

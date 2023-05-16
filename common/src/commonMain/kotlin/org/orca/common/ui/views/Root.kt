@@ -4,10 +4,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalUriHandler
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.Children
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.fade
@@ -20,13 +21,13 @@ import com.arkivanov.essenty.parcelable.Parcelable
 import com.arkivanov.essenty.parcelable.Parcelize
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.datetime.*
 import org.orca.common.data.*
-import org.orca.common.data.utils.DefaultPreferences
+import org.orca.common.data.utils.*
 import org.orca.common.ui.utils.WindowSize
-import org.orca.common.data.utils.Preferences
-import org.orca.common.data.utils.get
 import org.orca.common.ui.components.IWebViewBridge
 import org.orca.common.ui.components.calendar.ScheduleHolderType
 import org.orca.kotlass.IFlowKotlassClient
@@ -56,6 +57,18 @@ class RootComponent(
     // weird workaround for null pointer at runtime if getting directly from other components
     val compass: Compass
         get() = instanceKeeper.getOrCreate { Compass(compassClientCredentials, devMode = preferences.get(DefaultPreferences.Api.useDevMode)) }
+
+    // checking for updates
+    private val _updateCheckStatus: MutableStateFlow<NetResponse<Pair<Boolean, GitHubLatestVersionResponse?>>?> = MutableStateFlow(null)
+    val updateCheckStatus: StateFlow<NetResponse<Pair<Boolean, GitHubLatestVersionResponse?>>?> = _updateCheckStatus
+
+    fun checkForUpdates() {
+        _updateCheckStatus.value = null
+
+        CoroutineScope(Dispatchers.IO).launch {
+            _updateCheckStatus.value = updateCheck()
+        }
+    }
 
     private fun onFinishLogin(
         credentials: KotlassClient.CompassClientCredentials,
@@ -197,6 +210,10 @@ class RootComponent(
     }
 
     init {
+        if (preferences.get(DefaultPreferences.App.checkForUpdates)) {
+            checkForUpdates()
+        }
+
         val credentials = getClientCredentials(preferences)
         if (credentials != null) {
             onFinishLogin(credentials, preferences.get(DefaultPreferences.Api.verifyCredentials), true)
@@ -318,7 +335,6 @@ class RootComponent(
         data class ActionCentreEvent(val eventId: Int) : Config
     }
 
-
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -330,106 +346,155 @@ fun RootContent(
 ) {
     val childStack by component.stack.subscribeAsState()
     val activeComponent = childStack.active.instance
+    val updateCheckStatus by component.updateCheckStatus.collectAsStateAndLifecycle()
+    var haveNotifiedUpdate by rememberSaveable { mutableStateOf(false) }
 
-    if (activeComponent is RootComponent.Child.LoginChild) {
-        LoginContent(
-            component = activeComponent.component
-        )
-        return
-    }
+    val snackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
 
-    when (windowSize) {
-        WindowSize.EXPANDED -> {
-            Row(modifier = modifier) {
-                NavigationRail(
-                    modifier = Modifier.fillMaxHeight(),
-                    containerColor = MaterialTheme.colorScheme.surface
-                ) {
-                    NavItem(
-                        activeComponent is RootComponent.Child.HomeChild,
-                        { component.goToNavItem(RootComponent.Config.Home) },
-                        Icons.Default.Home,
-                        "Home"
-                    )
-                    NavItem(
-                        activeComponent is RootComponent.Child.CalendarChild,
-                        { component.goToNavItem(RootComponent.Config.Calendar) },
-                        Icons.Default.DateRange,
-                        "Calendar"
-                    )
-                    NavItem(
-                        activeComponent is RootComponent.Child.LearningTasksChild,
-                        { component.goToNavItem(RootComponent.Config.LearningTasks()) },
-                        Icons.Default.Edit,
-                        "Tasks"
-                    )
-                    NavItem(
-                        activeComponent is RootComponent.Child.ProfileChild,
-                        { component.goToNavItem(RootComponent.Config.Profile) },
-                        Icons.Default.Person,
-                        "Profile"
-                    )
-                    NavItem(
-                        activeComponent is RootComponent.Child.SettingsChild,
-                        { component.goToNavItem(RootComponent.Config.Settings) },
-                        Icons.Default.Settings,
-                        "Settings"
-                    )
+    if (!haveNotifiedUpdate && updateCheckStatus != null) {
+        val uriHandler = LocalUriHandler.current
+
+        coroutineScope.launch {
+            when (updateCheckStatus) {
+                is NetResponse.Success -> {
+                    if (!(updateCheckStatus as NetResponse.Success).data.first) {
+                        val snackRes = snackbarHostState.showSnackbar(
+                            "Update available: ${(updateCheckStatus as NetResponse.Success).data.second!!.name}",
+                            "Download"
+                        )
+
+                        if (snackRes == SnackbarResult.ActionPerformed) {
+                            val uri = (updateCheckStatus as NetResponse.Success).data.second!!.html_url ?: return@launch
+                            uriHandler.openUri(uri)
+                        }
+                    }
+
+                    haveNotifiedUpdate = true
                 }
-                RootChildSwitcher(
-                    component, Modifier, windowSize
-                )
+                else -> {
+                    val snackRes = snackbarHostState.showSnackbar(
+                        "Failed to check for updates",
+                        "Try again"
+                    )
+
+                    if (snackRes == SnackbarResult.ActionPerformed) {
+                        component.checkForUpdates()
+                    }
+                }
             }
         }
-        else -> {
-            Scaffold(
-                modifier = modifier,
-                bottomBar = {
-                    NavigationBar(modifier = Modifier.fillMaxWidth()) {
-                        NavItem(
-                            activeComponent is RootComponent.Child.SettingsChild,
-                            { component.goToNavItem(RootComponent.Config.Settings) },
-                            Icons.Default.Settings,
-                            "Settings"
-                        )
-                        NavItem(
-                            activeComponent is RootComponent.Child.CalendarChild,
-                            { component.goToNavItem(RootComponent.Config.Calendar) },
-                            Icons.Default.DateRange,
-                            "Calendar"
-                        )
-                        NavItem(
-                            activeComponent is RootComponent.Child.HomeChild,
-                            { component.goToNavItem(RootComponent.Config.Home) },
-                            Icons.Default.Home,
-                            "Home"
-                        )
-                        NavItem(
-                            activeComponent is RootComponent.Child.LearningTasksChild,
-                            { component.goToNavItem(RootComponent.Config.LearningTasks()) },
-                            Icons.Default.Edit,
-                            "Tasks"
-                        )
-                        NavItem(
-                            activeComponent is RootComponent.Child.ProfileChild,
-                            { component.goToNavItem(RootComponent.Config.Profile) },
-                            Icons.Default.Person,
-                            "Profile"
+    }
+
+    Scaffold {
+
+        if (activeComponent is RootComponent.Child.LoginChild) {
+            LoginContent(
+                component = activeComponent.component
+            )
+            return@Scaffold
+        }
+
+        when (windowSize) {
+            WindowSize.EXPANDED -> {
+                Scaffold(modifier = modifier, snackbarHost = {
+                    SnackbarHost(
+                        snackbarHostState
+                    )
+                }) {
+                    Row {
+                        NavigationRail(
+                            modifier = Modifier.fillMaxHeight(),
+                            containerColor = MaterialTheme.colorScheme.surface
+                        ) {
+                            NavItem(
+                                activeComponent is RootComponent.Child.HomeChild,
+                                { component.goToNavItem(RootComponent.Config.Home) },
+                                Icons.Default.Home,
+                                "Home"
+                            )
+                            NavItem(
+                                activeComponent is RootComponent.Child.CalendarChild,
+                                { component.goToNavItem(RootComponent.Config.Calendar) },
+                                Icons.Default.DateRange,
+                                "Calendar"
+                            )
+                            NavItem(
+                                activeComponent is RootComponent.Child.LearningTasksChild,
+                                { component.goToNavItem(RootComponent.Config.LearningTasks()) },
+                                Icons.Default.Edit,
+                                "Tasks"
+                            )
+                            NavItem(
+                                activeComponent is RootComponent.Child.ProfileChild,
+                                { component.goToNavItem(RootComponent.Config.Profile) },
+                                Icons.Default.Person,
+                                "Profile"
+                            )
+                            NavItem(
+                                activeComponent is RootComponent.Child.SettingsChild,
+                                { component.goToNavItem(RootComponent.Config.Settings) },
+                                Icons.Default.Settings,
+                                "Settings"
+                            )
+                        }
+                        RootChildSwitcher(
+                            component, Modifier, windowSize
                         )
                     }
                 }
-            ) { innerPadding ->
-                RootChildSwitcher(
-                    component, Modifier.padding(innerPadding), windowSize
-                )
+            }
+
+            else -> {
+                Scaffold(
+                    modifier = modifier,
+                    snackbarHost = {
+                        SnackbarHost(
+                            snackbarHostState
+                        )
+                    },
+                    bottomBar = {
+                        NavigationBar(modifier = Modifier.fillMaxWidth()) {
+                            NavItem(
+                                activeComponent is RootComponent.Child.SettingsChild,
+                                { component.goToNavItem(RootComponent.Config.Settings) },
+                                Icons.Default.Settings,
+                                "Settings"
+                            )
+                            NavItem(
+                                activeComponent is RootComponent.Child.CalendarChild,
+                                { component.goToNavItem(RootComponent.Config.Calendar) },
+                                Icons.Default.DateRange,
+                                "Calendar"
+                            )
+                            NavItem(
+                                activeComponent is RootComponent.Child.HomeChild,
+                                { component.goToNavItem(RootComponent.Config.Home) },
+                                Icons.Default.Home,
+                                "Home"
+                            )
+                            NavItem(
+                                activeComponent is RootComponent.Child.LearningTasksChild,
+                                { component.goToNavItem(RootComponent.Config.LearningTasks()) },
+                                Icons.Default.Edit,
+                                "Tasks"
+                            )
+                            NavItem(
+                                activeComponent is RootComponent.Child.ProfileChild,
+                                { component.goToNavItem(RootComponent.Config.Profile) },
+                                Icons.Default.Person,
+                                "Profile"
+                            )
+                        }
+                    }
+                ) { innerPadding ->
+                    RootChildSwitcher(
+                        component, Modifier.padding(innerPadding), windowSize
+                    )
+                }
             }
         }
     }
-}
-
-enum class NavDisplayType {
-    HORIZONTAL,
-    VERTICAL
 }
 
 @Composable
