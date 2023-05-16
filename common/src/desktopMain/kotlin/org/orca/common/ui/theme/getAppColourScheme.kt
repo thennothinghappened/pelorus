@@ -14,5 +14,5 @@ actual fun getAppColourScheme(
 }
 
 actual fun getSystemDarkTheme(): Boolean {
-    return OsThemeDetector.getDetector().isDark// || true
+    return OsThemeDetector.getDetector().isDark
 }
