@@ -307,7 +307,7 @@ class RootComponent(
         object Home : Config
         object Calendar : Config
         data class LearningTasks(
-            val activityFilter: Set<Int> = emptySet(),
+            val activityFilter: Set<Int> = setOf(-1),
             val statusFilter: Set<LearningTaskSubmissionStatus> = emptySet()
         ) : Config
         data class LearningTaskView(val learningTaskActivityId: Int, val learningTaskId: Int) : Config
