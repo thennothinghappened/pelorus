@@ -26,7 +26,7 @@ Unticked are planned features. You can also suggest features in *Issues*!
    - [ ] Upload
    - [ ] Feedback
    - [ ] Comments
- - [ ] Event view
+ - [x] Event view
  - [ ] Alerts
    - [ ] Coursework Notifications
  - [ ] Profile page
@@ -51,7 +51,8 @@ Unticked are planned features. You can also suggest features in *Issues*!
 ## Compiling
  Using either [Intellij Idea](https://www.jetbrains.com/idea/download) or [Android Studio](https://developer.android.com/studio/)
  with the Multiplatform plugin, clone and import the repo and let Gradle install dependencies. \
- You'll get some errors, since you won't have [Kotlass](https://github.com/thennothinghappened/kotlass), [HtmlText](https://github.com/thennothinghappened/HtmlText) or [compose-datetime](https://github.com/thennothinghappened/compose-datetime). Make sure to clone these too, and run their `:maven:publishToMavenLocal` task first. \
+ You'll get some errors, since you won't have [Kotlass](https://github.com/thennothinghappened/kotlass), [HtmlText](https://github.com/thennothinghappened/HtmlText) or [compose-datetime](https://github.com/thennothinghappened/compose-datetime).
+ Make sure to clone these too, and run their `:maven:publishToMavenLocal` task first. \
  Once the project sync is finished, run the `:desktop:compose desktop:run` gradle task to make sure it works. \
  Next, you can compile the APK through `:android:build:assemble`.
 
