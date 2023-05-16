@@ -88,9 +88,9 @@ class RootComponent(
     }
 
     fun goToNavItem(config: Config, forceReplaceStack: Boolean = false) {
-        if (forceReplaceStack || (getPlatform() == Platform.ANDROID && !preferences.get(DefaultPreferences.App.dontReplaceStack))) {
-            return navigation.replaceAll(config)
-        }
+//        if (forceReplaceStack || (getPlatform() == Platform.ANDROID && !preferences.get(DefaultPreferences.App.dontReplaceStack))) {
+//            return navigation.replaceAll(config)
+//        }
         navigation.push(config)
     }
 

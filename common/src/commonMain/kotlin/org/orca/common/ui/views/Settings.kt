@@ -67,14 +67,14 @@ fun SettingsContent(
                 component.preferences.put(DefaultPreferences.Api.useDevMode, useDevMode)
             }
         }
-        if (getPlatform() == Platform.ANDROID) item { SwitchSetting(
-            "Allow back navigation between Navbar items",
-            "When enabled, presisng the back button will work between sibling main screen tabs.",
-            dontReplaceStack
-        ) {
-            dontReplaceStack = it
-            component.preferences.put(DefaultPreferences.App.dontReplaceStack, dontReplaceStack)
-        } }
+//        if (getPlatform() == Platform.ANDROID) item { SwitchSetting(
+//            "Allow back navigation between Navbar items",
+//            "When enabled, presisng the back button will work between sibling main screen tabs.",
+//            dontReplaceStack
+//        ) {
+//            dontReplaceStack = it
+//            component.preferences.put(DefaultPreferences.App.dontReplaceStack, dontReplaceStack)
+//        } }
         item { Setting(
             "Logout",
             "(Requires restart)",
