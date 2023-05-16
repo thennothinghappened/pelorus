@@ -82,5 +82,7 @@ android {
 }
 
 buildConfig {
+    className("BuildDetails")
+
     buildConfigField("String", "APP_VERSION", "\"${version}\"")
 }

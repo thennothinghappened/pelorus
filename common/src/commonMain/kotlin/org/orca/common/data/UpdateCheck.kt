@@ -9,7 +9,7 @@ import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import org.orca.common.BuildConfig
+import org.orca.common.BuildDetails
 import org.orca.kotlass.data.NetResponse
 
 private const val UPDATE_URL = "https://api.github.com/repos/thennothinghappened/pelorus/releases/latest"
@@ -51,7 +51,7 @@ suspend fun updateCheck(allowPrereleases: Boolean = false): NetResponse<Pair<Boo
 
     server.close()
 
-    val ourVersion = BuildConfig.APP_VERSION.lowercase()
+    val ourVersion = BuildDetails.APP_VERSION.lowercase()
     val newVersion = res.tag_name.lowercase()
 
     if (ourVersion == newVersion) {
