@@ -35,7 +35,7 @@ fun SettingsContent(
     var verifyCredentials by rememberSaveable { mutableStateOf(component.preferences.get(DefaultPreferences.Api.verifyCredentials)) }
     var experimentalClassList by rememberSaveable { mutableStateOf(component.preferences.get(DefaultPreferences.App.experimentalClassList)) }
     var useDevMode by rememberSaveable { mutableStateOf(component.preferences.get(DefaultPreferences.Api.useDevMode)) }
-    var dontReplaceStack by rememberSaveable { mutableStateOf(component.preferences.get(DefaultPreferences.App.dontReplaceStack)) }
+//    var dontReplaceStack by rememberSaveable { mutableStateOf(component.preferences.get(DefaultPreferences.App.dontReplaceStack)) }
 
     LazyColumn(
         contentPadding = PaddingValues(16.dp)
