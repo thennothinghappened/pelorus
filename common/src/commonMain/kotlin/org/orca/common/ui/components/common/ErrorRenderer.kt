@@ -47,6 +47,13 @@ fun ErrorRenderer(
             )
         }
 
+        is java.net.UnknownHostException -> {
+            ErrorRenderer(
+                "Failed to connect to Compass servers: Failed to resolve host",
+                "Check your internet connection. If the error persists, check if you can reach the Compass website."
+            )
+        }
+
         is io.ktor.serialization.JsonConvertException -> {
             ErrorRenderer(
                 "Kotlass encountered unexpected input when reading a response from Compass.",
