@@ -10,4 +10,7 @@ object Font {
     val filterChip
         @Composable
         get() = MaterialTheme.typography.labelMedium
+    val button
+        @Composable
+        get() = MaterialTheme.typography.labelLarge
 }
