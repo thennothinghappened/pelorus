@@ -29,7 +29,7 @@ android {
         applicationId = "org.orca.android"
         minSdk = 23
         targetSdk = 33
-        versionCode = 23
+        versionCode = 24
         versionName = version.toString()
     }
     compileOptions {
