@@ -14,6 +14,7 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.UriHandler
 import androidx.compose.ui.unit.dp
 import io.ktor.http.*
+import org.orca.common.BuildDetails
 import org.orca.common.ui.defaults.Font
 import org.orca.common.ui.defaults.Padding
 import org.orca.kotlass.data.NetResponse
@@ -70,7 +71,7 @@ fun ErrorRenderer(
                 )
                 GitHubIssueButton(
                     "JSON convert exception",
-                    "### Error\n```\n${error.cause}\n```\n\n### Extra information\n*Optional, or remove this*",
+                    githubErrorTemplate(error.cause),
                     GitHubLinks.Repos.kotlass
                 )
             }
@@ -83,8 +84,7 @@ fun ErrorRenderer(
                 )
                 GitHubIssueButton(
                     "<A brief description of what went wrong...>",
-                    "*<A brief description of what you were doing when the error occurred...>*\n\n### Error\n```\n${error}\n```\n\n### Extra information\n" +
-                            "*Optional, or remove this*",
+                    "*<A brief description of what you were doing when the error occurred...>*\n\n" + githubErrorTemplate(error),
                     GitHubLinks.Repos.pelorus
                 )
             }
@@ -115,6 +115,13 @@ private object GitHubLinks {
         const val kotlass = "kotlass"
     }
 }
+
+private fun githubErrorTemplate(error: Throwable?) =
+    "### Error\n" +
+    "```\n${error}\n```\n\n" +
+    "### Extra information" +
+    "*Optional, or remove this*\n\n" +
+    "**Pelorus ${BuildDetails.APP_VERSION}**"
 
 @Composable
 fun GitHubIssueButton(
