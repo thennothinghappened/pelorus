@@ -7,7 +7,9 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.luminance
 
+@Composable
 expect fun getAppColourScheme(darkTheme: Boolean, dynamicColour: Boolean): ColorScheme
+@Composable
 expect fun getSystemDarkTheme(): Boolean
 
 @Composable

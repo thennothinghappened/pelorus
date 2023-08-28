@@ -6,29 +6,22 @@ plugins {
     kotlin("android")
 }
 
-//group "org.orca"
-//version "1.0-SNAPSHOT"
-
-repositories {
-    jcenter()
-}
-
 dependencies {
     implementation(project(":common"))
-    implementation("androidx.activity:activity-compose:1.7.1")
+    implementation("androidx.activity:activity-compose:1.7.2")
     implementation("com.google.accompanist:accompanist-systemuicontroller:0.29.1-alpha")
-    implementation("androidx.window:window:1.0.0")
-    implementation("androidx.compose.material3:material3:1.1.0") // https://issuetracker.google.com/issues/258907850
+    implementation("androidx.window:window:1.1.0")
+    implementation("androidx.compose.material3:material3:1.1.1") // https://issuetracker.google.com/issues/258907850
     implementation("com.arkivanov.decompose:decompose:1.0.0")
     implementation("com.google.accompanist:accompanist-webview:0.29.2-rc")
 }
 
 android {
+    namespace = group.toString()
     compileSdk = 33
     defaultConfig {
-        applicationId = "org.orca.android"
+        applicationId = "$group.android"
         minSdk = 23
-        targetSdk = 33
         versionCode = 24
         versionName = version.toString()
     }
@@ -36,8 +29,13 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
     lint {
         checkReleaseBuilds = false
+        abortOnError = false
+        warningsAsErrors = false
     }
     if (getLocalProperty("ANDROID_STORE_FILE") != null) {
         signingConfigs {
@@ -54,7 +52,7 @@ android {
                 signingConfig = signingConfigs.getByName("main")
                 proguardFiles(
                     getDefaultProguardFile("proguard-android-optimize.txt"),
-                    "proguard-rules.txt"
+                    "proguard-rules.pro"
                 )
             }
             getByName("debug") {

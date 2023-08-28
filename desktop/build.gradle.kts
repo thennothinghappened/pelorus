@@ -6,9 +6,10 @@ plugins {
 }
 
 kotlin {
+    jvmToolchain(18)
     jvm {
         compilations.all {
-            kotlinOptions.jvmTarget = "11"
+            kotlinOptions.jvmTarget = "18"
         }
         withJava()
     }
@@ -32,6 +33,10 @@ compose.desktop {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "pelorus"
             packageVersion = version.toString().split("-")[0] // Deb files are super picky
+        }
+        buildTypes.release.proguard {
+            configurationFiles.from(project.file("compose-desktop.pro"))
+//            isEnabled.set(false)
         }
     }
 }
