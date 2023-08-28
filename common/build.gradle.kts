@@ -4,7 +4,7 @@ plugins {
     id("com.android.library")
     id("kotlin-parcelize")
     id("com.github.gmazzo.buildconfig") version "4.0.4"
-    kotlin("plugin.serialization") version "1.8.0"
+    kotlin("plugin.serialization")
 }
 
 kotlin {

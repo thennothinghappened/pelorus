@@ -23,7 +23,6 @@ import org.orca.common.ui.utils.WindowSize
 
 @ExperimentalMaterial3Api
 class MainActivity : AppCompatActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
