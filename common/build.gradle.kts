@@ -9,20 +9,21 @@ plugins {
 
 kotlin {
 
+    jvmToolchain(18)
+
     androidTarget {
+        jvmToolchain(18)
         compilations.all {
-            kotlinOptions.jvmTarget = "1.8"
+            kotlinOptions.jvmTarget = "18"
         }
     }
 
-    jvm("desktop") {
-        jvmToolchain(18)
-    }
+    jvm("desktop")
 
     sourceSets {
         val datetimeVersion = "0.4.0"
-        val decomposeVersion = "1.0.0"
-        val ktorVersion = "2.2.2"
+        val decomposeVersion = "2.0.1"
+        val ktorVersion = "2.3.2"
         val commonMain by getting {
             dependencies {
                 api(compose.runtime)
@@ -40,7 +41,7 @@ kotlin {
                 implementation("io.ktor:ktor-client-core:$ktorVersion")
                 implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
                 implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
 
             }
@@ -77,12 +78,14 @@ android {
     namespace = group.toString()
     compileSdk = 33
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
+
     defaultConfig {
         minSdk = 23
     }
+
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_18
+        targetCompatibility = JavaVersion.VERSION_18
     }
 }
 

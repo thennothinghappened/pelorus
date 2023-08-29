@@ -4,6 +4,7 @@ import androidx.compose.material3.ColorScheme
 import androidx.compose.runtime.Composable
 import com.jthemedetecor.OsThemeDetector
 
+@Composable
 actual fun getAppColourScheme(
     darkTheme: Boolean,
     dynamicColour: Boolean,
