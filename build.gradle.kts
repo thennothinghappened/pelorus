@@ -26,13 +26,16 @@ allprojects {
                 password = GITHUB_TOKEN
             }
         }
+        maven("https://plugins.gradle.org/m2/")
     }
 }
 
 plugins {
-    kotlin("multiplatform") version "1.8.0" apply false
-    kotlin("android") apply false
-    id("com.android.application") apply false
-    id("com.android.library") apply false
-    id("org.jetbrains.compose") apply false
+    alias(libs.plugins.kotlin.multiplatform) apply false
+    alias(libs.plugins.kotlin.android) apply false
+    alias(libs.plugins.kotlin.serialization) apply false
+    alias(libs.plugins.kotlin.parcelize) apply false
+    alias(libs.plugins.android.application) apply false
+    alias(libs.plugins.android.library) apply false
+    alias(libs.plugins.compose) apply false
 }

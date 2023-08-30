@@ -1,0 +1,67 @@
+[versions]
+kotlin = "1.9.0"
+android-gradle-plugin = "8.0.0"
+
+androidx-activity-compose = "1.7.2"
+androidx-appcompat = "1.6.1"
+androidx-lifecycle-runtime-compose = "2.6.1"
+androidx-material3 = "1.1.1"
+androidx-core-ktx = "1.10.1"
+androidx-window = "1.1.0"
+
+compose = "1.4.3"
+
+kotlinx-datetime = "0.4.0"
+kotlinx-serialization-json = "1.6.0"
+ktor = "2.3.3"
+
+decompose = "2.0.1"
+kotlass = "1.1.1"
+htmlText = "1.1.1"
+jSystemThemeDetector = "3.6"
+kamel-image = "0.4.1"
+accompanist-flowlayout = "0.25.2"
+accompanist-systemuicontroller = "0.29.1-alpha"
+accompanist-webview = "0.29.2-rc"
+datetime = "1.0.10"
+
+junit = "4.13.2"
+buildconfig = "4.1.2"
+
+[plugins]
+kotlin-parcelize =      { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
+android-application =   { id = "com.android.application", version.ref = "android-gradle-plugin" }
+android-library =       { id = "com.android.library", version.ref = "android-gradle-plugin" }
+kotlin-multiplatform =  { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlin-android =        { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-serialization =  { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+compose =               { id = "org.jetbrains.compose", version.ref = "compose" }
+buildconfig =           { id = "com.github.gmazzo.buildconfig", version.ref = "buildconfig" }
+
+[libraries]
+accompanist-systemuicontroller =    { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanist-systemuicontroller" }
+accompanist-flowlayout ={ module = "ca.gosyer:accompanist-flowlayout", version.ref = "accompanist-flowlayout" }
+accompanist-webview =   { module = "com.google.accompanist:accompanist-webview", version.ref = "accompanist-webview" }
+datetime =              { module = "com.wakaztahir:datetime", version.ref = "datetime" }
+kamel-image =           { module = "com.alialbaali.kamel:kamel-image", version.ref = "kamel-image" }
+kotlinx-datetime =      { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
+
+decompose =             { module = "com.arkivanov.decompose:decompose", version.ref = "decompose" }
+decompose-jetbrains =   { module = "com.arkivanov.decompose:extensions-compose-jetbrains", version.ref = "decompose" }
+jSystemThemeDetector =  { module = "com.github.Dansoftowner:jSystemThemeDetector", version.ref = "jSystemThemeDetector" }
+kotlass =               { module = "org.orca:kotlass", version.ref = "kotlass" }
+htmlText =              { module = "org.orca.htmltext:common", version.ref = "htmlText" }
+
+junit =                 { module = "junit:junit", version.ref = "junit" }
+androidx-material3 =    { module = "androidx.compose.material3:material3", version.ref = "androidx-material3" }
+androidx-appcompat =    { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat" }
+androidx-core-ktx =     { module = "androidx.core:core-ktx", version.ref = "androidx-core-ktx" }
+androidx-lifecycle-runtime-compose ={ module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidx-lifecycle-runtime-compose" }
+androidx-activity-compose =         { module = "androidx.activity:activity-compose", version.ref = "androidx-activity-compose" }
+androidx-window =       { module = "androidx.window:window", version.ref = "androidx-window" }
+
+kotlinx-serialization-json =        { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization-json" }
+ktor-client-core =                  { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktor-serialization-kotlinx-json =   { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
+ktor-client-content-negotiation =   { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-client-okhttp =                { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }

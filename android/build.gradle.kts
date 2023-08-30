@@ -1,19 +1,18 @@
 import org.jetbrains.compose.internal.utils.getLocalProperty
 
 plugins {
-    id("org.jetbrains.compose")
-    id("com.android.application")
-    kotlin("android")
+    alias(libs.plugins.compose)
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
 }
 
 dependencies {
     implementation(project(":common"))
-    implementation("androidx.activity:activity-compose:1.7.2")
-    implementation("com.google.accompanist:accompanist-systemuicontroller:0.29.1-alpha")
-    implementation("androidx.window:window:1.1.0")
-    implementation("androidx.compose.material3:material3:1.1.1") // https://issuetracker.google.com/issues/258907850
-    implementation("com.arkivanov.decompose:decompose:2.0.1")
-    implementation("com.google.accompanist:accompanist-webview:0.29.2-rc")
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.accompanist.systemuicontroller)
+    implementation(libs.androidx.window)
+    implementation(libs.androidx.material3) // https://issuetracker.google.com/issues/258907850
+    implementation(libs.decompose)
 }
 
 android {
@@ -23,7 +22,7 @@ android {
     defaultConfig {
         applicationId = "$group.android"
         minSdk = 23
-        versionCode = 24
+        versionCode = 25
         versionName = version.toString()
     }
 

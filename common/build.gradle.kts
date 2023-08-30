@@ -1,10 +1,10 @@
 plugins {
-    kotlin("multiplatform")
-    id("org.jetbrains.compose")
-    id("com.android.library")
-    id("kotlin-parcelize")
-    id("com.github.gmazzo.buildconfig") version "4.0.4"
-    kotlin("plugin.serialization")
+    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.compose)
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.buildconfig)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 kotlin {
@@ -21,55 +21,58 @@ kotlin {
     jvm("desktop")
 
     sourceSets {
-        val datetimeVersion = "0.4.0"
-        val decomposeVersion = "2.0.1"
-        val ktorVersion = "2.3.2"
-        val commonMain by getting {
+        commonMain {
             dependencies {
                 api(compose.runtime)
                 api(compose.foundation)
-                @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class) api(compose.material3)
-                implementation("org.orca:kotlass:1.1.1")
-                implementation("org.orca.htmltext:common:1.1.0")
-                implementation("org.jetbrains.kotlinx:kotlinx-datetime:$datetimeVersion")
-                implementation("com.arkivanov.decompose:decompose:$decomposeVersion")
-                implementation("com.arkivanov.decompose:extensions-compose-jetbrains:$decomposeVersion")
-                implementation("com.alialbaali.kamel:kamel-image:0.4.0")
-                implementation("ca.gosyer:accompanist-flowlayout:0.25.2")
+                @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)api(compose.material3)
+                implementation(libs.kotlass)
+                implementation(libs.htmlText)
+                implementation(libs.kotlinx.datetime)
+                implementation(libs.decompose)
+                implementation(libs.decompose.jetbrains)
+                implementation(libs.kamel.image)
+                implementation(libs.accompanist.flowlayout)
 //                implementation("me.xdrop:fuzzywuzzy:1.4.0")
-                implementation("com.wakaztahir:datetime:1.0.10")
-                implementation("io.ktor:ktor-client-core:$ktorVersion")
-                implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
-                implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
-                implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
+                implementation(libs.datetime)
+                implementation(libs.ktor.client.core)
+                implementation(libs.ktor.client.content.negotiation)
+                implementation(libs.ktor.serialization.kotlinx.json)
+                implementation(libs.kotlinx.serialization.json)
+                implementation(libs.ktor.client.okhttp)
 
             }
         }
-        val commonTest by getting {
+
+        commonTest {
             dependencies {
                 implementation(kotlin("test"))
             }
         }
+
         val androidMain by getting {
             dependencies {
-                api("androidx.appcompat:appcompat:1.6.1")
-                api("androidx.core:core-ktx:1.10.1")
-                api("androidx.compose.material3:material3:1.1.1")
-                implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.1")
+                api(libs.androidx.appcompat)
+                api(libs.androidx.core.ktx)
+                api(libs.androidx.material3)
+                implementation(libs.androidx.lifecycle.runtime.compose)
+                implementation(libs.accompanist.webview)
             }
         }
+
         val androidUnitTest by getting {
             dependencies {
-                implementation("junit:junit:4.13.2")
+                implementation(libs.junit)
             }
         }
+
         val desktopMain by getting {
             dependencies {
                 api(compose.preview)
-                implementation("com.github.Dansoftowner:jSystemThemeDetector:3.6")
+                implementation(libs.jSystemThemeDetector)
             }
         }
+
         val desktopTest by getting
     }
 }
@@ -91,6 +94,5 @@ android {
 
 buildConfig {
     className("BuildDetails")
-
     buildConfigField("String", "APP_VERSION", "\"${version}\"")
 }
