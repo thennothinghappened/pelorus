@@ -28,12 +28,7 @@ class MainActivity : AppCompatActivity() {
 
         val root = RootComponent(
             componentContext = defaultComponentContext(),
-            preferences = Preferences(getSharedPreferences("data", MODE_PRIVATE)),
-            webViewBridge = WebViewBridge(
-                "https://schools.compass.education/",
-                false,
-                true
-            )
+            preferences = Preferences(getSharedPreferences("data", MODE_PRIVATE))
         )
 
         setContent {

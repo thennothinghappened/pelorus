@@ -82,9 +82,6 @@ fun LoginOption(
 // Mega hacky web login solution!!!!
 @Composable
 fun WebLoginContent(component: LoginComponent) {
-    if (component.webViewBridge == null) {
-        throw Throwable("Login WebViewBridge is missing!")
-    }
     val url by component.webViewBridge.lastLoadedUrl.collectAsStateAndLifecycle()
     val isLoading by component.webViewBridge.isLoading.collectAsStateAndLifecycle()
 

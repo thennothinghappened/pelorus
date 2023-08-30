@@ -24,11 +24,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import kotlinx.datetime.*
 import org.orca.common.data.*
 import org.orca.common.data.utils.*
 import org.orca.common.ui.utils.WindowSize
-import org.orca.common.ui.components.IWebViewBridge
 import org.orca.common.ui.components.calendar.ScheduleHolderType
 import org.orca.kotlass.IFlowKotlassClient
 import org.orca.kotlass.KotlassClient
@@ -38,8 +36,7 @@ import org.orca.kotlass.data.NetResponse
 
 class RootComponent(
     componentContext: ComponentContext,
-    private val preferences: Preferences,
-    private val webViewBridge: IWebViewBridge? = null // only needed for mobile
+    private val preferences: Preferences
 ) : ComponentContext by componentContext {
 
     private val navigation = StackNavigation<Config>()
@@ -224,8 +221,7 @@ class RootComponent(
         when (config) {
             is Config.Login -> Child.LoginChild(
                 LoginComponent(
-                    onFinishLogin = ::onFinishLogin,
-                    webViewBridge = webViewBridge
+                    onFinishLogin = ::onFinishLogin
                 )
             )
             is Config.Home -> Child.HomeChild(

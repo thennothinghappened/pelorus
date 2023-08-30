@@ -1,19 +1,11 @@
-package org.orca.android
+package org.orca.common.ui.components.common
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.graphics.Bitmap
-import android.os.Build
 import android.util.Log
 import android.webkit.CookieManager
 import android.webkit.JavascriptInterface
-import android.webkit.WebChromeClient
 import android.webkit.WebView
-import android.webkit.WebViewClient
-import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.google.accompanist.web.*
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -51,7 +43,7 @@ class WebViewBridge(
             modifier = modifier,
             captureBackPresses = captureBackPresses,
             onCreated = {
-                        it.settings.javaScriptEnabled = javascriptEnabled
+                it.settings.javaScriptEnabled = javascriptEnabled
             },
             factory = { context ->
                 if (webView == null) {

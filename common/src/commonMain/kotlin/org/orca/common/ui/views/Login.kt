@@ -13,18 +13,32 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
+import org.orca.common.data.Platform
+import org.orca.common.data.getPlatform
 import org.orca.common.ui.components.IWebViewBridge
+import org.orca.common.ui.components.webViewBridge
 import org.orca.kotlass.KotlassClient.CompassClientCredentials
 import org.orca.kotlass.data.NetResponse
 
 class LoginComponent(
-    val onFinishLogin: (CompassClientCredentials, Boolean, Boolean) -> NetResponse<Unit?>,
-    val webViewBridge: IWebViewBridge? = null
+    val onFinishLogin: (CompassClientCredentials, Boolean, Boolean) -> NetResponse<Unit?>
 ) {
     companion object {
         const val credentialsInvalidMessage = "Credentials are invalid."
         const val checkNetworkMessage = "Failed to get a reply from Compass. Check that you have internet access and that the Compass website is accessible."
         const val clientErrorMessage = "A client error has occurred. Please report this message on GitHub and screenshot the below. Stack Trace:\n"
+    }
+
+    lateinit var webViewBridge: IWebViewBridge
+
+    init {
+        if (getPlatform() == Platform.ANDROID) {
+            webViewBridge = webViewBridge(
+                "https://schools.compass.education/",
+                captureBackPresses = false,
+                javascriptEnabled = true
+            )
+        }
     }
 }
 
@@ -53,10 +67,15 @@ fun CookieLoginContent(
         verticalArrangement = Arrangement.Center
     ) {
         Text("Login")
+
         OutlinedTextField(cookie, { cookie = it }, label = { Text("Cookie") }, isError = cookieError)
         OutlinedTextField(userId, { userId = it.filter(Char::isDigit) }, label = { Text("User Id") }, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number), isError = userIdError)
         OutlinedTextField(domain, { domain = it }, label = { Text("Domain") }, isError = domainError)
-        if (cookieError || userIdError || domainError) Text(errorMessage)
+
+        if (cookieError || userIdError || domainError) {
+            Text(errorMessage)
+        }
+
         Button(
             onClick = {
                 cookieError = cookie == ""
