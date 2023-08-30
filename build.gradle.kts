@@ -3,8 +3,8 @@ val GITHUB_USER = project.findProperty("gpr.user") as String? ?: System.getenv("
 val GITHUB_TOKEN = project.findProperty("gpr.key") as String? ?: System.getenv("GITHUB_TOKEN")
 
 allprojects {
-    group = "org.orca"
-    version = "1.6.6-BETA"
+    group = Pelorus.group
+    version = Pelorus.version
 
     repositories {
         mavenLocal()
@@ -26,7 +26,6 @@ allprojects {
                 password = GITHUB_TOKEN
             }
         }
-        maven("https://plugins.gradle.org/m2/")
     }
 }
 

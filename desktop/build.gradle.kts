@@ -6,10 +6,10 @@ plugins {
 }
 
 kotlin {
-    jvmToolchain(18)
+    jvmToolchain(Pelorus.Jvm.versionNumber)
     jvm {
         compilations.all {
-            kotlinOptions.jvmTarget = "18"
+            kotlinOptions.jvmTarget = Pelorus.Jvm.version.majorVersion
         }
         withJava()
     }
@@ -31,7 +31,7 @@ compose.desktop {
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "pelorus"
+            packageName = Pelorus.name
             packageVersion = version.toString().split("-")[0] // Deb files are super picky
         }
 

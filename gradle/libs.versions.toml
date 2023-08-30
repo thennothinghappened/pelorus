@@ -1,4 +1,5 @@
 [versions]
+
 kotlin = "1.9.0"
 android-gradle-plugin = "8.0.0"
 
@@ -39,6 +40,7 @@ compose =               { id = "org.jetbrains.compose", version.ref = "compose" 
 buildconfig =           { id = "com.github.gmazzo.buildconfig", version.ref = "buildconfig" }
 
 [libraries]
+
 accompanist-systemuicontroller =    { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanist-systemuicontroller" }
 accompanist-flowlayout ={ module = "ca.gosyer:accompanist-flowlayout", version.ref = "accompanist-flowlayout" }
 accompanist-webview =   { module = "com.google.accompanist:accompanist-webview", version.ref = "accompanist-webview" }

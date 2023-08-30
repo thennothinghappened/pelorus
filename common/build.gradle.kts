@@ -8,13 +8,13 @@ plugins {
 }
 
 kotlin {
-
-    jvmToolchain(18)
+    jvmToolchain(Pelorus.Jvm.versionNumber)
 
     androidTarget {
-        jvmToolchain(18)
+        jvmToolchain(Pelorus.Jvm.versionNumber)
+
         compilations.all {
-            kotlinOptions.jvmTarget = "18"
+            kotlinOptions.jvmTarget = Pelorus.Jvm.version.majorVersion
         }
     }
 
@@ -22,6 +22,7 @@ kotlin {
 
     sourceSets {
         commonMain {
+
             dependencies {
                 api(compose.runtime)
                 api(compose.foundation)
@@ -78,21 +79,22 @@ kotlin {
 }
 
 android {
-    namespace = group.toString()
-    compileSdk = 33
+    namespace = Pelorus.Android.namespace
+    compileSdk = Pelorus.Android.Sdk.compile
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
 
     defaultConfig {
-        minSdk = 23
+        minSdk = Pelorus.Android.Sdk.min
+        targetSdk = Pelorus.Android.Sdk.compile
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_18
-        targetCompatibility = JavaVersion.VERSION_18
+        sourceCompatibility = Pelorus.Jvm.version
+        targetCompatibility = Pelorus.Jvm.version
     }
 }
 
 buildConfig {
     className("BuildDetails")
-    buildConfigField("String", "APP_VERSION", "\"${version}\"")
+    buildConfigField("String", "APP_VERSION", "\"${Pelorus.version}\"")
 }

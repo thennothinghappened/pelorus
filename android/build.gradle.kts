@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
 }
 
+
 dependencies {
     implementation(project(":common"))
     implementation(libs.androidx.activity.compose)
@@ -16,19 +17,21 @@ dependencies {
 }
 
 android {
-    namespace = group.toString()
-    compileSdk = 33
+    namespace = Pelorus.Android.namespace
+    compileSdk = Pelorus.Android.Sdk.compile
 
     defaultConfig {
-        applicationId = "$group.android"
-        minSdk = 23
-        versionCode = 25
-        versionName = version.toString()
+        applicationId = Pelorus.Android.namespace
+        minSdk = Pelorus.Android.Sdk.min
+        targetSdk = Pelorus.Android.Sdk.compile
+
+        versionCode = Pelorus.Android.versionCode
+        versionName = Pelorus.version
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_18
-        targetCompatibility = JavaVersion.VERSION_18
+        sourceCompatibility = Pelorus.Jvm.version
+        targetCompatibility = Pelorus.Jvm.version
     }
 
     lint {
