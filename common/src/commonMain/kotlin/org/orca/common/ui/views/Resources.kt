@@ -20,7 +20,6 @@ import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.parcelable.Parcelable
 import com.arkivanov.essenty.parcelable.Parcelize
-import io.kamel.image.KamelImage
 import io.kamel.image.lazyPainterResource
 import io.ktor.http.*
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -214,7 +213,7 @@ fun ResourcesContent(
                             )
                         },
                         imageGenerator = { url, modifier ->
-                            KamelImage(
+                            NetworkImage(
                                 resource = lazyPainterResource(component.compass.buildDomainUrlString(url)),
                                 contentDescription = "Icon",
                                 contentScale = ContentScale.Fit,

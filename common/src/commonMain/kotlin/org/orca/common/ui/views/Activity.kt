@@ -16,7 +16,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.ComponentContext
 import com.google.accompanist.flowlayout.FlowRow
-import io.kamel.image.KamelImage
 import io.kamel.image.lazyPainterResource
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
@@ -136,9 +135,9 @@ fun ActivityContent(
 ) {
     Card(modifier = Modifier.fillMaxWidth()) {
         Row {
-            KamelImage(
+            NetworkImage(
                 lazyPainterResource(teacherPhotoUrl),
-                contentDescription = "Teacher Photo",
+                contentDescription = "$teacherName Photo",
                 modifier = Modifier
                     .padding(8.dp)
                     .clip(CircleShape)

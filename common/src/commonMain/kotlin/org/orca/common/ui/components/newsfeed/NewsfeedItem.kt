@@ -11,10 +11,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
 import io.kamel.core.Resource
-import io.kamel.image.KamelImage
 import kotlinx.datetime.Instant
 import org.orca.common.data.timeAgo
 import org.orca.common.ui.components.common.CompassAttachment
+import org.orca.common.ui.components.common.NetworkImage
 import org.orca.htmltext.HtmlText
 
 @Composable
@@ -31,9 +31,9 @@ fun NewsfeedItem(
         Column(Modifier.padding(16.dp)) {
             Row {
                 if (posterImage != null) {
-                    KamelImage(
+                    NetworkImage(
                         posterImage,
-                        contentDescription = "Teacher Image",
+                        contentDescription = "Photo of $poster",
                         modifier = Modifier
                             .clip(RoundedCornerShape(8.dp))
                     )
