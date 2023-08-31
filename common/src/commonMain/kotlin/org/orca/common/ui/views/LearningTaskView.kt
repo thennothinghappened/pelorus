@@ -91,7 +91,7 @@ fun LearningTaskViewContent(
         val task = list[component.learningTaskActivityId]!!.find { it.id == component.learningTaskId }!!
 
         Column(modifier = Modifier.padding(8.dp)) {
-            if (getPlatform() == Platform.DESKTOP) {
+            if (PLATFORM == Platform.DESKTOP) {
                 Button(onClick = component.onBackPress) {
                     Icon(Icons.Default.ArrowBack, "Back")
                 }

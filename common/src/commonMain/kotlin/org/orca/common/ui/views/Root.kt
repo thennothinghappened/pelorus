@@ -36,20 +36,64 @@ import org.orca.kotlass.data.LearningTask
 import org.orca.kotlass.data.LearningTaskSubmissionStatus
 import org.orca.kotlass.data.NetResponse
 
-class RootComponent(
+interface RootComponent {
+
+    val stack: Value<ChildStack<*, Child>>
+
+    val updateCheckStatus: StateFlow<NetResponse<Pair<Boolean, GitHubLatestVersionResponse?>>?>
+
+    fun goToNavItem(config: Config)
+
+    fun checkForUpdates()
+
+    sealed interface Child {
+        class LoginChild(val component: LoginComponent) : Child
+        class HomeChild(val component: HomeComponent) : Child
+        class CalendarChild(val component: CalendarComponent) : Child
+        class LearningTasksChild(val component: LearningTasksComponent) : Child
+        class LearningTaskViewChild(val component: LearningTaskViewComponent) : Child
+        class SettingsChild(val component: SettingsComponent) : Child
+        class ActivityChild(val component: ActivityComponent) : Child
+        class ResourcesChild(val component: ResourcesComponent) : Child
+        class ProfileChild(val component: ProfileComponent) : Child
+        class ActionCentreEventChild(val component: ActionCentreEventComponent) : Child
+    }
+
+    @Suppress("JavaIoSerializableObjectMustHaveReadResolve")
+    @Parcelize
+    sealed interface Config : Parcelable {
+        data object Login : Config
+        data object Home : Config
+        data object Calendar : Config
+        data class LearningTasks(
+            val activityFilter: Set<Int> = setOf(-1),
+            val statusFilter: Set<LearningTaskSubmissionStatus> = emptySet()
+        ) : Config
+        data class LearningTaskView(val learningTaskActivityId: Int, val learningTaskId: Int) : Config
+        data object Settings : Config
+        data class Activity(val scheduleEntryIndex: Int) : Config
+        data class Resources(val activityId: Int) : Config
+        data object Profile : Config
+        data class ActionCentreEvent(val eventId: Int) : Config
+    }
+}
+
+class DefaultRootComponent(
     componentContext: ComponentContext,
     private val preferences: Preferences
-) : ComponentContext by componentContext {
+) : RootComponent, ComponentContext by componentContext
+{
 
-    private val navigation = StackNavigation<Config>()
+    private val navigation = StackNavigation<RootComponent.Config>()
     private val _stack =
         childStack(
             source = navigation,
-            initialConfiguration = Config.Login,
+            initialConfiguration = RootComponent.Config.Login,
             handleBackButton = true,
             childFactory = ::child
         )
-    val stack: Value<ChildStack<*, Child>> = _stack
+    override val stack: Value<ChildStack<*, RootComponent.Child>> = _stack
+
     // this gets filled in when login form is complete, or preferences loaded.
     private lateinit var compassClientCredentials: KotlassClient.CompassClientCredentials
 
@@ -59,9 +103,9 @@ class RootComponent(
 
     // checking for updates
     private val _updateCheckStatus: MutableStateFlow<NetResponse<Pair<Boolean, GitHubLatestVersionResponse?>>?> = MutableStateFlow(null)
-    val updateCheckStatus: StateFlow<NetResponse<Pair<Boolean, GitHubLatestVersionResponse?>>?> = _updateCheckStatus
+    override val updateCheckStatus: StateFlow<NetResponse<Pair<Boolean, GitHubLatestVersionResponse?>>?> = _updateCheckStatus
 
-    fun checkForUpdates() {
+    override fun checkForUpdates() {
         _updateCheckStatus.value = null
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -73,7 +117,7 @@ class RootComponent(
         credentials: KotlassClient.CompassClientCredentials,
         enableVerify: Boolean = true,
         mainThread: Boolean
-    ): NetResponse<Unit?> {
+    ): NetResponse<*> {
         if (enableVerify) {
             // make sure the credentials are valid!
             val _compass = KotlassClient(credentials)
@@ -91,17 +135,17 @@ class RootComponent(
         if (!mainThread) {
             // We launch this in a scope since this function can get called from a coroutine in Browser login.
             CoroutineScope(Dispatchers.Main).launch {
-                goToNavItem(Config.Home)
+                goToNavItem(RootComponent.Config.Home)
             }
         } else {
-            goToNavItem(Config.Home, true)
+            goToNavItem(RootComponent.Config.Home)
         }
 
         return NetResponse.Success(null)
     }
 
-    fun goToNavItem(config: Config, forceReplaceStack: Boolean = false) {
-//        if (forceReplaceStack || (getPlatform() == Platform.ANDROID && !preferences.get(DefaultPreferences.App.dontReplaceStack))) {
+    override fun goToNavItem(config: RootComponent.Config) {
+//        if (forceReplaceStack || (PLATFORM == Platform.ANDROID && !preferences.get(DefaultPreferences.App.dontReplaceStack))) {
 //            return navigation.replaceAll(config)
 //        }
         navigation.replaceAll(config)
@@ -142,7 +186,7 @@ class RootComponent(
             compass.loadLessonPlan(scheduleEntry)
 
         compass.setViewedEntry(scheduleEntry)
-        navigation.push(Config.Activity(scheduleEntryIndex))
+        navigation.push(RootComponent.Config.Activity(scheduleEntryIndex))
     }
 
     private fun onClickLearningTaskByName(name: String) {
@@ -161,20 +205,20 @@ class RootComponent(
     }
 
     private fun onClickLearningTaskById(learningTaskActivityId: Int, learningTaskId: Int) {
-        navigation.push(Config.LearningTaskView(learningTaskActivityId, learningTaskId))
+        navigation.push(RootComponent.Config.LearningTaskView(learningTaskActivityId, learningTaskId))
     }
 
     private fun onClickLearningTasksFromActivity(learningTaskActivityId: Int) {
-        navigation.push(Config.LearningTasks(setOf(learningTaskActivityId)))
+        navigation.push(RootComponent.Config.LearningTasks(setOf(learningTaskActivityId)))
     }
 
     private fun onClickResourcesFromActivity(resourcesActivityId: Int) {
         compass.loadActivityResources(resourcesActivityId)
-        navigation.push(Config.Resources(resourcesActivityId))
+        navigation.push(RootComponent.Config.Resources(resourcesActivityId))
     }
 
     private fun onClickActionCentreEvent(eventId: Int) {
-        navigation.push(Config.ActionCentreEvent(eventId))
+        navigation.push(RootComponent.Config.ActionCentreEvent(eventId))
     }
 
     private fun onClickActionCentreEventByScheduleEntry(
@@ -219,14 +263,14 @@ class RootComponent(
         }
     }
 
-    private fun child(config: Config, componentContext: ComponentContext): Child =
+    private fun child(config: RootComponent.Config, componentContext: ComponentContext): RootComponent.Child =
         when (config) {
-            is Config.Login -> Child.LoginChild(
+            is RootComponent.Config.Login -> RootComponent.Child.LoginChild(
                 LoginComponent(
                     onFinishLogin = ::onFinishLogin
                 )
             )
-            is Config.Home -> Child.HomeChild(
+            is RootComponent.Config.Home -> RootComponent.Child.HomeChild(
                 HomeComponent(
                     componentContext = componentContext,
                     compass,
@@ -237,7 +281,7 @@ class RootComponent(
                     preferences.get(DefaultPreferences.Credentials.schoolStartTime)
                 )
             )
-            is Config.Calendar -> Child.CalendarChild(
+            is RootComponent.Config.Calendar -> RootComponent.Child.CalendarChild(
                 CalendarComponent(
                     componentContext = componentContext,
                     compass,
@@ -248,7 +292,7 @@ class RootComponent(
                     preferences.get(DefaultPreferences.Credentials.schoolStartTime)
                 )
             )
-            is Config.LearningTasks -> Child.LearningTasksChild(
+            is RootComponent.Config.LearningTasks -> RootComponent.Child.LearningTasksChild(
                 LearningTasksComponent(
                     componentContext = componentContext,
                     compass,
@@ -256,7 +300,7 @@ class RootComponent(
                     config.activityFilter
                 )
             )
-            is Config.LearningTaskView -> Child.LearningTaskViewChild(
+            is RootComponent.Config.LearningTaskView -> RootComponent.Child.LearningTaskViewChild(
                 LearningTaskViewComponent(
                     componentContext = componentContext,
                     compass,
@@ -265,13 +309,13 @@ class RootComponent(
                     navigation::pop
                 )
             )
-            is Config.Settings -> Child.SettingsChild(
+            is RootComponent.Config.Settings -> RootComponent.Child.SettingsChild(
                 SettingsComponent(
                     componentContext = componentContext,
                     preferences = preferences
                 )
             )
-            is Config.Activity -> Child.ActivityChild(
+            is RootComponent.Config.Activity -> RootComponent.Child.ActivityChild(
                 ActivityComponent(
                     componentContext = componentContext,
                     compass,
@@ -280,7 +324,7 @@ class RootComponent(
                     ::onClickResourcesFromActivity
                 )
             )
-            is Config.Resources -> Child.ResourcesChild(
+            is RootComponent.Config.Resources -> RootComponent.Child.ResourcesChild(
                 ResourcesComponent(
                     componentContext = componentContext,
                     compass,
@@ -288,13 +332,13 @@ class RootComponent(
                     navigation::pop
                 )
             )
-            is Config.Profile -> Child.ProfileChild(
+            is RootComponent.Config.Profile -> RootComponent.Child.ProfileChild(
                 ProfileComponent(
                     compass,
                     ::onClickActionCentreEvent
                 )
             )
-            is Config.ActionCentreEvent -> Child.ActionCentreEventChild(
+            is RootComponent.Config.ActionCentreEvent -> RootComponent.Child.ActionCentreEventChild(
                 ActionCentreEventComponent(
                     compass,
                     config.eventId,
@@ -302,36 +346,6 @@ class RootComponent(
                 )
             )
         }
-
-    sealed interface Child {
-        class LoginChild(val component: LoginComponent) : Child
-        class HomeChild(val component: HomeComponent) : Child
-        class CalendarChild(val component: CalendarComponent) : Child
-        class LearningTasksChild(val component: LearningTasksComponent) : Child
-        class LearningTaskViewChild(val component: LearningTaskViewComponent) : Child
-        class SettingsChild(val component: SettingsComponent) : Child
-        class ActivityChild(val component: ActivityComponent) : Child
-        class ResourcesChild(val component: ResourcesComponent) : Child
-        class ProfileChild(val component: ProfileComponent) : Child
-        class ActionCentreEventChild(val component: ActionCentreEventComponent) : Child
-    }
-
-    @Parcelize
-    sealed interface Config : Parcelable {
-        object Login : Config
-        object Home : Config
-        object Calendar : Config
-        data class LearningTasks(
-            val activityFilter: Set<Int> = setOf(-1),
-            val statusFilter: Set<LearningTaskSubmissionStatus> = emptySet()
-        ) : Config
-        data class LearningTaskView(val learningTaskActivityId: Int, val learningTaskId: Int) : Config
-        object Settings : Config
-        data class Activity(val scheduleEntryIndex: Int) : Config
-        data class Resources(val activityId: Int) : Config
-        object Profile : Config
-        data class ActionCentreEvent(val eventId: Int) : Config
-    }
 
 }
 

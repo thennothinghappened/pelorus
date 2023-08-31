@@ -5,4 +5,4 @@ enum class Platform {
     DESKTOP
 }
 
-expect fun getPlatform(): Platform
+expect val PLATFORM: Platform

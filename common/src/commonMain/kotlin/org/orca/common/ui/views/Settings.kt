@@ -11,9 +11,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.ComponentContext
-import org.orca.common.data.Platform
+//import org.orca.common.data.Platform
 import org.orca.common.data.clearClientCredentials
-import org.orca.common.data.getPlatform
 import org.orca.common.data.utils.DefaultPreferences
 import org.orca.common.data.utils.Preferences
 import org.orca.common.data.utils.get
@@ -76,7 +75,7 @@ fun SettingsContent(
             checkForUpdates = it
             component.preferences.put(DefaultPreferences.App.checkForUpdates, checkForUpdates)
         } }
-//        if (getPlatform() == Platform.ANDROID) item { SwitchSetting(
+//        if (PLATFORM == Platform.ANDROID) item { SwitchSetting(
 //            "Allow back navigation between Navbar items",
 //            "When enabled, presisng the back button will work between sibling main screen tabs.",
 //            dontReplaceStack
