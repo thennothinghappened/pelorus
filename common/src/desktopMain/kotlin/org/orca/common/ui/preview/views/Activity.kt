@@ -1,4 +1,4 @@
-package org.orca.common.ui.preview
+package org.orca.common.ui.preview.views
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Column
@@ -16,7 +16,7 @@ import org.orca.htmltext.HtmlText
 
 @Preview
 @Composable
-fun ActivityPreview() {
+private fun ActivityPreview() {
     AppTheme {
         Surface {
             Column(Modifier.fillMaxSize().padding(16.dp)) {

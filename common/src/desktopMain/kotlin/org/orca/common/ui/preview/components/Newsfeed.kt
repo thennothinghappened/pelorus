@@ -1,4 +1,4 @@
-package org.orca.common.ui.preview
+package org.orca.common.ui.preview.components
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.runtime.Composable

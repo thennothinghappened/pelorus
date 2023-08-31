@@ -1,4 +1,4 @@
-package org.orca.common.ui.preview
+package org.orca.common.ui.preview.views
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.fillMaxSize
