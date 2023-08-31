@@ -1,4 +1,4 @@
-package org.orca.common.ui.views
+package org.orca.common.ui.views.login
 
 import androidx.activity.OnBackPressedDispatcher
 import androidx.compose.foundation.layout.*

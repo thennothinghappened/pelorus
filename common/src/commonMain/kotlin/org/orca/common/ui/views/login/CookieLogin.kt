@@ -1,4 +1,4 @@
-package org.orca.common.ui.views
+package org.orca.common.ui.views.login
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -8,44 +8,17 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
-import org.orca.common.data.Platform
-import org.orca.common.data.getPlatform
-import org.orca.common.ui.components.IWebViewBridge
-import org.orca.common.ui.components.webViewBridge
-import org.orca.kotlass.KotlassClient.CompassClientCredentials
+import io.ktor.client.network.sockets.*
+import org.orca.kotlass.KotlassClient
 import org.orca.kotlass.data.NetResponse
-
-class LoginComponent(
-    val onFinishLogin: (CompassClientCredentials, Boolean, Boolean) -> NetResponse<Unit?>
-) {
-    companion object {
-        const val credentialsInvalidMessage = "Credentials are invalid."
-        const val checkNetworkMessage = "Failed to get a reply from Compass. Check that you have internet access and that the Compass website is accessible."
-        const val clientErrorMessage = "A client error has occurred. Please report this message on GitHub and screenshot the below. Stack Trace:\n"
-    }
-
-    lateinit var webViewBridge: IWebViewBridge
-
-    init {
-        if (getPlatform() == Platform.ANDROID) {
-            webViewBridge = webViewBridge(
-                "https://schools.compass.education/",
-                captureBackPresses = false,
-                javascriptEnabled = true
-            )
-        }
-    }
-}
-
-@Composable
-expect fun LoginContent(
-    component: LoginComponent
-)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -89,7 +62,7 @@ fun CookieLoginContent(
                 ) return@Button
 
                 val reply = component.onFinishLogin(
-                    object : CompassClientCredentials {
+                    object : KotlassClient.CompassClientCredentials {
                         override val cookie = cookie
                         override val userId = userId.toInt()
                         override val domain = domain
@@ -99,8 +72,8 @@ fun CookieLoginContent(
                 when (reply) {
                     is NetResponse.ClientError -> {
                         if (
-                            reply.error is io.ktor.client.network.sockets.SocketTimeoutException ||
-                            reply.error is io.ktor.client.network.sockets.ConnectTimeoutException
+                            reply.error is SocketTimeoutException ||
+                            reply.error is ConnectTimeoutException
                         ) {
                             domainError = true
                             errorMessage = LoginComponent.checkNetworkMessage
