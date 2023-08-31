@@ -1,6 +1,6 @@
 
-val GITHUB_USER = project.findProperty("gpr.user") as String? ?: System.getenv("GITHUB_USER")
-val GITHUB_TOKEN = project.findProperty("gpr.key") as String? ?: System.getenv("GITHUB_TOKEN")
+val GITHUB_USER: String = project.findProperty("gpr.user") as String? ?: System.getenv("GITHUB_USER")
+val GITHUB_TOKEN: String = project.findProperty("gpr.key") as String? ?: System.getenv("GITHUB_TOKEN")
 
 allprojects {
     group = Pelorus.group
