@@ -16,7 +16,7 @@ class WebViewBridge(
     startingUrl: String,
     private val captureBackPresses: Boolean = false,
     private val javascriptEnabled: Boolean = false,
-    private var onPageChange: ((String?) -> Unit)? = { url -> Log.i("URL", url!!) }
+    private var onPageChange: ((url: String?) -> Unit)? = null
 ) : IWebViewBridge {
 
     private val webViewState = WebViewState(WebContent.Url(startingUrl))
@@ -37,6 +37,12 @@ class WebViewBridge(
 
         _lastLoadedUrl.value = webViewState.lastLoadedUrl
         _isLoading.value = webViewState.isLoading
+
+        if (lastLoadedUrl.value != null && isLoading.value) {
+            onPageChange?.let {
+                it(lastLoadedUrl.value)
+            }
+        }
 
         WebView(
             state = webViewState,
