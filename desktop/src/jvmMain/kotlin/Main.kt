@@ -12,6 +12,7 @@ import org.orca.common.ui.views.RootComponent
 import org.orca.common.ui.views.RootContent
 import org.orca.common.ui.theme.AppTheme
 import org.orca.common.ui.utils.WindowSize
+import org.orca.common.ui.views.DefaultRootComponent
 
 
 @ExperimentalMaterial3Api
@@ -20,7 +21,7 @@ fun main() {
     val lifecycle = LifecycleRegistry()
 
     val root = runOnUiThread {
-        RootComponent(
+        DefaultRootComponent(
             componentContext = DefaultComponentContext(lifecycle = lifecycle),
             Preferences()
         )

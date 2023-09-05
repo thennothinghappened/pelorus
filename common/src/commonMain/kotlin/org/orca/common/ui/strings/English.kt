@@ -4,6 +4,7 @@ object English : Strings {
 
     override val login = object : Strings.Login {
 
+        override val topBarText = "Login"
         override val onboardHeading = "Welcome to Pelorus!"
         override val onboardActionOptions = "Login to Compass"
 

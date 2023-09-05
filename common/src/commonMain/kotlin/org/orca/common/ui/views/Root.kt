@@ -19,6 +19,7 @@ import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.arkivanov.essenty.parcelable.Parcelable
 import com.arkivanov.essenty.parcelable.Parcelize
+import io.ktor.utils.io.errors.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,6 +29,7 @@ import org.orca.common.data.*
 import org.orca.common.data.utils.*
 import org.orca.common.ui.utils.WindowSize
 import org.orca.common.ui.components.calendar.ScheduleHolderType
+import org.orca.common.ui.views.login.DefaultLoginComponent
 import org.orca.common.ui.views.login.LoginComponent
 import org.orca.common.ui.views.login.LoginContent
 import org.orca.kotlass.IFlowKotlassClient
@@ -263,11 +265,37 @@ class DefaultRootComponent(
         }
     }
 
+    private fun onFinishLoginFromScreen(domain: String, userId: String, cookie: String): LoginComponent.ErrorType? {
+
+        val reply = onFinishLogin(
+            object : KotlassClient.CompassClientCredentials {
+                override val cookie = cookie
+                override val userId = userId.toInt()
+                override val domain = domain
+            }, true, true
+        )
+
+        return when (reply) {
+            is NetResponse.ClientError -> {
+                if (reply.error is IOException) {
+                    return LoginComponent.ErrorType.NetworkError(reply.error)
+                }
+                LoginComponent.ErrorType.ClientError(reply.error)
+            }
+            is NetResponse.RequestFailure -> LoginComponent.ErrorType.ContentError(
+                cookie = true,
+                userId = true
+            )
+            is NetResponse.Success -> null
+        }
+    }
+
     private fun child(config: RootComponent.Config, componentContext: ComponentContext): RootComponent.Child =
         when (config) {
             is RootComponent.Config.Login -> RootComponent.Child.LoginChild(
-                LoginComponent(
-                    onFinishLogin = ::onFinishLogin
+                DefaultLoginComponent(
+                    componentContext = componentContext,
+                    onFinishLogin = ::onFinishLoginFromScreen
                 )
             )
             is RootComponent.Config.Home -> RootComponent.Child.HomeChild(

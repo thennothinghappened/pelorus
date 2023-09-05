@@ -18,6 +18,7 @@ interface Strings {
      */
     interface Login {
 
+        val topBarText: String
         val onboardHeading: String
         val onboardActionOptions: String
 
