@@ -20,13 +20,14 @@ import org.orca.common.ui.views.RootComponent
 import org.orca.common.ui.views.RootContent
 import org.orca.common.ui.theme.AppTheme
 import org.orca.common.ui.utils.WindowSize
+import org.orca.common.ui.views.DefaultRootComponent
 
 @ExperimentalMaterial3Api
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val root = RootComponent(
+        val root = DefaultRootComponent(
             componentContext = defaultComponentContext(),
             preferences = Preferences(getSharedPreferences("data", MODE_PRIVATE))
         )
