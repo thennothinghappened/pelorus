@@ -21,6 +21,7 @@ import com.arkivanov.essenty.parcelable.Parcelize
 import org.orca.common.data.PLATFORM
 import org.orca.common.data.Platform
 import org.orca.common.ui.components.common.BackNavIcon
+import org.orca.common.ui.defaults.Colours
 import org.orca.common.ui.defaults.Font
 import org.orca.common.ui.defaults.Padding
 import org.orca.common.ui.strings.STRINGS
@@ -115,18 +116,20 @@ fun LoginContent(component: LoginComponent) {
                 if (stack.active.instance !is LoginComponent.Child.MenuChild) {
                     BackNavIcon(component::back)
                 }
-            }
+            },
+            colors = TopAppBarDefaults.mediumTopAppBarColors(
+                containerColor = Colours.TopBarBackground
+            )
         ) }
     ) { paddingValues ->
         Children(
             stack = stack,
-            animation = stackAnimation(fade() + scale())
+            animation = stackAnimation(fade() + scale()),
+            modifier = Modifier.padding(paddingValues)
         ) {
             when (val child = it.instance) {
                 is LoginComponent.Child.MenuChild -> LoginMenu(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues),
+                    modifier = Modifier.fillMaxSize(),
                     gotoWebLogin = if (PLATFORM == Platform.ANDROID) component::gotoWebLogin else null,
                     gotoCookieLogin = component::gotoCookieLogin
                 )

@@ -18,24 +18,31 @@ import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.arkivanov.essenty.parcelable.Parcelable
 import com.arkivanov.essenty.parcelable.Parcelize
 import com.arkivanov.essenty.statekeeper.consume
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import org.orca.common.data.utils.collectAsStateAndLifecycle
+import org.orca.common.data.utils.coroutineScope
 import org.orca.common.ui.components.common.ErrorRenderer
 import org.orca.common.ui.strings.STRINGS
+import kotlin.coroutines.CoroutineContext
 
 interface CookieLoginComponent {
 
     val state: StateFlow<State>
 
-    fun onFinishLogin(): LoginComponent.ErrorType?
+    fun onFinishLogin()
 
     @Parcelize
     data class State(
         val cookie: String = "",
         val userId: String = "",
         val domain: String = "",
+        val loading: Boolean = false,
         val errorType: LoginComponent.ErrorType? = null
     ) : Parcelable
 
@@ -46,7 +53,7 @@ interface CookieLoginComponent {
 
 class DefaultCookieLoginComponent(
     val componentContext: ComponentContext,
-    private val _onFinishLogin: (domain: String, userId: String, cookie: String) -> LoginComponent.ErrorType?
+    private val _onFinishLogin: suspend (domain: String, userId: String, cookie: String) -> LoginComponent.ErrorType?
 ) : CookieLoginComponent, ComponentContext by componentContext {
 
     private val handler =
@@ -56,7 +63,9 @@ class DefaultCookieLoginComponent(
             )
         }
 
-    override val state = handler.state
+    override val state: StateFlow<CookieLoginComponent.State> = handler.state
+
+    private var loginJob: Job? = null
 
     override fun onCookieUpdate(cookie: String) {
         handler.state.update {
@@ -64,12 +73,35 @@ class DefaultCookieLoginComponent(
         }
     }
 
-    override fun onFinishLogin(): LoginComponent.ErrorType? =
-        _onFinishLogin(
-            state.value.domain,
-            state.value.cookie,
-            state.value.userId
-        )
+    override fun onFinishLogin() {
+        if (loginJob == null) {
+            loginJob = coroutineScope(Dispatchers.IO).launch {
+                handler.state.update {
+                    it.copy(loading = true)
+                }
+
+                handler.state.update {
+                    it.copy(
+                        errorType = _onFinishLogin(
+                            state.value.domain,
+                            state.value.userId,
+                            state.value.cookie
+                        )
+                    )
+                }
+
+                handler.state.update {
+                    it.copy(loading = false)
+                }
+            }
+        } else {
+            loginJob?.cancel()
+            loginJob = null
+
+            onFinishLogin()
+        }
+    }
+
     override fun onUserIdUpdate(userId: String) {
         handler.state.update {
             it.copy(userId = userId.filter(Char::isDigit))
@@ -128,6 +160,7 @@ fun CookieLoginContent(
             label = { Text(STRINGS.login.cookie.fields.cookie.name) },
             isError = contentError?.cookie == true
         )
+
         OutlinedTextField(
             state.userId,
             component::onUserIdUpdate,
@@ -152,11 +185,8 @@ fun CookieLoginContent(
         }
 
         Button(
-            onClick = {
-                component.onFinishLogin(
-
-                )
-            }
+            onClick = component::onFinishLogin,
+            enabled = !state.loading
         ) {
             Text("Login")
         }

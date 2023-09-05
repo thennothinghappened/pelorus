@@ -265,15 +265,40 @@ class DefaultRootComponent(
         }
     }
 
-    private fun onFinishLoginFromScreen(domain: String, userId: String, cookie: String): LoginComponent.ErrorType? {
+    private fun onFinishLoginFromScreen(
+        domain: String,
+        userId: String,
+        cookie: String
+    ): LoginComponent.ErrorType? {
 
-        val reply = onFinishLogin(
-            object : KotlassClient.CompassClientCredentials {
-                override val cookie = cookie
-                override val userId = userId.toInt()
-                override val domain = domain
-            }, true, true
-        )
+        run {
+            val domainBlank = domain.isBlank()
+            val userIdBlank = userId.isBlank()
+            val cookieBlank = cookie.isBlank()
+
+            if (domainBlank || userIdBlank || cookieBlank) {
+                return LoginComponent.ErrorType.ContentError(
+                    domain = domainBlank,
+                    userId = userIdBlank,
+                    cookie = cookieBlank
+                )
+            }
+        }
+
+        val reply = run {
+            val _userId = userId.toIntOrNull()
+                ?: return LoginComponent.ErrorType.ContentError(
+                    userId = true
+                )
+
+            onFinishLogin(
+                object : KotlassClient.CompassClientCredentials {
+                    override val cookie = cookie
+                    override val userId = _userId
+                    override val domain = domain
+                }, true, true
+            )
+        }
 
         return when (reply) {
             is NetResponse.ClientError -> {
