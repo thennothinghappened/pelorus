@@ -41,7 +41,7 @@ interface LoginComponent {
     sealed interface Child {
         data object MenuChild : Child
         class CookieLoginChild(val component: CookieLoginComponent) : Child
-        class WebLoginChild(val component: HomeComponent) : Child
+        class WebLoginChild(val component: WebLoginComponent) : Child
     }
 
     @Suppress("JavaIoSerializableObjectMustHaveReadResolve")
@@ -66,7 +66,12 @@ interface LoginComponent {
 
 class DefaultLoginComponent(
     val componentContext: ComponentContext,
-    private val onFinishLogin: (domain: String, userId: String, cookie: String) -> LoginComponent.ErrorType?
+    private val onFinishLogin: (
+        domain: String,
+        userId: String,
+        cookie: String,
+        mainThread: Boolean
+    ) -> LoginComponent.ErrorType?
 ) : LoginComponent, ComponentContext by componentContext {
 
     private val navigation = StackNavigation<LoginComponent.Config>()
@@ -81,11 +86,15 @@ class DefaultLoginComponent(
     private fun child(config: LoginComponent.Config, componentContext: ComponentContext): LoginComponent.Child =
         when (config) {
             is LoginComponent.Config.Menu -> LoginComponent.Child.MenuChild
+
             is LoginComponent.Config.CookieLogin -> LoginComponent.Child.CookieLoginChild(DefaultCookieLoginComponent(
                 componentContext = componentContext,
-                _onFinishLogin = onFinishLogin
+                _onFinishLogin = { domain, userId, cookie -> onFinishLogin(domain, userId, cookie, true) }
             ))
-            is LoginComponent.Config.WebLogin -> TODO("implement web login")
+
+            is LoginComponent.Config.WebLogin -> LoginComponent.Child.WebLoginChild(DefaultWebLoginComponent(
+                _onFinishLogin = { domain, userId, cookie -> onFinishLogin(domain, userId, cookie, false) }
+            ))
         }
 
     override fun gotoCookieLogin() {
@@ -128,13 +137,16 @@ fun LoginContent(component: LoginComponent) {
             modifier = Modifier.padding(paddingValues)
         ) {
             when (val child = it.instance) {
+
                 is LoginComponent.Child.MenuChild -> LoginMenu(
                     modifier = Modifier.fillMaxSize(),
                     gotoWebLogin = if (PLATFORM == Platform.ANDROID) component::gotoWebLogin else null,
                     gotoCookieLogin = component::gotoCookieLogin
                 )
+
                 is LoginComponent.Child.CookieLoginChild -> CookieLoginContent(child.component)
-                is LoginComponent.Child.WebLoginChild -> TODO("implement web login")
+
+                is LoginComponent.Child.WebLoginChild -> WebLoginContent(child.component)
             }
         }
     }

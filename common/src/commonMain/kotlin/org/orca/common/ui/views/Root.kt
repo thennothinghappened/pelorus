@@ -120,6 +120,7 @@ class DefaultRootComponent(
         enableVerify: Boolean = true,
         mainThread: Boolean
     ): NetResponse<*> {
+
         if (enableVerify) {
             // make sure the credentials are valid!
             val _compass = KotlassClient(credentials)
@@ -128,7 +129,6 @@ class DefaultRootComponent(
             if (valid !is NetResponse.Success) {
                 return valid
             }
-
         }
 
         compassClientCredentials = credentials
@@ -268,7 +268,8 @@ class DefaultRootComponent(
     private fun onFinishLoginFromScreen(
         domain: String,
         userId: String,
-        cookie: String
+        cookie: String,
+        mainThread: Boolean
     ): LoginComponent.ErrorType? {
 
         run {
@@ -292,11 +293,11 @@ class DefaultRootComponent(
                 )
 
             onFinishLogin(
-                object : KotlassClient.CompassClientCredentials {
+                credentials = object : KotlassClient.CompassClientCredentials {
                     override val cookie = cookie
                     override val userId = _userId
                     override val domain = domain
-                }, true, true
+                }, mainThread = mainThread
             )
         }
 

@@ -4,11 +4,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import org.orca.common.ui.components.IWebViewBridge
 import org.orca.common.ui.components.webViewBridge
 
 interface WebLoginComponent {
-    fun onFinishLogin(domain: String, userId: String, cookie: String): LoginComponent.ErrorType?
     @Composable
     fun WebView(modifier: Modifier)
 }
@@ -39,7 +37,7 @@ class DefaultWebLoginComponent(
         const val COOKIE_SEARCH_STRING = "cpssid_"
         const val JS_GET_USERID = """
                 window.addEventListener('DOMContentLoaded', function() {
-                    kotlinInterface.run('doLogin', Compass.organisationUserId.toString());
+                    kotlinInterface.run('doPelorusLogin', Compass.organisationUserId.toString());
                 });
             """
     }
@@ -70,8 +68,12 @@ class DefaultWebLoginComponent(
                 if (url == homepageUrl) {
                     val cookie = webViewBridge.getCookie(homepageUrl)
 
+                    if (cookie == null || !cookie.contains(COOKIE_SEARCH_STRING)) {
+                        TODO("Handle invalid or missing cookie")
+                    }
+
                     webViewBridge.addJavascriptInterface("doPelorusLogin") { userId ->
-                        if (userId != null && cookie != null) {
+                        if (userId != null) {
                             onFinishLogin(
                                 domain = domainMatch.value,
                                 userId = userId,
@@ -81,6 +83,8 @@ class DefaultWebLoginComponent(
                             TODO("Handle invalid setup for Compass info setup")
                         }
                     }
+
+                    webViewBridge.evaluateJavascript(JS_GET_USERID)
                 }
             }
         }
@@ -93,7 +97,7 @@ class DefaultWebLoginComponent(
         onPageChange = ::onPageChange
     )
 
-    override fun onFinishLogin(domain: String, userId: String, cookie: String): LoginComponent.ErrorType? =
+    private fun onFinishLogin(domain: String, userId: String, cookie: String): LoginComponent.ErrorType? =
         _onFinishLogin(domain, userId, cookie)
 
     @Composable
