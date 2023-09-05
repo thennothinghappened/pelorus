@@ -140,7 +140,7 @@ fun LoginContent(component: LoginComponent) {
 
                 is LoginComponent.Child.MenuChild -> LoginMenu(
                     modifier = Modifier.fillMaxSize(),
-                    gotoWebLogin = if (PLATFORM == Platform.ANDROID) component::gotoWebLogin else null,
+                    gotoWebLogin = component::gotoWebLogin,
                     gotoCookieLogin = component::gotoCookieLogin
                 )
 

@@ -29,6 +29,8 @@ datetime = "1.0.10"
 junit = "4.13.2"
 buildconfig = "4.1.2"
 
+osdetector = "1.7.3"
+
 [plugins]
 kotlin-parcelize =      { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 android-application =   { id = "com.android.application", version.ref = "android-gradle-plugin" }
@@ -38,9 +40,9 @@ kotlin-android =        { id = "org.jetbrains.kotlin.android", version.ref = "ko
 kotlin-serialization =  { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 compose =               { id = "org.jetbrains.compose", version.ref = "compose" }
 buildconfig =           { id = "com.github.gmazzo.buildconfig", version.ref = "buildconfig" }
+osdetector =            { id = "com.google.osdetector", version.ref = "osdetector" }
 
 [libraries]
-
 accompanist-systemuicontroller =    { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanist-systemuicontroller" }
 accompanist-flowlayout ={ module = "ca.gosyer:accompanist-flowlayout", version.ref = "accompanist-flowlayout" }
 accompanist-webview =   { module = "com.google.accompanist:accompanist-webview", version.ref = "accompanist-webview" }

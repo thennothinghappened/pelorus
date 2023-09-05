@@ -4,13 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import kotlinx.coroutines.flow.StateFlow
 
-expect fun webViewBridge(
-    startingUrl: String,
-    captureBackPresses: Boolean = false,
-    javascriptEnabled: Boolean = false,
-    onPageChange: ((String?) -> Unit)? = null
-): IWebViewBridge
-
 interface IWebViewBridge {
 
     val lastLoadedUrl: StateFlow<String?>
@@ -25,3 +18,10 @@ interface IWebViewBridge {
 
     fun addJavascriptInterface(name: String, jsInterface: (String?) -> Unit)
 }
+
+expect class WebViewBridge(
+    startingUrl: String,
+    captureBackPresses: Boolean = false,
+    javascriptEnabled: Boolean = false,
+    onPageChange: ((url: String?) -> Unit)? = null
+) : IWebViewBridge

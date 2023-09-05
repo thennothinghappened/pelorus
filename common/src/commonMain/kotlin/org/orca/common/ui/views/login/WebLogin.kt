@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import org.orca.common.ui.components.webViewBridge
+import org.orca.common.ui.components.WebViewBridge
 
 interface WebLoginComponent {
     @Composable
@@ -90,7 +90,7 @@ class DefaultWebLoginComponent(
         }
     }
 
-    private val webViewBridge = webViewBridge(
+    private val webViewBridge = WebViewBridge(
         startingUrl = COMPASS_SEARCH_URL,
         captureBackPresses = false,
         javascriptEnabled = true,

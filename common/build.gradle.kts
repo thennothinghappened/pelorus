@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.buildconfig)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.osdetector)
 }
 
 kotlin {
@@ -34,7 +35,7 @@ kotlin {
                 implementation(libs.decompose.jetbrains)
                 implementation(libs.kamel.image)
                 implementation(libs.accompanist.flowlayout)
-//                implementation("me.xdrop:fuzzywuzzy:1.4.0")
+
                 implementation(libs.datetime)
                 implementation(libs.ktor.client.core)
                 implementation(libs.ktor.client.content.negotiation)
@@ -71,6 +72,23 @@ kotlin {
             dependencies {
                 api(compose.preview)
                 implementation(libs.jSystemThemeDetector)
+
+                // https://github.com/Kashif-E/KMPMovies/blob/master/common/build.gradle.kts
+                // would be nice to use libs toml but this works for now
+                val fxSuffix = when (osdetector.classifier) {
+                    "linux-x86_64" -> "linux"
+                    "linux-aarch_64" -> "linux-aarch64"
+                    "windows-x86_64" -> "win"
+                    "osx-x86_64" -> "mac"
+                    "osx-aarch_64" -> "mac-aarch64"
+                    else -> throw IllegalStateException("Unknown OS: ${osdetector.classifier}")
+                }
+                implementation("org.openjfx:javafx-base:19:${fxSuffix}")
+                implementation("org.openjfx:javafx-graphics:19:${fxSuffix}")
+                implementation("org.openjfx:javafx-controls:19:${fxSuffix}")
+                implementation("org.openjfx:javafx-swing:19:${fxSuffix}")
+                implementation("org.openjfx:javafx-web:19:${fxSuffix}")
+                implementation("org.openjfx:javafx-media:19:${fxSuffix}")
             }
         }
 

@@ -1,4 +1,4 @@
-package org.orca.common.ui.components.common
+package org.orca.common.ui.components
 
 import android.annotation.SuppressLint
 import android.util.Log
@@ -12,11 +12,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import org.orca.common.ui.components.IWebViewBridge
 
-class WebViewBridge(
+actual class WebViewBridge actual constructor(
     startingUrl: String,
-    private val captureBackPresses: Boolean = false,
-    private val javascriptEnabled: Boolean = false,
-    private var onPageChange: ((url: String?) -> Unit)? = null
+    private val captureBackPresses: Boolean,
+    private val javascriptEnabled: Boolean,
+    private var onPageChange: ((url: String?) -> Unit)?
 ) : IWebViewBridge {
 
     private val webViewState = WebViewState(WebContent.Url(startingUrl))
