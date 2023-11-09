@@ -17,6 +17,8 @@ private fun NewsfeedPreview() {
             null,
             "<b>what</b>",
             emptyList(),
+            true,
+            {}
         )
     }
 }

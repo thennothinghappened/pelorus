@@ -3,9 +3,7 @@ package org.orca.common.ui.views
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.ComponentContext
@@ -108,6 +106,9 @@ private fun Newsfeed(
 ) {
     Newsfeed(modifier) {
         NetStates(newsfeedState) { list ->
+            // TODO: this is a very quick and dirty impl.
+            var chosen: Int? by remember { mutableStateOf(null) }
+
             list.forEach {
                 NewsfeedItem(
                     it.title,
@@ -115,8 +116,12 @@ private fun Newsfeed(
                     lazyPainterResource(compass.buildDomainUrlString(it.userImageUrl)),
                     it.postDateTime,
                     it.content1.toString(),
-                    it.attachments.map { Pair(it.name, compass.buildDomainUrlString(it.uiLink)) }
-                )
+                    it.attachments.map { Pair(it.name, compass.buildDomainUrlString(it.uiLink)) },
+                    list.indexOf(it) == chosen
+                ) {
+                    val idx = list.indexOf(it)
+                    chosen = if (chosen == idx) null else idx
+                }
             }
         }
     }

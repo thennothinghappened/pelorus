@@ -1,8 +1,10 @@
 package org.orca.common.ui.components.newsfeed
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,6 +19,7 @@ import org.orca.common.ui.components.common.CompassAttachment
 import org.orca.common.ui.components.common.NetworkImage
 import org.orca.htmltext.HtmlText
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewsfeedItem(
     title: String,
@@ -24,10 +27,15 @@ fun NewsfeedItem(
     posterImage: Resource<Painter>? = null,
     postDateTime: Instant?,
     content: String,
-    attachments: List<Pair<String, String>>
+    attachments: List<Pair<String, String>>,
+    expanded: Boolean,
+    onExpand: () -> Unit
 ) {
 
-    Card(modifier = Modifier.fillMaxWidth()) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        onClick = onExpand
+    ) {
         Column(Modifier.padding(16.dp)) {
             Row {
                 if (posterImage != null) {
@@ -46,14 +54,18 @@ fun NewsfeedItem(
                 }
             }
 
-            HtmlText(content)
+            AnimatedVisibility(expanded) {
+                Column {
+                    HtmlText(content)
 
-            Column {
-                attachments.forEach { attachment ->
-                    CompassAttachment(
-                        attachment.first,
-                        attachment.second
-                    )
+                    Column {
+                        attachments.forEach { attachment ->
+                            CompassAttachment(
+                                attachment.first,
+                                attachment.second
+                            )
+                        }
+                    }
                 }
             }
         }
