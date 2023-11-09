@@ -2,7 +2,6 @@ package org.orca.common.ui.views
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -36,7 +35,7 @@ import org.orca.kotlass.IFlowKotlassClient
 import org.orca.kotlass.data.LearningTask
 import org.orca.kotlass.data.LearningTaskSubmissionStatus
 
-class LearningTasksComponent(
+class LearningTaskListComponent(
     componentContext: ComponentContext,
     val compass: Compass,
     val onClickLearningTask: (Int, Int) -> Unit,
@@ -100,8 +99,8 @@ class LearningTasksComponent(
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun LearningTasksContent(
-    component: LearningTasksComponent
+fun LearningTaskListContent(
+    component: LearningTaskListComponent
 ) {
     val learningTasksState by component.compass.defaultLearningTasks.state.collectAsStateAndLifecycle()
     val activityFilter by component.activityFilter.collectAsStateAndLifecycle()
@@ -215,7 +214,8 @@ fun LearningTasksContent(
                         ) {
                             Text(
                                 subjectNames[subject.key]!!,
-                                Modifier.padding(4.dp)
+                                modifier = Modifier.padding(4.dp),
+                                style = Font.infoSmall
                             )
                         }
                     }

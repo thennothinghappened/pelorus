@@ -52,7 +52,7 @@ interface RootComponent {
         class LoginChild(val component: LoginComponent) : Child
         class HomeChild(val component: HomeComponent) : Child
         class CalendarChild(val component: CalendarComponent) : Child
-        class LearningTasksChild(val component: LearningTasksComponent) : Child
+        class LearningTasksChild(val component: LearningTaskListComponent) : Child
         class LearningTaskViewChild(val component: LearningTaskViewComponent) : Child
         class SettingsChild(val component: SettingsComponent) : Child
         class ActivityChild(val component: ActivityComponent) : Child
@@ -347,7 +347,7 @@ class DefaultRootComponent(
                 )
             )
             is RootComponent.Config.LearningTasks -> RootComponent.Child.LearningTasksChild(
-                LearningTasksComponent(
+                LearningTaskListComponent(
                     componentContext = componentContext,
                     compass,
                     ::onClickLearningTaskById,
@@ -614,7 +614,7 @@ private fun RootChildSwitcher(
                 component = child.component,
                 windowSize = windowSize
             )
-            is RootComponent.Child.LearningTasksChild -> LearningTasksContent(
+            is RootComponent.Child.LearningTasksChild -> LearningTaskListContent(
                 component = child.component
             )
             is RootComponent.Child.SettingsChild -> SettingsContent(
