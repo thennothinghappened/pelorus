@@ -13,4 +13,13 @@ object Font {
     val button
         @Composable
         get() = MaterialTheme.typography.labelLarge
+
+    val settingLabel
+        @Composable
+        get() = MaterialTheme.typography.labelLarge
+            .copy(color = MaterialTheme.colorScheme.onSurfaceVariant)
+
+    val infoSmall
+        @Composable
+        get() = MaterialTheme.typography.labelLarge
 }
