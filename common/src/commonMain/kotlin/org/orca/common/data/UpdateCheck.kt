@@ -134,4 +134,8 @@ data class SemVer(
 
         return 0
     }
+
+    override fun toString(): String {
+        return "$major.$minor.$patch${if (suffix != null) "-$suffix" else ""}"
+    }
 }
