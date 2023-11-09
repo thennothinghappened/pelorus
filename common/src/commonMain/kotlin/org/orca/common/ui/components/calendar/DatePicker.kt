@@ -3,15 +3,11 @@ package org.orca.common.ui.components.calendar
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.DialogWindow
 import kotlinx.datetime.*
-import org.orca.common.ui.components.common.DialogBox
 import org.orca.common.ui.defaults.Font
 import org.orca.common.ui.defaults.Padding
-import kotlin.time.Duration.Companion.milliseconds
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
