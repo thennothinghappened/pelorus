@@ -11,6 +11,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import org.orca.common.BuildDetails
 import org.orca.kotlass.data.NetResponse
+import kotlin.math.min
 
 private const val UPDATE_URL = "https://api.github.com/repos/thennothinghappened/pelorus/releases/latest"
 
@@ -51,36 +52,86 @@ suspend fun updateCheck(allowPrereleases: Boolean = false): NetResponse<Pair<Boo
 
     server.close()
 
-    val ourVersion = BuildDetails.APP_VERSION.lowercase()
-    val newVersion = res.tag_name.lowercase()
+    val ourVersion = SemVer.parseString(BuildDetails.APP_VERSION).fold(
+        onFailure = {
+            throw Exception(
+                "This really shouldn't ever happen!" +
+                "If it did, something went *catastrophically* wrong." +
+                "Or I can't type. Either possible.")
+        },
+        onSuccess = { it }
+    )
+    val newVersion = SemVer.parseString(res.tag_name).fold(
+        onFailure = {
+            // TODO: Handle case where I fail typing the tag name. For now, we pretend the request failed.
+            return NetResponse.RequestFailure(req.status)
+        },
+        onSuccess = { it }
+    )
 
-    if (ourVersion == newVersion) {
-        return NetResponse.Success(Pair(true, null))
+    return ourVersion.compareTo(newVersion).let {
+        when {
+            // Up to date
+            it == 0 -> NetResponse.Success(Pair(true, null))
+            // Out of date
+            it < 0 ->
+                if (!res.prerelease || allowPrereleases)
+                    NetResponse.Success(Pair(false, res))
+                else
+                    NetResponse.Success(Pair(true, null))
+            // Newer than current release
+            else -> NetResponse.Success(Pair(true, null))
+        }
     }
+}
 
-    // parse the version (badly...)
-    val wereInBeta = ourVersion.contains("beta")
-    val currentInBeta = newVersion.contains("beta")
+data class SemVer(
+    val major: UInt,
+    val minor: UInt,
+    val patch: UInt,
+    val suffix: String? = null
+) : Comparable<SemVer> {
 
-    if (wereInBeta && !currentInBeta) {
-        if (!res.prerelease || allowPrereleases) {
-            return NetResponse.Success(Pair(false, res))
+    companion object {
+        /**
+         * Attempts to parse [str] in the form `major.minor.patch[-SUFFIX]`.
+         */
+        fun parseString(str: String): Result<SemVer> {
+            val split = str.split('.', limit = 3)
+
+            if (split.size != 3) {
+                return Result.failure(Exception("Input has incorrect number of '.' delimiters.`"))
+            }
+
+            val majorStr = split[0]
+            val minorStr = split[1]
+
+            val patchSplit = split[2].split('-', limit = 2)
+            val patchStr = patchSplit[0]
+            val suffix = if (patchSplit.size == 1) null else patchSplit[1]
+
+            val major = majorStr.toUIntOrNull() ?: return Result.failure(Exception("Major version $majorStr invalid."))
+            val minor = minorStr.toUIntOrNull() ?: return Result.failure(Exception("Minor version $minorStr invalid."))
+            val patch = patchStr.toUIntOrNull() ?: return Result.failure(Exception("Patch version $patchStr invalid."))
+
+            return Result.success(SemVer(major, minor, patch, suffix))
         }
     }
 
-    val ourVersionNum = ourVersion.split('-')[0].split('.').map { it.toInt() }
-    val newVersionNum = newVersion.split('-')[0].split('.').map { it.toInt() }
+    override fun compareTo(other: SemVer): Int {
 
-    // we should be able to get away with this since we won't be runnning a version *newer* than latest
-    if (
-        newVersionNum[0] > ourVersionNum[0] ||
-        newVersionNum[1] > ourVersionNum[1] ||
-        newVersionNum[2] > ourVersionNum[2]
-        ) {
-        if (!res.prerelease || allowPrereleases) {
-            return NetResponse.Success(Pair(false, res))
+        if (other.major != this.major) {
+            return (this.major - other.major).toInt()
         }
-    }
 
-    return NetResponse.Success(Pair(true, null))
+        if (other.minor != this.minor) {
+            return (this.minor - other.minor).toInt()
+        }
+
+        if (other.patch != this.patch) {
+            return (this.patch - other.patch).toInt()
+        }
+
+        return 0
+    }
 }
