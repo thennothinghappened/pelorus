@@ -12,6 +12,7 @@ import androidx.compose.ui.text.intl.Locale
 interface Strings {
 
     val login: Login
+    val settings: Settings
 
     /**
      * Base login screen
@@ -64,6 +65,20 @@ interface Strings {
                 val checkNetwork: String
             }
         }
+    }
+
+    /**
+     * Settings screen!
+     */
+    interface Settings {
+
+        val verifyCredentials: Setting
+        val experimentalClassList: Setting
+        val useDevMode: Setting
+        val checkForUpdates: Setting
+        val logout: Setting
+
+        class Setting(val name: String, val description: String)
     }
 }
 

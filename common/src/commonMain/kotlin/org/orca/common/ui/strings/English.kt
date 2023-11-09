@@ -31,5 +31,27 @@ object English : Strings {
         }
 
     }
+    override val settings = object : Strings.Settings {
+        override val verifyCredentials = Strings.Settings.Setting(
+            "Verify login credentials on startup",
+            "Disabling this will marginally improve startup time, but pelorus can't know if credentials are valid."
+        )
+        override val experimentalClassList = Strings.Settings.Setting(
+            "Use time-based class layout",
+            "Improved class list layout, but doesn't account for class overlap."
+        )
+        override val useDevMode = Strings.Settings.Setting(
+            "Use Kotlass Developer mode",
+            "Disables lenient JSON parsing in kotlass. Don't use unless you know what you're doing."
+        )
+        override val checkForUpdates = Strings.Settings.Setting(
+            "Check for updates",
+            "Whether Pelorus should check for updates on startup"
+        )
+        override val logout = Strings.Settings.Setting(
+            "Logout",
+            "(Requires restart)"
+        )
+    }
 
 }

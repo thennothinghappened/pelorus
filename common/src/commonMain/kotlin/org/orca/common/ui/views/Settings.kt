@@ -17,6 +17,7 @@ import org.orca.common.data.utils.DefaultPreferences
 import org.orca.common.data.utils.Preferences
 import org.orca.common.data.utils.get
 import org.orca.common.data.utils.put
+import org.orca.common.ui.strings.STRINGS
 import org.orca.common.ui.utils.WindowSize
 
 class SettingsComponent(
@@ -40,8 +41,8 @@ fun SettingsContent(
         contentPadding = PaddingValues(16.dp)
     ) {
         item { SwitchSetting(
-            "Verify login credentials on startup",
-            "Disabling this will marginally improve startup time, but pelorus can't know if credentials are valid.",
+            STRINGS.settings.verifyCredentials.name,
+            STRINGS.settings.verifyCredentials.description,
             verifyCredentials
             ) {
                 verifyCredentials = it
@@ -49,8 +50,8 @@ fun SettingsContent(
             }
         }
         item { SwitchSetting(
-            "Use time-based class layout",
-            "Improved class list layout, but doesn't account for class overlap.",
+            STRINGS.settings.experimentalClassList.name,
+            STRINGS.settings.experimentalClassList.description,
             experimentalClassList
             ) {
                 experimentalClassList = it
@@ -58,8 +59,8 @@ fun SettingsContent(
             }
         }
         item { SwitchSetting(
-            "Use Kotlass Developer mode",
-            "Disables lenient JSON parsing in kotlass. Don't use unless you know what you're doing.",
+            STRINGS.settings.useDevMode.name,
+            STRINGS.settings.useDevMode.description,
             useDevMode
             ) {
                 useDevMode = it;
@@ -67,8 +68,8 @@ fun SettingsContent(
             }
         }
         item { SwitchSetting(
-            "Check for updates",
-            "Whether Pelorus should check for updates on startup",
+            STRINGS.settings.checkForUpdates.name,
+            STRINGS.settings.checkForUpdates.description,
             checkForUpdates
         ) {
             checkForUpdates = it
@@ -83,8 +84,8 @@ fun SettingsContent(
 //            component.preferences.put(DefaultPreferences.App.dontReplaceStack, dontReplaceStack)
 //        } }
         item { Setting(
-            "Logout",
-            "(Requires restart)",
+            STRINGS.settings.logout.name,
+            STRINGS.settings.logout.description,
             { clearClientCredentials(component.preferences) }
         ) }
     }
