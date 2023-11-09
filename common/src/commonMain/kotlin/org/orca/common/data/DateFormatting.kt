@@ -59,4 +59,4 @@ private fun getDaySuffix(day: Int) = when(day) {
 }
 
 private fun String.capFirstLetter() =
-    this[0].uppercaseChar() + this.slice(1..this.length-1).lowercase(Locale.getDefault())
+    this[0].uppercaseChar() + this.slice(1..<this.length).lowercase(Locale.getDefault())

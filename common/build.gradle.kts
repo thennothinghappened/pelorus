@@ -35,7 +35,6 @@ kotlin {
                 implementation(libs.kamel.image)
                 implementation(libs.accompanist.flowlayout)
 //                implementation("me.xdrop:fuzzywuzzy:1.4.0")
-                implementation(libs.datetime)
                 implementation(libs.ktor.client.core)
                 implementation(libs.ktor.client.content.negotiation)
                 implementation(libs.ktor.serialization.kotlinx.json)

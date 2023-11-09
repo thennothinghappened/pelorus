@@ -27,7 +27,6 @@ kamel-image = "0.4.1"
 accompanist-flowlayout = "0.25.2"
 accompanist-systemuicontroller = "0.29.1-alpha"
 accompanist-webview = "0.29.2-rc"
-datetime = "1.0.10"
 
 junit = "4.13.2"
 buildconfig = "4.1.2"
@@ -47,7 +46,6 @@ buildconfig =           { id = "com.github.gmazzo.buildconfig", version.ref = "b
 accompanist-systemuicontroller =    { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanist-systemuicontroller" }
 accompanist-flowlayout ={ module = "ca.gosyer:accompanist-flowlayout", version.ref = "accompanist-flowlayout" }
 accompanist-webview =   { module = "com.google.accompanist:accompanist-webview", version.ref = "accompanist-webview" }
-datetime =              { module = "com.wakaztahir:datetime", version.ref = "datetime" }
 kamel-image =           { module = "com.alialbaali.kamel:kamel-image", version.ref = "kamel-image" }
 kotlinx-datetime =      { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
 
