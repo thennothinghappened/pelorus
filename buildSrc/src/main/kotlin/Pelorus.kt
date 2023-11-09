@@ -6,10 +6,10 @@ import org.gradle.api.JavaVersion
 object Pelorus {
     const val name = "Pelorus"
     const val group = "org.orca"
-    const val version = "1.6.8-BETA"
+    const val version = "1.6.9-BETA"
 
     object Android {
-        const val versionCode = 27
+        const val versionCode = 28
         const val namespace = "$group.android"
 
         object Sdk {
