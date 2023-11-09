@@ -266,13 +266,13 @@ private fun FolderNode(
     icon: @Composable (Modifier) -> Unit = {},
     onClick: () -> Unit,
 ) {
-    ListItemWorkaround(
+    ListItem(
         modifier = Modifier.clickable { onClick() },
         leadingContent = { icon(Modifier.size(32.dp)) },
-        headlineText = {
+        headlineContent = {
             Text(name, style = MaterialTheme.typography.labelLarge)
         },
-        supportingText = {
+        supportingContent = {
             Text(author, style = MaterialTheme.typography.labelMedium)
         }
     )
