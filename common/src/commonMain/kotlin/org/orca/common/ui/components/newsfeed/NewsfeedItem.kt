@@ -31,7 +31,6 @@ fun NewsfeedItem(
     expanded: Boolean,
     onExpand: () -> Unit
 ) {
-
     Card(
         modifier = Modifier.fillMaxWidth(),
         onClick = onExpand

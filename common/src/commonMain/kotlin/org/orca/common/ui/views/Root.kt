@@ -33,7 +33,6 @@ import org.orca.common.ui.views.login.LoginComponent
 import org.orca.common.ui.views.login.LoginContent
 import org.orca.kotlass.IFlowKotlassClient
 import org.orca.kotlass.KotlassClient
-import org.orca.kotlass.data.LearningTask
 import org.orca.kotlass.data.LearningTaskSubmissionStatus
 import org.orca.kotlass.data.NetResponse
 
@@ -162,8 +161,8 @@ class DefaultRootComponent(
         }
 
         val subSchedule = when(scheduleHolderType) {
-            ScheduleHolderType.allDay -> state.data.allDay
-            ScheduleHolderType.normal -> state.data.normal
+            ScheduleHolderType.ALL_DAY -> state.data.allDay
+            ScheduleHolderType.NORMAL -> state.data.normal
         }
 
         return Result.success(subSchedule[scheduleEntryIndex])
