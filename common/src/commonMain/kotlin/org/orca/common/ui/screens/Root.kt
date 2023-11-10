@@ -1,4 +1,4 @@
-package org.orca.common.ui.views
+package org.orca.common.ui.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -28,9 +28,9 @@ import org.orca.common.data.*
 import org.orca.common.data.utils.*
 import org.orca.common.ui.utils.WindowSize
 import org.orca.common.ui.components.calendar.ScheduleHolderType
-import org.orca.common.ui.views.login.DefaultLoginComponent
-import org.orca.common.ui.views.login.LoginComponent
-import org.orca.common.ui.views.login.LoginContent
+import org.orca.common.ui.screens.login.DefaultLoginComponent
+import org.orca.common.ui.screens.login.LoginComponent
+import org.orca.common.ui.screens.login.LoginContent
 import org.orca.kotlass.IFlowKotlassClient
 import org.orca.kotlass.KotlassClient
 import org.orca.kotlass.data.LearningTaskSubmissionStatus

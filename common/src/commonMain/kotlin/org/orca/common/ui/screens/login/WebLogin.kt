@@ -1,4 +1,4 @@
-package org.orca.common.ui.views.login
+package org.orca.common.ui.screens.login
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize

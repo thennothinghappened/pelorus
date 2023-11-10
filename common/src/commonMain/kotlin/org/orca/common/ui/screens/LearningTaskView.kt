@@ -1,4 +1,4 @@
-package org.orca.common.ui.views
+package org.orca.common.ui.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -21,7 +21,6 @@ import org.orca.common.ui.components.common.CompassAttachment
 import org.orca.common.ui.components.common.FlairedCard
 import org.orca.htmltext.HtmlText
 import org.orca.common.ui.components.common.NetStates
-import org.orca.common.ui.theme.AppTheme
 import org.orca.common.ui.utils.WindowSize
 import org.orca.kotlass.data.LearningTaskAttachment
 import org.orca.kotlass.data.LearningTaskStudentSubmission

@@ -1,4 +1,4 @@
-package org.orca.common.ui.views.schedule
+package org.orca.common.ui.screens.schedule
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height

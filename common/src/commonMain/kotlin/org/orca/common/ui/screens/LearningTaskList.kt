@@ -1,4 +1,4 @@
-package org.orca.common.ui.views
+package org.orca.common.ui.screens
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -221,14 +221,12 @@ fun LearningTaskListContent(
                     }
 
                     // TODO: weird behaviour here, sometimes items don't appear until recomposition triggered by user.
-                    subject.value.forEach { task ->
-                        item(task.id) {
-                            LearningTaskCard(
-                                task,
-                                component.onClickLearningTask,
-                                component.compass.defaultTaskCategories
-                            )
-                        }
+                    items(subject.value, key = { task -> task.id }) { task ->
+                        LearningTaskCard(
+                            task,
+                            component.onClickLearningTask,
+                            component.compass.defaultTaskCategories
+                        )
                     }
                 }
             }

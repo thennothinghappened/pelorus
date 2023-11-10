@@ -7,8 +7,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import kotlinx.datetime.LocalDateTime
 import org.orca.common.ui.theme.AppTheme
-import org.orca.common.ui.views.ActionCentreEventComponent
-import org.orca.common.ui.views.ActionCentreEventSession
+import org.orca.common.ui.screens.ActionCentreEventComponent
+import org.orca.common.ui.screens.ActionCentreEventSession
 
 @Preview
 @Composable

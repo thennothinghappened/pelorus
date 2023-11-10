@@ -1,9 +1,8 @@
-package org.orca.common.ui.views.login
+package org.orca.common.ui.screens.login
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -25,10 +24,6 @@ import org.orca.common.ui.defaults.Colours
 import org.orca.common.ui.defaults.Font
 import org.orca.common.ui.defaults.Padding
 import org.orca.common.ui.strings.STRINGS
-import org.orca.common.ui.views.*
-import org.orca.kotlass.KotlassClient.CompassClientCredentials
-import org.orca.kotlass.data.LearningTaskSubmissionStatus
-import org.orca.kotlass.data.NetResponse
 
 interface LoginComponent {
 

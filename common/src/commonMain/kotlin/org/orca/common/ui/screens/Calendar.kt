@@ -1,4 +1,4 @@
-package org.orca.common.ui.views
+package org.orca.common.ui.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -16,7 +16,7 @@ import org.orca.common.data.Compass
 import org.orca.common.data.utils.collectAsStateAndLifecycle
 import org.orca.common.ui.components.calendar.*
 import org.orca.common.ui.utils.WindowSize
-import org.orca.common.ui.views.schedule.daySchedule
+import org.orca.common.ui.screens.schedule.daySchedule
 
 class CalendarComponent(
     componentContext: ComponentContext,

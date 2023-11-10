@@ -1,4 +1,4 @@
-package org.orca.common.ui.views.login
+package org.orca.common.ui.screens.login
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
@@ -19,7 +19,6 @@ import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.arkivanov.essenty.parcelable.Parcelable
 import com.arkivanov.essenty.parcelable.Parcelize
 import com.arkivanov.essenty.statekeeper.consume
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,10 +31,7 @@ import org.orca.common.ui.components.common.ErrorRenderer
 import org.orca.common.ui.defaults.Font
 import org.orca.common.ui.defaults.Padding
 import org.orca.common.ui.strings.STRINGS
-import org.orca.common.ui.utils.WindowSize
 import org.orca.htmltext.HtmlText
-import kotlin.coroutines.CoroutineContext
-import kotlin.math.log
 
 interface CookieLoginComponent {
 
