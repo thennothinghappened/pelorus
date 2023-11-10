@@ -3,8 +3,10 @@ package org.orca.common.ui.components.calendar
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import kotlinx.datetime.*
@@ -42,7 +44,15 @@ fun LazyListScope.classList(
         }
 
         is IFlowKotlassClient.State.Loading -> {
-            // TODO: nice loading thing here maybe?
+            item {
+                // We can expect school days to usually be 6 hours, and we're already measuring in minutes.dp!
+                Box(Modifier
+                    .height((60 * 6).dp)
+                    .fillMaxWidth()
+                ) {
+                    CircularProgressIndicator(Modifier.align(Alignment.Center))
+                }
+            }
         }
 
         is IFlowKotlassClient.State.Error -> {

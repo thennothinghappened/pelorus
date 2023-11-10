@@ -81,7 +81,7 @@ fun LazyListScope.dueLearningTasksContent(
             "",
             modifier = Modifier
                 .height(60.dp)
-                .padding(Padding.Divider),
+                .padding(Padding.SpacerInner),
             colors = CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                 contentColor = MaterialTheme.colorScheme.onPrimaryContainer

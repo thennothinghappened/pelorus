@@ -28,6 +28,8 @@ accompanist-flowlayout = "0.25.2"
 accompanist-systemuicontroller = "0.29.1-alpha"
 accompanist-webview = "0.29.2-rc"
 
+pullrefresh = "1.0.1"
+
 junit = "4.13.2"
 buildconfig = "4.1.2"
 
@@ -54,6 +56,7 @@ decompose-jetbrains =   { module = "com.arkivanov.decompose:extensions-compose-j
 jSystemThemeDetector =  { module = "com.github.Dansoftowner:jSystemThemeDetector", version.ref = "jSystemThemeDetector" }
 kotlass =               { module = "org.orca:kotlass", version.ref = "kotlass" }
 htmlText =              { module = "org.orca.htmltext:common", version.ref = "htmlText" }
+pullrefresh =           { module = "dev.materii.pullrefresh:pullrefresh", version.ref = "pullrefresh" }
 
 junit =                 { module = "junit:junit", version.ref = "junit" }
 androidx-material3 =    { module = "androidx.compose.material3:material3", version.ref = "androidx-material3" }

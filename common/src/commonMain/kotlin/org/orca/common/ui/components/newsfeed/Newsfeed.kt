@@ -1,6 +1,8 @@
 package org.orca.common.ui.components.newsfeed
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
@@ -9,9 +11,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.unit.dp
 import io.kamel.image.lazyPainterResource
-import org.orca.common.data.Compass
 import org.orca.common.ui.components.common.ErrorRenderer
 import org.orca.common.ui.components.common.PlaceholderText
+import org.orca.common.ui.defaults.Padding
 import org.orca.kotlass.IFlowKotlassClient
 import org.orca.kotlass.data.NewsItem
 
@@ -65,10 +67,14 @@ fun LazyListScope.newsfeedContent(
             lazyPainterResource(buildDomainUrlString(newsItem.userImageUrl)),
             newsItem.postDateTime,
             newsItem.content1.toString(),
-            newsItem.attachments.map { Pair(it.name, buildDomainUrlString(it.uiLink)) },
+            newsItem.attachments.map {
+                Pair(it.name, buildDomainUrlString(it.uiLink))
+             },
             expanded = (newsItems.indexOf(newsItem) == selectedNewsItem),
             onExpand = { onClickItem(newsItems.indexOf(newsItem)) }
         )
+
+        Spacer(Modifier.height(Padding.Divider))
     }
 }
 
@@ -93,5 +99,7 @@ private fun LazyListScope.newsfeedContentLoading() {
                 posterImage = null
             )
         }
+
+        Spacer(Modifier.height(Padding.Divider))
     }
 }

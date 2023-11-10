@@ -15,10 +15,10 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import io.kamel.core.Resource
+import io.kamel.image.KamelImage
 import kotlinx.datetime.Instant
 import org.orca.common.data.timeAgo
 import org.orca.common.ui.components.common.CompassAttachment
-import org.orca.common.ui.components.common.NetworkImage
 import org.orca.common.ui.defaults.Padding
 import org.orca.htmltext.HtmlText
 
@@ -45,7 +45,7 @@ fun NewsfeedItem(
                 return@NewsfeedItemContent
             }
 
-            NetworkImage(
+            KamelImage(
                 posterImage,
                 contentDescription = "Photo of $poster",
                 contentScale = ContentScale.FillBounds

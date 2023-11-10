@@ -13,18 +13,16 @@ import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.ComponentContext
 import kotlinx.datetime.*
 import org.orca.common.data.Compass
-import org.orca.common.data.formatAsVisualDate
 import org.orca.common.data.utils.collectAsStateAndLifecycle
 import org.orca.common.ui.components.calendar.*
-import org.orca.common.ui.components.common.ShortDivider
 import org.orca.common.ui.utils.WindowSize
-import org.orca.kotlass.IFlowKotlassClient
+import org.orca.common.ui.views.schedule.daySchedule
 
 class CalendarComponent(
     componentContext: ComponentContext,
     val compass: Compass,
-    val onClickActivity: (Int, ScheduleHolderType, IFlowKotlassClient.Pollable.Schedule) -> Unit,
-    val onClickEvent: (Int, ScheduleHolderType, IFlowKotlassClient.Pollable.Schedule) -> Unit,
+    val onClickActivity: (Int, ScheduleHolderType) -> Unit,
+    val onClickEvent: (Int, ScheduleHolderType) -> Unit,
     val onClickLearningTask: (String) -> Unit,
     val experimentalClassList: Boolean,
     val schoolStartTime: LocalTime
@@ -50,7 +48,6 @@ class CalendarComponent(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CalendarContent(
     component: CalendarComponent,
@@ -106,25 +103,15 @@ fun CalendarContent(
             LazyColumn(
                 contentPadding = PaddingValues(16.dp)
             ) {
-                item {
-                    Text(viewedDay?.formatAsVisualDate() ?: "")
-                }
-
-                classList(
+                daySchedule(
                     windowSize = windowSize,
                     scheduleState = scheduleState,
-                    onClickActivity = { index, type -> component.onClickActivity(index, type, component.compass.calendarSchedule) },
-                    onClickEvent = { index, type -> component.onClickEvent(index, type, component.compass.calendarSchedule) },
+                    date = viewedDay,
                     experimentalClassList = component.experimentalClassList,
-                    _schoolStartTime = component.schoolStartTime,
-                    date = viewedDay!!
-                )
-
-                item { ShortDivider() }
-
-                dueLearningTasks(
-                    scheduleState = scheduleState,
-                    onClickTask = component.onClickLearningTask
+                    schoolStartTime = component.schoolStartTime,
+                    onClickActivity = component.onClickActivity,
+                    onClickEvent = component.onClickEvent,
+                    onClickLearningTask = component.onClickLearningTask
                 )
             }
         }

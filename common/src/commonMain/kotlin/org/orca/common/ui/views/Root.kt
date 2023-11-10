@@ -349,23 +349,23 @@ class DefaultRootComponent(
             is RootComponent.Config.Home -> RootComponent.Child.HomeChild(
                 HomeComponent(
                     componentContext = componentContext,
-                    compass,
-                    ::onClickActivity,
-                    ::onClickActionCentreEventByScheduleEntry,
-                    ::onClickLearningTaskByName,
-                    preferences.get(DefaultPreferences.App.experimentalClassList),
-                    preferences.get(DefaultPreferences.Credentials.schoolStartTime)
+                    compass = compass,
+                    onClickActivity = { index, type -> onClickActivity(index, type, compass.defaultSchedule) },
+                    onClickEvent = { index, type -> onClickActionCentreEventByScheduleEntry(index, type, compass.defaultSchedule) },
+                    onClickLearningTask = ::onClickLearningTaskByName,
+                    experimentalClassList = preferences.get(DefaultPreferences.App.experimentalClassList),
+                    schoolStartTime = preferences.get(DefaultPreferences.Credentials.schoolStartTime)
                 )
             )
             is RootComponent.Config.Calendar -> RootComponent.Child.CalendarChild(
                 CalendarComponent(
                     componentContext = componentContext,
-                    compass,
-                    ::onClickActivity,
-                    ::onClickActionCentreEventByScheduleEntry,
-                    ::onClickLearningTaskByName,
-                    preferences.get(DefaultPreferences.App.experimentalClassList),
-                    preferences.get(DefaultPreferences.Credentials.schoolStartTime)
+                    compass = compass,
+                    onClickActivity = { index, type -> onClickActivity(index, type, compass.calendarSchedule) },
+                    onClickEvent = { index, type -> onClickActionCentreEventByScheduleEntry(index, type, compass.calendarSchedule) },
+                    onClickLearningTask = ::onClickLearningTaskByName,
+                    experimentalClassList = preferences.get(DefaultPreferences.App.experimentalClassList),
+                    schoolStartTime = preferences.get(DefaultPreferences.Credentials.schoolStartTime)
                 )
             )
             is RootComponent.Config.LearningTasks -> RootComponent.Child.LearningTasksChild(

@@ -40,7 +40,7 @@ kotlin {
                 implementation(libs.ktor.serialization.kotlinx.json)
                 implementation(libs.kotlinx.serialization.json)
                 implementation(libs.ktor.client.okhttp)
-
+                implementation(libs.pullrefresh)
             }
         }
 
