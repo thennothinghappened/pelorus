@@ -1,7 +1,5 @@
 package org.orca.common.ui.components.calendar
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListScope
@@ -9,19 +7,13 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import kotlinx.datetime.LocalDate
-import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.orca.common.data.formatAsHourMinute
-import org.orca.common.data.utils.collectAsStateAndLifecycle
 import org.orca.common.ui.components.common.CornersCard
 import org.orca.common.ui.components.common.ErrorRenderer
-import org.orca.common.ui.components.common.NetStates
 import org.orca.common.ui.defaults.Padding
 import org.orca.kotlass.IFlowKotlassClient
 
