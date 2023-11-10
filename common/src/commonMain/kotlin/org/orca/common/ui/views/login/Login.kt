@@ -52,15 +52,25 @@ interface LoginComponent {
         data object WebLogin : Config
     }
 
+    enum class FieldErrorType {
+        OK,
+        INVALID_FORMAT,
+        REJECTED
+    }
+
     @Parcelize
-    sealed class ErrorType : Parcelable {
-        data class ContentError(
-            val cookie: Boolean = false,
-            val userId: Boolean = false,
-            val domain: Boolean = false
-        ) : ErrorType()
-        data class NetworkError(val error: Throwable) : ErrorType()
-        data class ClientError(val error: Throwable) : ErrorType()
+    sealed class LoginResult : Parcelable {
+        data object Success : LoginResult() {
+            private fun readResolve(): Any = Success
+        }
+
+        data class FieldError(
+            val cookie: FieldErrorType = FieldErrorType.OK,
+            val userId: FieldErrorType = FieldErrorType.OK,
+            val domain: FieldErrorType = FieldErrorType.OK
+        ) : LoginResult()
+        data class NetworkError(val error: Throwable) : LoginResult()
+        data class ClientError(val error: Throwable) : LoginResult()
     }
 }
 
@@ -71,7 +81,7 @@ class DefaultLoginComponent(
         userId: String,
         cookie: String,
         mainThread: Boolean
-    ) -> LoginComponent.ErrorType?
+    ) -> LoginComponent.LoginResult
 ) : LoginComponent, ComponentContext by componentContext {
 
     private val navigation = StackNavigation<LoginComponent.Config>()
@@ -119,17 +129,19 @@ fun LoginContent(component: LoginComponent) {
     val stack by component.stack.subscribeAsState()
 
     Scaffold(
-        topBar = { TopAppBar(
-            title = { Text(STRINGS.login.topBarText, style = Font.topAppBar) },
-            navigationIcon = {
-                if (stack.active.instance !is LoginComponent.Child.MenuChild) {
-                    BackNavIcon(component::back)
-                }
-            },
-            colors = TopAppBarDefaults.mediumTopAppBarColors(
-                containerColor = Colours.TopBarBackground
+        topBar = {
+            TopAppBar(
+                title = { Text(STRINGS.login.topBarText, style = Font.topAppBar) },
+                navigationIcon = {
+                    if (stack.active.instance !is LoginComponent.Child.MenuChild) {
+                        BackNavIcon(component::back)
+                    }
+                },
+                colors = TopAppBarDefaults.mediumTopAppBarColors(
+                    containerColor = Colours.TopBarBackground
+                )
             )
-        ) }
+        }
     ) { paddingValues ->
         Children(
             stack = stack,
@@ -139,7 +151,9 @@ fun LoginContent(component: LoginComponent) {
             when (val child = it.instance) {
 
                 is LoginComponent.Child.MenuChild -> LoginMenu(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(Padding.ScaffoldInner),
                     gotoWebLogin = if (PLATFORM == Platform.ANDROID) component::gotoWebLogin else null,
                     gotoCookieLogin = component::gotoCookieLogin
                 )
@@ -161,7 +175,7 @@ private fun LoginMenu(
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(Padding.SpacerInner)
     ) {
 
         Text(STRINGS.login.onboardHeading, style = MaterialTheme.typography.titleLarge)

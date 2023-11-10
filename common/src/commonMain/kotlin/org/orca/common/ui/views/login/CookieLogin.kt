@@ -1,9 +1,10 @@
 package org.orca.common.ui.views.login
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
@@ -28,8 +29,13 @@ import kotlinx.coroutines.launch
 import org.orca.common.data.utils.collectAsStateAndLifecycle
 import org.orca.common.data.utils.coroutineScope
 import org.orca.common.ui.components.common.ErrorRenderer
+import org.orca.common.ui.defaults.Font
+import org.orca.common.ui.defaults.Padding
 import org.orca.common.ui.strings.STRINGS
+import org.orca.common.ui.utils.WindowSize
+import org.orca.htmltext.HtmlText
 import kotlin.coroutines.CoroutineContext
+import kotlin.math.log
 
 interface CookieLoginComponent {
 
@@ -43,7 +49,7 @@ interface CookieLoginComponent {
         val userId: String = "",
         val domain: String = "",
         val loading: Boolean = false,
-        val errorType: LoginComponent.ErrorType? = null
+        val result: LoginComponent.LoginResult? = null
     ) : Parcelable
 
     fun onCookieUpdate(cookie: String)
@@ -53,7 +59,7 @@ interface CookieLoginComponent {
 
 class DefaultCookieLoginComponent(
     val componentContext: ComponentContext,
-    private val _onFinishLogin: suspend (domain: String, userId: String, cookie: String) -> LoginComponent.ErrorType?
+    private val _onFinishLogin: suspend (domain: String, userId: String, cookie: String) -> LoginComponent.LoginResult
 ) : CookieLoginComponent, ComponentContext by componentContext {
 
     private val handler =
@@ -74,31 +80,28 @@ class DefaultCookieLoginComponent(
     }
 
     override fun onFinishLogin() {
-        if (loginJob == null) {
-            loginJob = coroutineScope(Dispatchers.IO).launch {
-                handler.state.update {
-                    it.copy(loading = true)
-                }
 
-                handler.state.update {
-                    it.copy(
-                        errorType = _onFinishLogin(
-                            state.value.domain,
-                            state.value.userId,
-                            state.value.cookie
-                        )
-                    )
-                }
-
-                handler.state.update {
-                    it.copy(loading = false)
-                }
-            }
-        } else {
+        if (loginJob != null) {
             loginJob?.cancel()
-            loginJob = null
+        }
 
-            onFinishLogin()
+        loginJob = coroutineScope(Dispatchers.IO).launch {
+            handler.state.update {
+                it.copy(loading = true)
+            }
+
+            val result = _onFinishLogin(
+                state.value.domain,
+                state.value.userId,
+                state.value.cookie
+            )
+
+            handler.state.update {
+                it.copy(
+                    result = result,
+                    loading = false
+                )
+            }
         }
     }
 
@@ -140,55 +143,76 @@ fun CookieLoginContent(
     component: CookieLoginComponent
 ) {
     val state by component.state.collectAsStateAndLifecycle()
-    val contentError = state.errorType?.let {
-        if (it is LoginComponent.ErrorType.ContentError) {
-            return@let it
-        }
-        null
+    val contentError = state.result?.let {
+        if (it is LoginComponent.LoginResult.FieldError) it else null
     }
 
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(Padding.ScaffoldInner),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.spacedBy(Padding.SpacerInner)
     ) {
-        Text(STRINGS.login.cookie.name)
+        Text(STRINGS.login.cookie.name, style = Font.title)
 
         OutlinedTextField(
-            state.cookie,
-            component::onCookieUpdate,
+            value = state.cookie,
+            modifier = Modifier.fillMaxWidth(),
+            onValueChange = component::onCookieUpdate,
             label = { Text(STRINGS.login.cookie.fields.cookie.name) },
-            isError = contentError?.cookie == true
+            isError = when (contentError?.cookie) {
+                LoginComponent.FieldErrorType.OK -> false
+                null -> false
+                else -> true
+            }
         )
 
         OutlinedTextField(
-            state.userId,
-            component::onUserIdUpdate,
+            value = state.userId,
+            modifier = Modifier.fillMaxWidth(),
+            onValueChange = component::onUserIdUpdate,
             label = { Text(STRINGS.login.cookie.fields.userId.name) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            isError = contentError?.userId == true
+            isError = when (contentError?.userId) {
+                LoginComponent.FieldErrorType.OK -> false
+                null -> false
+                else -> true
+            }
         )
 
         OutlinedTextField(
-            state.domain,
-            component::onDomainUpdate,
+            value = state.domain,
+            modifier = Modifier.fillMaxWidth(),
+            onValueChange = component::onDomainUpdate,
             label = { Text(STRINGS.login.cookie.fields.domain.name) },
-            isError = contentError?.domain == true
+            isError = when (contentError?.domain) {
+                LoginComponent.FieldErrorType.OK -> false
+                null -> false
+                else -> true
+            }
         )
 
-        state.errorType?.let {
-            when (it) {
-                is LoginComponent.ErrorType.ContentError -> Text(STRINGS.login.cookie.errors.invalidInput)
-                is LoginComponent.ErrorType.NetworkError -> Text(STRINGS.login.cookie.errors.checkNetwork)
-                is LoginComponent.ErrorType.ClientError -> ErrorRenderer(it.error)
+        AnimatedVisibility(state.result != null) {
+            when (val res = state.result) {
+                is LoginComponent.LoginResult.FieldError -> Text(STRINGS.login.cookie.errors.invalidInput)
+                is LoginComponent.LoginResult.NetworkError -> Text(STRINGS.login.cookie.errors.checkNetwork)
+                is LoginComponent.LoginResult.ClientError -> ErrorRenderer(res.error)
+                else -> {  }
             }
         }
 
+        Spacer(Modifier.weight(1f))
+
+        HtmlText(STRINGS.login.cookie.explanation)
+
         Button(
+            modifier = Modifier.fillMaxWidth(),
             onClick = component::onFinishLogin,
             enabled = !state.loading
         ) {
-            Text("Login")
+            Text("Login", style = Font.button)
         }
     }
 }

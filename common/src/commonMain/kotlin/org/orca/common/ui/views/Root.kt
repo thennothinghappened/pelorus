@@ -22,8 +22,7 @@ import com.arkivanov.essenty.parcelable.Parcelize
 import io.ktor.utils.io.errors.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import org.orca.common.data.*
 import org.orca.common.data.utils.*
@@ -105,13 +104,13 @@ class DefaultRootComponent(
 
     // checking for updates
     private val _updateCheckStatus: MutableStateFlow<NetResponse<Pair<Boolean, GitHubLatestVersionResponse?>>?> = MutableStateFlow(null)
-    override val updateCheckStatus: StateFlow<NetResponse<Pair<Boolean, GitHubLatestVersionResponse?>>?> = _updateCheckStatus
+    override val updateCheckStatus: StateFlow<NetResponse<Pair<Boolean, GitHubLatestVersionResponse?>>?> = _updateCheckStatus.asStateFlow()
 
     override fun checkForUpdates() {
-        _updateCheckStatus.value = null
+        _updateCheckStatus.update { null }
 
         CoroutineScope(Dispatchers.IO).launch {
-            _updateCheckStatus.value = updateCheck()
+            _updateCheckStatus.update { updateCheck() }
         }
     }
 
@@ -147,9 +146,6 @@ class DefaultRootComponent(
     }
 
     override fun goToNavItem(config: RootComponent.Config) {
-//        if (forceReplaceStack || (PLATFORM == Platform.ANDROID && !preferences.get(DefaultPreferences.App.dontReplaceStack))) {
-//            return navigation.replaceAll(config)
-//        }
         navigation.replaceAll(config)
     }
 
@@ -157,18 +153,20 @@ class DefaultRootComponent(
         scheduleEntryIndex: Int,
         scheduleHolderType: ScheduleHolderType,
         schedule: IFlowKotlassClient.Pollable.Schedule
-    ): IFlowKotlassClient.ScheduleEntry? {
-        if (schedule.state.value !is IFlowKotlassClient.State.Success) return null
+    ): Result<IFlowKotlassClient.ScheduleEntry> {
 
-        val scheduleStateHolder =
-            (schedule.state.value as IFlowKotlassClient.State.Success<IFlowKotlassClient.Pollable.Schedule.ScheduleStateHolder>).data
+        val state = schedule.state.value
 
-        val subSchedule = when(scheduleHolderType) {
-            ScheduleHolderType.allDay -> scheduleStateHolder.allDay
-            ScheduleHolderType.normal -> scheduleStateHolder.normal
+        if (state !is IFlowKotlassClient.State.Success) {
+            return Result.failure(Exception("Schedule no longer loaded."))
         }
 
-        return subSchedule[scheduleEntryIndex]
+        val subSchedule = when(scheduleHolderType) {
+            ScheduleHolderType.allDay -> state.data.allDay
+            ScheduleHolderType.normal -> state.data.normal
+        }
+
+        return Result.success(subSchedule[scheduleEntryIndex])
     }
 
     private fun onClickActivity(
@@ -180,27 +178,42 @@ class DefaultRootComponent(
             scheduleEntryIndex,
             scheduleHolderType,
             schedule
+        ).fold(
+            onFailure = { return },
+            onSuccess = { it }
         )
 
         if (scheduleEntry !is IFlowKotlassClient.ScheduleEntry.ActivityEntry) return
 
-        if (scheduleEntry is IFlowKotlassClient.ScheduleEntry.Lesson)
+        if (scheduleEntry is IFlowKotlassClient.ScheduleEntry.Lesson) {
             compass.loadLessonPlan(scheduleEntry)
+        }
 
         compass.setViewedEntry(scheduleEntry)
         navigation.push(RootComponent.Config.Activity(scheduleEntryIndex))
     }
 
     private fun onClickLearningTaskByName(name: String) {
+        val learningTasksState = compass.defaultLearningTasks.state.value
+
         // terrible way of finding the associated task
-        if (compass.defaultLearningTasks.state.value !is IFlowKotlassClient.State.Success) return
+        if (learningTasksState !is IFlowKotlassClient.State.Success) {
+            return
+        }
 
         // run on all of them to get the task which matches
-        val indexList = (compass.defaultLearningTasks.state.value as IFlowKotlassClient.State.Success<Map<Int, List<LearningTask>>>)
-            .data.map { subject -> subject.key to subject.value.find { it.name == name } }
+        val indexList = learningTasksState
+            .data
+            .map { subject ->
+                subject.key to subject.value.find {
+                    it.name == name
+                }
+            }
 
         // find the one that returned the task
-        val index = indexList.find { it.second != null } ?: return
+        val index = indexList.find {
+            it.second != null
+        } ?: return
 
         // run our ID based one
         onClickLearningTaskById(index.first, index.second!!.id)
@@ -234,15 +247,25 @@ class DefaultRootComponent(
             scheduleEntryIndex,
             scheduleHolderType,
             schedule
+        ).fold(
+            onFailure = { return },
+            onSuccess = { it }
         )
 
-        if (scheduleEntry !is IFlowKotlassClient.ScheduleEntry.Event) return
+        if (scheduleEntry !is IFlowKotlassClient.ScheduleEntry.Event) {
+            return
+        }
 
         // Attempt to locate the entry
         val indexList = (compass.defaultActionCentreEvents.state.value as IFlowKotlassClient.State.Success)
-            .data.filter { it.name.trim() == scheduleEntry.event.title.trim() }
+            .data
+            .filter {
+                it.name.trim() == scheduleEntry.event.title.trim()
+            }
 
-        if (indexList.isEmpty()) return
+        if (indexList.isEmpty()) {
+            return
+        }
 
         // Track it down *exactly* by instanceId.
         val index = indexList.find { event ->
@@ -270,26 +293,24 @@ class DefaultRootComponent(
         userId: String,
         cookie: String,
         mainThread: Boolean
-    ): LoginComponent.ErrorType? {
+    ): LoginComponent.LoginResult {
 
-        run {
-            val domainBlank = domain.isBlank()
-            val userIdBlank = userId.isBlank()
-            val cookieBlank = cookie.isBlank()
+        val blanks = listOf(domain, userId, cookie).map {
+            if (it.isBlank()) LoginComponent.FieldErrorType.INVALID_FORMAT else LoginComponent.FieldErrorType.OK
+        }
 
-            if (domainBlank || userIdBlank || cookieBlank) {
-                return LoginComponent.ErrorType.ContentError(
-                    domain = domainBlank,
-                    userId = userIdBlank,
-                    cookie = cookieBlank
-                )
-            }
+        if (blanks.contains(LoginComponent.FieldErrorType.INVALID_FORMAT)) {
+            return LoginComponent.LoginResult.FieldError(
+                domain = blanks[0],
+                userId = blanks[1],
+                cookie = blanks[2]
+            )
         }
 
         val reply = run {
             val _userId = userId.toIntOrNull()
-                ?: return LoginComponent.ErrorType.ContentError(
-                    userId = true
+                ?: return LoginComponent.LoginResult.FieldError(
+                    userId = LoginComponent.FieldErrorType.INVALID_FORMAT
                 )
 
             onFinishLogin(
@@ -304,15 +325,17 @@ class DefaultRootComponent(
         return when (reply) {
             is NetResponse.ClientError -> {
                 if (reply.error is IOException) {
-                    return LoginComponent.ErrorType.NetworkError(reply.error)
+                    return LoginComponent.LoginResult.NetworkError(reply.error)
                 }
-                LoginComponent.ErrorType.ClientError(reply.error)
+                LoginComponent.LoginResult.ClientError(reply.error)
             }
-            is NetResponse.RequestFailure -> LoginComponent.ErrorType.ContentError(
-                cookie = true,
-                userId = true
+
+            is NetResponse.RequestFailure -> LoginComponent.LoginResult.FieldError(
+                cookie = LoginComponent.FieldErrorType.REJECTED,
+                userId = LoginComponent.FieldErrorType.REJECTED
             )
-            is NetResponse.Success -> null
+
+            is NetResponse.Success -> LoginComponent.LoginResult.Success
         }
     }
 

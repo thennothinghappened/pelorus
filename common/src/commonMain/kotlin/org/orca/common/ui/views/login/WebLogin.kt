@@ -12,7 +12,7 @@ interface WebLoginComponent {
 }
 
 class DefaultWebLoginComponent(
-    private val _onFinishLogin: (domain: String, userId: String, cookie: String) -> LoginComponent.ErrorType?
+    private val _onFinishLogin: (domain: String, userId: String, cookie: String) -> LoginComponent.LoginResult
 ) : WebLoginComponent {
 
     private companion object {
@@ -97,7 +97,7 @@ class DefaultWebLoginComponent(
         onPageChange = ::onPageChange
     )
 
-    private fun onFinishLogin(domain: String, userId: String, cookie: String): LoginComponent.ErrorType? =
+    private fun onFinishLogin(domain: String, userId: String, cookie: String): LoginComponent.LoginResult =
         _onFinishLogin(domain, userId, cookie)
 
     @Composable

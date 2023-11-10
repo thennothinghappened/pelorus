@@ -44,6 +44,8 @@ interface Strings {
             val errors: Errors
             val fields: Fields
 
+            val explanation: String
+
             /**
              * Data entry fields
              */

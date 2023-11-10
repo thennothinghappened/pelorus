@@ -22,6 +22,9 @@ object English : Strings {
                 override val userId = Strings.Login.Cookie.Fields.Field("User ID", "Compass numerical user ID")
                 override val domain = Strings.Login.Cookie.Fields.Field("Domain", "Compass instance web domain")
             }
+            override val explanation = """
+                For an explanation on how to use cookie login, see <a href="https://github.com/thennothinghappened/pelorus#cookie-fallback">here</a>.
+            """.trimIndent()
 
             override val errors = object : Strings.Login.Cookie.Errors {
                 override val invalidInput = "Malformed input, see highlighted field(s)."

@@ -7,6 +7,11 @@ object Font {
     val topAppBar
         @Composable
         get() = MaterialTheme.typography.titleMedium
+
+    val title
+        @Composable
+        get() = MaterialTheme.typography.titleMedium
+
     val filterChip
         @Composable
         get() = MaterialTheme.typography.labelMedium
