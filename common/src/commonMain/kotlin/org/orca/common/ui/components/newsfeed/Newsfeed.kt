@@ -1,12 +1,17 @@
 package org.orca.common.ui.components.newsfeed
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.unit.dp
 import io.kamel.image.lazyPainterResource
 import org.orca.common.data.Compass
 import org.orca.common.ui.components.common.ErrorRenderer
+import org.orca.common.ui.components.common.PlaceholderText
 import org.orca.kotlass.IFlowKotlassClient
 import org.orca.kotlass.data.NewsItem
 
@@ -27,7 +32,7 @@ fun LazyListScope.newsfeed(
         }
 
         is IFlowKotlassClient.State.Loading -> {
-            // TODO: nice loading thing here maybe?
+            newsfeedContentLoading()
         }
 
         is IFlowKotlassClient.State.Error -> {
@@ -64,5 +69,29 @@ fun LazyListScope.newsfeedContent(
             expanded = (newsItems.indexOf(newsItem) == selectedNewsItem),
             onExpand = { onClickItem(newsItems.indexOf(newsItem)) }
         )
+    }
+}
+
+private fun LazyListScope.newsfeedContentLoading() {
+
+    items(20) {
+        Box(Modifier.alpha(0.6f)) {
+            NewsfeedItemContent(
+                title = {
+                    PlaceholderText(
+                        textStyle = MaterialTheme.typography.titleMedium,
+                        width = 100.dp
+                    )
+                },
+                poster = {
+                    PlaceholderText(
+                        textStyle = MaterialTheme.typography.titleSmall,
+                        width = 50.dp
+                    )
+                },
+                content = {},
+                posterImage = null
+            )
+        }
     }
 }

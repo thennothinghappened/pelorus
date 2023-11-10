@@ -1,6 +1,7 @@
 package org.orca.common.ui.components.newsfeed
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -11,15 +12,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import io.kamel.core.Resource
 import kotlinx.datetime.Instant
 import org.orca.common.data.timeAgo
 import org.orca.common.ui.components.common.CompassAttachment
 import org.orca.common.ui.components.common.NetworkImage
+import org.orca.common.ui.defaults.Padding
 import org.orca.htmltext.HtmlText
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewsfeedItem(
     title: String,
@@ -31,40 +33,76 @@ fun NewsfeedItem(
     expanded: Boolean,
     onExpand: () -> Unit
 ) {
+    NewsfeedItemContent(
+        title = {
+            Text(title, style = MaterialTheme.typography.titleMedium)
+        },
+        poster = {
+            Text("$poster - ${postDateTime?.timeAgo()}", style = MaterialTheme.typography.titleSmall)
+        },
+        posterImage = {
+            if (posterImage == null) {
+                return@NewsfeedItemContent
+            }
+
+            NetworkImage(
+                posterImage,
+                contentDescription = "Photo of $poster",
+                contentScale = ContentScale.FillBounds
+            )
+        },
+        content = {
+            HtmlText(content)
+
+            Column {
+                attachments.forEach { attachment ->
+                    CompassAttachment(
+                        attachment.first,
+                        attachment.second
+                    )
+                }
+            }
+        },
+        expanded = expanded,
+        onExpand = onExpand
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun NewsfeedItemContent(
+    title: @Composable ColumnScope.() -> Unit,
+    poster: @Composable ColumnScope.() -> Unit,
+    posterImage: (@Composable BoxScope.() -> Unit)?,
+    content: @Composable ColumnScope.() -> Unit,
+    expanded: Boolean = false,
+    onExpand: () -> Unit = {  }
+) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         onClick = onExpand
     ) {
-        Column(Modifier.padding(16.dp)) {
+        Column(Modifier.padding(Padding.ContainerInner)) {
             Row {
-                if (posterImage != null) {
-                    NetworkImage(
-                        posterImage,
-                        contentDescription = "Photo of $poster",
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(8.dp))
-                    )
-                    Spacer(Modifier.size(8.dp))
-                }
+                Box(
+                    Modifier
+                        .clip(RoundedCornerShape(Padding.RoundedCorners))
+                        .size(48.dp)
+                        .background(MaterialTheme.colorScheme.surface),
+                    content = { posterImage?.let { it() } }
+                )
+
+                Spacer(Modifier.width(Padding.SpacerInner))
 
                 Column {
-                    Text(title, style = MaterialTheme.typography.titleMedium)
-                    Text("$poster - ${postDateTime?.timeAgo()}", style = MaterialTheme.typography.titleSmall)
+                    title()
+                    poster()
                 }
             }
 
             AnimatedVisibility(expanded) {
                 Column {
-                    HtmlText(content)
-
-                    Column {
-                        attachments.forEach { attachment ->
-                            CompassAttachment(
-                                attachment.first,
-                                attachment.second
-                            )
-                        }
-                    }
+                    content()
                 }
             }
         }
