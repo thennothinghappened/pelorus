@@ -1,6 +1,5 @@
-package org.orca.common.data
+package org.orca.common.data.utils
 
-import androidx.compose.ui.text.toLowerCase
 import kotlinx.datetime.*
 import kotlinx.datetime.TimeZone
 import java.util.*
@@ -46,6 +45,9 @@ fun LocalTime.toInstant(date: LocalDate): Instant {
     return LocalDateTime(date, this)
         .toInstant(TimeZone.currentSystemDefault())
 }
+
+fun Instant.toLocalDateTime(): LocalDateTime =
+    this.toLocalDateTime(TimeZone.currentSystemDefault())
 
 private fun getDaySuffix(day: Int) = when(day) {
     1 -> "st"

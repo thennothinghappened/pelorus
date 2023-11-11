@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import org.orca.common.data.formatAsHourMinute
+import org.orca.common.data.utils.formatAsHourMinute
 import org.orca.common.ui.components.common.CornersCard
 import org.orca.common.ui.components.common.ErrorRenderer
 import org.orca.common.ui.defaults.Padding

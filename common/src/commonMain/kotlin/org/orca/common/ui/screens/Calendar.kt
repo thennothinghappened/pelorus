@@ -14,6 +14,7 @@ import com.arkivanov.decompose.ComponentContext
 import kotlinx.datetime.*
 import org.orca.common.data.Compass
 import org.orca.common.data.utils.collectAsStateAndLifecycle
+import org.orca.common.data.utils.toLocalDateTime
 import org.orca.common.ui.components.calendar.*
 import org.orca.common.ui.utils.WindowSize
 import org.orca.common.ui.screens.schedule.daySchedule
@@ -67,6 +68,11 @@ fun CalendarContent(
         datePickerVisible = false
     }
 
+    if (viewedDay == null) {
+        component.setDay(Clock.System.now().toLocalDateTime().date)
+        return
+    }
+
     Scaffold(
         bottomBar = {
             NavigationBar(modifier = Modifier.height(50.dp)) {
@@ -106,7 +112,7 @@ fun CalendarContent(
                 daySchedule(
                     windowSize = windowSize,
                     scheduleState = scheduleState,
-                    date = viewedDay,
+                    date = viewedDay!!,
                     experimentalClassList = component.experimentalClassList,
                     schoolStartTime = component.schoolStartTime,
                     onClickActivity = component.onClickActivity,

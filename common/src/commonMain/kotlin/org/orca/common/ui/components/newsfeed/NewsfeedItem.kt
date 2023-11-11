@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import io.kamel.core.Resource
 import io.kamel.image.KamelImage
 import kotlinx.datetime.Instant
-import org.orca.common.data.timeAgo
+import org.orca.common.data.utils.timeAgo
 import org.orca.common.ui.components.common.CompassAttachment
 import org.orca.common.ui.defaults.Padding
 import org.orca.htmltext.HtmlText

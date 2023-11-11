@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
-import org.orca.common.data.toInstant
+import org.orca.common.data.utils.toInstant
 import org.orca.common.ui.components.common.ErrorRenderer
 import org.orca.common.ui.defaults.Padding
 import org.orca.common.ui.utils.WindowSize
@@ -21,6 +21,10 @@ import java.lang.Integer.max
 enum class ScheduleHolderType {
     ALL_DAY,
     NORMAL
+}
+
+private object ClassListDefaults {
+    val defaultMinSize = 48.dp
 }
 
 fun LazyListScope.classList(
@@ -33,6 +37,7 @@ fun LazyListScope.classList(
     _schoolStartTime: LocalTime,
     date: LocalDate
 ) {
+
     item {
         Text("Schedule", style = MaterialTheme.typography.labelMedium)
 
@@ -46,11 +51,9 @@ fun LazyListScope.classList(
 
         is IFlowKotlassClient.State.Loading -> {
             item {
-                // We can expect school days to usually be 6 hours, and we're already measuring in minutes.dp!
                 Box(Modifier
-                    .height((60 * 6).dp)
                     .fillMaxWidth()
-                ) {
+                    .defaultMinSize(minHeight = ClassListDefaults.defaultMinSize)) {
                     CircularProgressIndicator(Modifier.align(Alignment.Center))
                 }
             }
@@ -58,7 +61,11 @@ fun LazyListScope.classList(
 
         is IFlowKotlassClient.State.Error -> {
             item {
-                ErrorRenderer(scheduleState.error)
+                Box(Modifier
+                    .fillMaxWidth()
+                    .defaultMinSize(minHeight = ClassListDefaults.defaultMinSize)) {
+                    ErrorRenderer(scheduleState.error)
+                }
             }
         }
 

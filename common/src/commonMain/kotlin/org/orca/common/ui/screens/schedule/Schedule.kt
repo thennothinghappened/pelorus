@@ -6,7 +6,7 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
 import kotlinx.datetime.*
-import org.orca.common.data.formatAsVisualDate
+import org.orca.common.data.utils.formatAsVisualDate
 import org.orca.common.ui.components.calendar.ScheduleHolderType
 import org.orca.common.ui.components.calendar.classList
 import org.orca.common.ui.components.calendar.dueLearningTasks
@@ -19,7 +19,7 @@ import org.orca.kotlass.IFlowKotlassClient
 fun LazyListScope.daySchedule(
     windowSize: WindowSize,
     scheduleState: IFlowKotlassClient.State<IFlowKotlassClient.Pollable.Schedule.ScheduleStateHolder>,
-    date: LocalDate?,
+    date: LocalDate,
     experimentalClassList: Boolean,
     schoolStartTime: LocalTime,
     onClickActivity: (Int, ScheduleHolderType) -> Unit,
@@ -27,7 +27,7 @@ fun LazyListScope.daySchedule(
     onClickLearningTask: (String) -> Unit
 ) {
     item {
-        Text(date?.formatAsVisualDate() ?: "", style = Font.title)
+        Text(date.formatAsVisualDate(), style = Font.title)
     }
 
     classList(
@@ -37,11 +37,7 @@ fun LazyListScope.daySchedule(
         onClickEvent = onClickEvent,
         experimentalClassList = experimentalClassList,
         _schoolStartTime = schoolStartTime,
-        date = Clock
-            .System
-            .now()
-            .toLocalDateTime(TimeZone.currentSystemDefault())
-            .date
+        date = date
     )
 
     item {
