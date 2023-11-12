@@ -43,3 +43,9 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+################################################ Chromium ################################################
+# I'm iffy on using this, given it downloads an entire browser                                           #
+# The builtin JavaFX one would be less intrusive if it worked... (or rather, I could get it working :) ) #
+composeApp/cache
+composeApp/kcef-bundle

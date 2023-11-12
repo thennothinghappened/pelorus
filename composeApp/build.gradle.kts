@@ -30,6 +30,7 @@ kotlin {
             implementation(compose.material)
             @OptIn(ExperimentalComposeLibrary::class)
             implementation(compose.components.resources)
+            api(libs.compose.webview.multiplatform)
         }
 
         androidMain.dependencies {
@@ -103,6 +104,19 @@ compose.desktop {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "org.orca.pelorus"
             packageVersion = version.toString().split("-")[0]
+        }
+
+        buildTypes.release.proguard {
+            configurationFiles.from("compose-desktop.pro")
+        }
+
+        // https://github.com/KevinnZou/compose-webview-multiplatform/blob/main/README.desktop.md#flags
+        jvmArgs("--add-opens", "java.desktop/sun.awt=ALL-UNNAMED")
+        jvmArgs("--add-opens", "java.desktop/java.awt.peer=ALL-UNNAMED") // recommended but not necessary
+
+        if (System.getProperty("os.name").contains("Mac")) {
+            jvmArgs("--add-opens", "java.desktop/sun.lwawt=ALL-UNNAMED")
+            jvmArgs("--add-opens", "java.desktop/sun.lwawt.macosx=ALL-UNNAMED")
         }
     }
 }
