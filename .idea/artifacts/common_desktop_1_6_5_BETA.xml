@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="common-desktop-1.6.5-BETA">
-    <output-path>$PROJECT_DIR$/common/build/libs</output-path>
-    <root id="archive" name="common-desktop-1.6.5-BETA.jar">
-      <element id="module-output" name="pelorus.common.desktopMain" />
-    </root>
-  </artifact>
-</component>
