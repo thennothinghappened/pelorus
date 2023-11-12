@@ -1,11 +1,14 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.compose.ExperimentalComposeLibrary
+import org.jetbrains.compose.internal.utils.getLocalProperty
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
 }
+
+version = "2.0.0-SNAPSHOT-1"
 
 kotlin {
     androidTarget {
@@ -20,21 +23,23 @@ kotlin {
     
     sourceSets {
         val desktopMain by getting
-        
-        androidMain.dependencies {
-            implementation(libs.compose.ui)
-            implementation(libs.compose.ui.tooling.preview)
-            implementation(libs.androidx.activity.compose)
-        }
-        desktopMain.dependencies {
-            implementation(compose.desktop.currentOs)
-        }
+
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material)
             @OptIn(ExperimentalComposeLibrary::class)
             implementation(compose.components.resources)
+        }
+
+        androidMain.dependencies {
+            implementation(libs.compose.ui)
+            implementation(libs.compose.ui.tooling.preview)
+            implementation(libs.androidx.activity.compose)
+        }
+
+        desktopMain.dependencies {
+            implementation(compose.desktop.currentOs)
         }
     }
 }
@@ -51,8 +56,8 @@ android {
         applicationId = "org.orca.pelorus"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 31
+        versionName = version.toString()
     }
     buildFeatures {
         compose = true
@@ -65,9 +70,20 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    signingConfigs {
+        getLocalProperty("ANDROID_STORE_FILE")?.let { androidStoreFile ->
+            create("main") {
+                storeFile = file(androidStoreFile)
+                storePassword = getLocalProperty("ANDROID_STORE_PASSWORD")
+                keyAlias = getLocalProperty("ANDROID_KEY_ALIAS")
+                keyPassword = getLocalProperty("ANDROID_KEY_PASSWORD")
+            }
+        }
+    }
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
+            signingConfig = signingConfigs.findByName("main")
         }
     }
     compileOptions {
@@ -86,7 +102,7 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "org.orca.pelorus"
-            packageVersion = "1.0.0"
+            packageVersion = version.toString().split("-")[0]
         }
     }
 }
