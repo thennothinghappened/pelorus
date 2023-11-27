@@ -36,8 +36,9 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven("https://repo1.maven.org/maven2")
         maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
-        maven("https://jogamp.org/deployment/maven")
+        maven("https://jogamp.org/deployment/maven/")
 
         if (gitHubUser != null && gitHubToken != null) {
             maven {

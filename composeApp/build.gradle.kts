@@ -1,6 +1,7 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.compose.ExperimentalComposeLibrary
 import org.jetbrains.compose.internal.utils.getLocalProperty
+import org.jetbrains.kotlin.backend.common.push
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -48,6 +49,10 @@ kotlin {
     }
 }
 
+object Proguard {
+    const val COMMON_PATH = "proguard-rules.pro"
+}
+
 android {
     namespace = "org.orca.pelorus"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
@@ -63,37 +68,47 @@ android {
         versionCode = 31
         versionName = version.toString()
     }
+
     buildFeatures {
         compose = true
     }
+
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
+
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
     signingConfigs {
-        getLocalProperty("ANDROID_STORE_FILE")?.let { androidStoreFile ->
+        val storeFilePath = getLocalProperty("ANDROID_STORE_FILE")
+
+        if (storeFilePath != null) {
             create("main") {
-                storeFile = file(androidStoreFile)
+                storeFile = file(storeFilePath)
                 storePassword = getLocalProperty("ANDROID_STORE_PASSWORD")
                 keyAlias = getLocalProperty("ANDROID_KEY_ALIAS")
                 keyPassword = getLocalProperty("ANDROID_KEY_PASSWORD")
             }
         }
     }
+
     buildTypes {
         getByName("release") {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             signingConfig = signingConfigs.findByName("main")
+            proguardFiles.push(File(Proguard.COMMON_PATH))
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+
     dependencies {
         debugImplementation(libs.compose.ui.tooling)
     }
@@ -104,13 +119,17 @@ compose.desktop {
         mainClass = "MainKt"
 
         nativeDistributions {
-            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "org.orca.pelorus"
+            targetFormats(TargetFormat.Dmg, TargetFormat.Exe, TargetFormat.Deb)
+            packageName = "Pelorus"
             packageVersion = version.toString().split("-")[0]
+
+            windows {
+//                iconFile.set(project.file(""))
+            }
         }
 
         buildTypes.release.proguard {
-            configurationFiles.from("compose-desktop.pro")
+            configurationFiles.from(Proguard.COMMON_PATH)
         }
 
         // https://github.com/KevinnZou/compose-webview-multiplatform/blob/main/README.desktop.md#flags
