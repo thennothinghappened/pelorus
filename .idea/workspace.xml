@@ -1,0 +1,568 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AndroidLayouts">
+    <shared>
+      <config />
+    </shared>
+  </component>
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="bd5edbc8-12c0-4ce8-b2dc-1671b46c8dfd" name="Changes" comment="add `kotlass`, fixed local.properties github packages key, testing K2!">
+      <change afterPath="$PROJECT_DIR$/composeApp/src/commonMain/kotlin/org/orca/pelorus/App.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/composeApp/src/commonMain/kotlin/org/orca/pelorus/utils/InstantUtils.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/composeApp/src/commonMain/kotlin/org/orca/pelorus/utils/LocalDateTimeUtils.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composeApp/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/composeApp/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composeApp/src/androidMain/kotlin/org/orca/pelorus/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/composeApp/src/androidMain/kotlin/org/orca/pelorus/MainActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composeApp/src/commonMain/kotlin/App.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/composeApp/src/desktopMain/kotlin/main.kt" beforeDir="false" afterPath="$PROJECT_DIR$/composeApp/src/desktopMain/kotlin/main.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle/libs.versions.toml" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/libs.versions.toml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[]" />
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <task path="$PROJECT_DIR$/desktop">
+          <activation />
+        </task>
+        <task path="$PROJECT_DIR$">
+          <activation />
+        </task>
+        <task path="$PROJECT_DIR$/android">
+          <activation />
+        </task>
+        <task path="$PROJECT_DIR$/common">
+          <activation />
+        </task>
+        <task path="$PROJECT_DIR$/composeApp">
+          <activation />
+        </task>
+        <projects_view>
+          <tree_state>
+            <expand />
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Kotlin Class" />
+        <option value="Kotlin Object" />
+        <option value="Kotlin Interface" />
+        <option value="Kotlin File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="QODANA_PROBLEMS_VIEW_TAB" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 7
+}</component>
+  <component name="ProjectId" id="2UcIreTsm1KiLO0twzBQcl94Ff4" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;2.x&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/orca/Documents/GitHub/pelorus/composeApp/src/commonMain/resources&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;SDKs&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.1875&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.project.gradle&quot;,
+    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/composeApp/src/commonMain/resources" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/composeApp/src/commonMain/kotlin/org/orca/pelorus" />
+      <recent name="$PROJECT_DIR$/common/src/commonMain/kotlin/org/orca/common/data/utils" />
+      <recent name="$PROJECT_DIR$/common/src/androidMain/kotlin/org/orca/common/ui/components" />
+      <recent name="$PROJECT_DIR$/common/src/desktopMain/kotlin/org/orca/common/ui/views/login" />
+      <recent name="$PROJECT_DIR$/common/src/androidMain/kotlin/org/orca/common/ui/views/login" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Gradle.pelorus:composeApp [run]">
+    <configuration name="android" type="AndroidRunConfigurationType" factoryName="Android App">
+      <module name="pelorus.android.main" />
+      <option name="DEPLOY" value="true" />
+      <option name="DEPLOY_APK_FROM_BUNDLE" value="false" />
+      <option name="DEPLOY_AS_INSTANT" value="false" />
+      <option name="ARTIFACT_NAME" value="" />
+      <option name="PM_INSTALL_OPTIONS" value="" />
+      <option name="ALL_USERS" value="false" />
+      <option name="ALWAYS_INSTALL_WITH_PM" value="false" />
+      <option name="CLEAR_APP_STORAGE" value="false" />
+      <option name="ACTIVITY_EXTRA_FLAGS" value="" />
+      <option name="MODE" value="default_activity" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false" />
+      <option name="INSPECTION_WITHOUT_ACTIVITY_RESTART" value="false" />
+      <option name="TARGET_SELECTION_MODE" value="DEVICE_AND_SNAPSHOT_COMBO_BOX" />
+      <option name="DEBUGGER_TYPE" value="Java" />
+      <Java>
+        <option name="ATTACH_ON_WAIT_FOR_DEBUGGER" value="false" />
+        <option name="DEBUG_SANDBOX_SDK" value="false" />
+      </Java>
+      <Profilers>
+        <option name="ADVANCED_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_CPU_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_CPU_PROFILING_CONFIGURATION_NAME" value="Java/Kotlin Method Sample (legacy)" />
+        <option name="STARTUP_NATIVE_MEMORY_PROFILING_ENABLED" value="false" />
+        <option name="NATIVE_MEMORY_SAMPLE_RATE_BYTES" value="2048" />
+      </Profilers>
+      <option name="DEEP_LINK" value="" />
+      <option name="ACTIVITY_CLASS" value="" />
+      <option name="SEARCH_ACTIVITY_IN_GLOBAL_SCOPE" value="false" />
+      <option name="SKIP_ACTIVITY_VALIDATION" value="false" />
+      <method v="2">
+        <option name="Android.Gradle.BeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="composeApp" type="AndroidRunConfigurationType" factoryName="Android App">
+      <module name="GitHub.pelorus.composeApp.main" />
+      <option name="DEPLOY" value="true" />
+      <option name="DEPLOY_APK_FROM_BUNDLE" value="false" />
+      <option name="DEPLOY_AS_INSTANT" value="false" />
+      <option name="ARTIFACT_NAME" value="" />
+      <option name="PM_INSTALL_OPTIONS" value="" />
+      <option name="ALL_USERS" value="false" />
+      <option name="ALWAYS_INSTALL_WITH_PM" value="false" />
+      <option name="CLEAR_APP_STORAGE" value="false" />
+      <option name="ACTIVITY_EXTRA_FLAGS" value="" />
+      <option name="MODE" value="default_activity" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false" />
+      <option name="INSPECTION_WITHOUT_ACTIVITY_RESTART" value="false" />
+      <option name="TARGET_SELECTION_MODE" value="DEVICE_AND_SNAPSHOT_COMBO_BOX" />
+      <option name="DEBUGGER_TYPE" value="Java" />
+      <Java>
+        <option name="ATTACH_ON_WAIT_FOR_DEBUGGER" value="false" />
+        <option name="DEBUG_SANDBOX_SDK" value="false" />
+      </Java>
+      <Profilers>
+        <option name="ADVANCED_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_CPU_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_CPU_PROFILING_CONFIGURATION_NAME" value="Java/Kotlin Method Sample (legacy)" />
+        <option name="STARTUP_NATIVE_MEMORY_PROFILING_ENABLED" value="false" />
+        <option name="NATIVE_MEMORY_SAMPLE_RATE_BYTES" value="2048" />
+      </Profilers>
+      <option name="DEEP_LINK" value="" />
+      <option name="ACTIVITY_CLASS" value="" />
+      <option name="SEARCH_ACTIVITY_IN_GLOBAL_SCOPE" value="false" />
+      <option name="SKIP_ACTIVITY_VALIDATION" value="false" />
+      <method v="2">
+        <option name="Android.Gradle.BeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="pelorus:composeApp [assemble]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/composeApp" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="assemble" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="pelorus:composeApp [clean]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/composeApp" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="clean" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="pelorus:composeApp [desktopRun]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/composeApp" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="desktopRun" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="pelorus:composeApp [run]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/composeApp" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="run" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Gradle.pelorus:composeApp [run]" />
+        <item itemvalue="Gradle.pelorus:composeApp [clean]" />
+        <item itemvalue="Gradle.pelorus:composeApp [assemble]" />
+        <item itemvalue="Gradle.pelorus:composeApp [desktopRun]" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="bd5edbc8-12c0-4ce8-b2dc-1671b46c8dfd" name="Changes" comment="" />
+      <created>1693232641394</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1693232641394</updated>
+    </task>
+    <task id="LOCAL-00001" summary="Upgrade Kotlin to `1.9.20`, Compose to `1.5.10`, Android libs, AGP to `8.1.0-rc01`, HtmlText to `1.2.0`. Removed `ListItemWorkaround` as no longer needed.">
+      <option name="closed" value="true" />
+      <created>1699516442832</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1699516442832</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Bump version - `1.6.8-BETA`">
+      <option name="closed" value="true" />
+      <created>1699516491394</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1699516491394</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Upgrade Decompose `2.0.1` -&gt; `2.1.4`, HtmlText `1.2.0` -&gt; `1.2.1`">
+      <option name="closed" value="true" />
+      <created>1699523146918</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1699523146918</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Upgrade Gradle `8.1` -&gt; `8.3`, reduced Gradle Heap size.">
+      <option name="closed" value="true" />
+      <created>1699523762313</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1699523762313</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Made update checker more robust!">
+      <option name="closed" value="true" />
+      <created>1699527242022</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1699527242022</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Increment version: `1.6.9-BETA`">
+      <option name="closed" value="true" />
+      <created>1699527265450</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1699527265450</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Changed settings to use `STRINGS`">
+      <option name="closed" value="true" />
+      <created>1699527602253</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1699527602253</updated>
+    </task>
+    <task id="LOCAL-00008" summary="pretty printing SemVer">
+      <option name="closed" value="true" />
+      <created>1699529080737</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1699529080737</updated>
+    </task>
+    <task id="LOCAL-00009" summary="refactor settings view slightly + show version.">
+      <option name="closed" value="true" />
+      <created>1699529102369</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1699529102369</updated>
+    </task>
+    <task id="LOCAL-00010" summary="move to using built-in material datepicker now!">
+      <option name="closed" value="true" />
+      <created>1699531127556</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1699531127556</updated>
+    </task>
+    <task id="LOCAL-00011" summary="rename learning tasks list to be clearer">
+      <option name="closed" value="true" />
+      <created>1699562199153</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1699562199153</updated>
+    </task>
+    <task id="LOCAL-00012" summary="remove unused imports">
+      <option name="closed" value="true" />
+      <created>1699562208263</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1699562208264</updated>
+    </task>
+    <task id="LOCAL-00013" summary="made newsfeed collapsable!">
+      <option name="closed" value="true" />
+      <created>1699562267148</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1699562267148</updated>
+    </task>
+    <task id="LOCAL-00014" summary="slight login refactor, improved cookie login, learning task &amp; activity click refactor.">
+      <option name="closed" value="true" />
+      <created>1699578841454</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1699578841454</updated>
+    </task>
+    <task id="LOCAL-00015" summary="refactored calendar and newsfeed">
+      <option name="closed" value="true" />
+      <created>1699583652456</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1699583652456</updated>
+    </task>
+    <task id="LOCAL-00016" summary="new loading view for newsfeed">
+      <option name="closed" value="true" />
+      <created>1699597554622</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1699597554622</updated>
+    </task>
+    <task id="LOCAL-00017" summary="Add pull to refresh, some refactoring to class list callbacks, add class list loading size.">
+      <option name="closed" value="true" />
+      <created>1699612670591</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1699612670591</updated>
+    </task>
+    <task id="LOCAL-00018" summary="Removed unused imports.">
+      <option name="closed" value="true" />
+      <created>1699612762274</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1699612762274</updated>
+    </task>
+    <task id="LOCAL-00019" summary="Renamed `views` to `screens`">
+      <option name="closed" value="true" />
+      <created>1699613125982</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1699613125982</updated>
+    </task>
+    <task id="LOCAL-00020" summary="Bump version: `1.6.10-BETA`">
+      <option name="closed" value="true" />
+      <created>1699613175094</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1699613175095</updated>
+    </task>
+    <task id="LOCAL-00021" summary="Fixed regression: calendar always using current date for time-based class list.">
+      <option name="closed" value="true" />
+      <created>1699663673809</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1699663673809</updated>
+    </task>
+    <task id="LOCAL-00022" summary="Bump version: `1.6.11-BETA`">
+      <option name="closed" value="true" />
+      <created>1699663755669</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1699663755669</updated>
+    </task>
+    <task id="LOCAL-00023" summary="Add version, add signing">
+      <option name="closed" value="true" />
+      <created>1699785033344</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1699785033344</updated>
+    </task>
+    <task id="LOCAL-00024" summary="Remove template">
+      <option name="closed" value="true" />
+      <created>1699785355846</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1699785355846</updated>
+    </task>
+    <task id="LOCAL-00025" summary="Add proguard, add multiplatform WebView!">
+      <option name="closed" value="true" />
+      <created>1699786739100</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1699786739100</updated>
+    </task>
+    <task id="LOCAL-00026" summary="Add android internet permission">
+      <option name="closed" value="true" />
+      <created>1699787261438</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1699787261438</updated>
+    </task>
+    <task id="LOCAL-00027" summary="add `kotlass`, fixed local.properties github packages key, testing K2!">
+      <option name="closed" value="true" />
+      <created>1700778806395</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1700778806395</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Upgrade Decompose `2.0.1` -&gt; `2.1.4`, HtmlText `1.2.0` -&gt; `1.2.1`" />
+    <MESSAGE value="Upgrade Gradle `8.1` -&gt; `8.3`, reduced Gradle Heap size." />
+    <MESSAGE value="Made update checker more robust!" />
+    <MESSAGE value="Increment version: `1.6.9-BETA`" />
+    <MESSAGE value="Changed settings to use `STRINGS`" />
+    <MESSAGE value="pretty printing SemVer" />
+    <MESSAGE value="refactor settings view slightly + show version." />
+    <MESSAGE value="move to using built-in material datepicker now!" />
+    <MESSAGE value="rename learning tasks list to be clearer" />
+    <MESSAGE value="remove unused imports" />
+    <MESSAGE value="made newsfeed collapsable!" />
+    <MESSAGE value="slight login refactor, improved cookie login, learning task &amp; activity click refactor." />
+    <MESSAGE value="refactored calendar and newsfeed" />
+    <MESSAGE value="new loading view for newsfeed" />
+    <MESSAGE value="Add pull to refresh, some refactoring to class list callbacks, add class list loading size." />
+    <MESSAGE value="Removed unused imports." />
+    <MESSAGE value="Renamed `views` to `screens`" />
+    <MESSAGE value="Bump version: `1.6.10-BETA`" />
+    <MESSAGE value="Fixed regression: calendar always using current date for time-based class list." />
+    <MESSAGE value="Bump version: `1.6.11-BETA`" />
+    <MESSAGE value="Add version, add signing" />
+    <MESSAGE value="Remove template" />
+    <MESSAGE value="Add proguard, add multiplatform WebView!" />
+    <MESSAGE value="Add android internet permission" />
+    <MESSAGE value="add `kotlass`, fixed local.properties github packages key, testing K2!" />
+    <option name="LAST_COMMIT_MESSAGE" value="add `kotlass`, fixed local.properties github packages key, testing K2!" />
+  </component>
+</project>
