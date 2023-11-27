@@ -1,6 +1,9 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 
-val GITHUB_USER: String = project.findProperty("gpr.user") as String? ?: System.getenv("GITHUB_USER")
-val GITHUB_TOKEN: String = project.findProperty("gpr.key") as String? ?: System.getenv("GITHUB_TOKEN")
+val localProperties = gradleLocalProperties(rootDir)
+
+val gitHubUser: Any? = project.findProperty("gpr.user") ?: localProperties.getProperty("GITHUB_USER") ?: System.getenv("GITHUB_USER")
+val gitHubToken: Any? = project.findProperty("gpr.key") ?: localProperties.getProperty("GITHUB_TOKEN") ?: System.getenv("GITHUB_TOKEN")
 
 allprojects {
     group = Pelorus.group
@@ -12,18 +15,21 @@ allprojects {
         mavenCentral()
         maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
         maven("https://jitpack.io")
-        maven {
-            url = uri("https://maven.pkg.github.com/thennothinghappened/kotlass")
-            credentials {
-                username = GITHUB_USER
-                password = GITHUB_TOKEN
+
+        if (gitHubUser is String && gitHubToken is String) {
+            maven {
+                url = uri("https://maven.pkg.github.com/thennothinghappened/kotlass")
+                credentials {
+                    username = gitHubUser
+                    password = gitHubToken
+                }
             }
-        }
-        maven {
-            url = uri("https://maven.pkg.github.com/Qawaz/compose-datetime")
-            credentials {
-                username = GITHUB_USER
-                password = GITHUB_TOKEN
+            maven {
+                url = uri("https://maven.pkg.github.com/Qawaz/compose-datetime")
+                credentials {
+                    username = gitHubUser
+                    password = gitHubToken
+                }
             }
         }
     }
