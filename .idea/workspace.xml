@@ -9,17 +9,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bd5edbc8-12c0-4ce8-b2dc-1671b46c8dfd" name="Changes" comment="add `kotlass`, fixed local.properties github packages key, testing K2!">
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/composeApp/proguard-rules.pro" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/composeApp/src/commonMain/kotlin/org/orca/pelorus/ui/PelorusTheme.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+    <list default="true" id="bd5edbc8-12c0-4ce8-b2dc-1671b46c8dfd" name="Changes" comment="Setup theme, fixing Proguard on desktop.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/composeApp/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/composeApp/build.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/composeApp/src/commonMain/kotlin/org/orca/pelorus/App.kt" beforeDir="false" afterPath="$PROJECT_DIR$/composeApp/src/commonMain/kotlin/org/orca/pelorus/App.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/composeApp/src/compose-desktop.pro" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/settings.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composeApp/src/commonMain/kotlin/org/orca/pelorus/ui/PelorusTheme.kt" beforeDir="false" afterPath="$PROJECT_DIR$/composeApp/src/commonMain/kotlin/org/orca/pelorus/ui/PelorusTheme.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composeApp/src/desktopMain/kotlin/main.kt" beforeDir="false" afterPath="$PROJECT_DIR$/composeApp/src/desktopMain/kotlin/main.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle/libs.versions.toml" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/libs.versions.toml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -105,8 +101,9 @@
     "project.structure.last.edited": "SDKs",
     "project.structure.proportion": "0.1875",
     "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "reference.settingsdialog.project.gradle",
-    "show.migrate.to.gradle.popup": "false"
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "show.migrate.to.gradle.popup": "false",
+    "stored_options": "{\"dialectConnections\":{\"app.cash.sqldelight.dialects.sqlite_3_18.SqliteDialect\":{\"orderedOptions\":[],\"serializedProperties\":{}}}}"
   }
 }]]></component>
   <component name="RecentsManager">
@@ -121,7 +118,7 @@
       <recent name="$PROJECT_DIR$/common/src/desktopMain/kotlin/org/orca/common/ui/views/login" />
     </key>
   </component>
-  <component name="RunManager" selected="Android App.GitHub.pelorus.composeApp">
+  <component name="RunManager" selected="Gradle.pelorus:composeApp [run]">
     <configuration name="GitHub.pelorus.composeApp" type="AndroidRunConfigurationType" factoryName="Android App">
       <module name="pelorus.composeApp.main" />
       <option name="DEPLOY" value="true" />
@@ -233,6 +230,44 @@
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
       </method>
     </configuration>
+    <configuration name="AppAndroidPreview" type="ComposePreviewRunConfiguration" temporary="true">
+      <module name="GitHub.pelorus.composeApp" />
+      <option name="DEPLOY" value="true" />
+      <option name="DEPLOY_APK_FROM_BUNDLE" value="false" />
+      <option name="DEPLOY_AS_INSTANT" value="false" />
+      <option name="ARTIFACT_NAME" value="" />
+      <option name="PM_INSTALL_OPTIONS" value="" />
+      <option name="ALL_USERS" value="false" />
+      <option name="ALWAYS_INSTALL_WITH_PM" value="false" />
+      <option name="CLEAR_APP_STORAGE" value="false" />
+      <option name="ACTIVITY_EXTRA_FLAGS" value="--es composable org.orca.pelorus.MainActivityKt.AppAndroidPreview" />
+      <option name="MODE" value="specific_activity" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false" />
+      <option name="INSPECTION_WITHOUT_ACTIVITY_RESTART" value="false" />
+      <option name="TARGET_SELECTION_MODE" value="SHOW_DIALOG" />
+      <option name="DEBUGGER_TYPE" value="Java" />
+      <Java>
+        <option name="ATTACH_ON_WAIT_FOR_DEBUGGER" value="false" />
+        <option name="DEBUG_SANDBOX_SDK" value="false" />
+      </Java>
+      <Profilers>
+        <option name="ADVANCED_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_CPU_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_CPU_PROFILING_CONFIGURATION_NAME" value="Java/Kotlin Method Sample (legacy)" />
+        <option name="STARTUP_NATIVE_MEMORY_PROFILING_ENABLED" value="false" />
+        <option name="NATIVE_MEMORY_SAMPLE_RATE_BYTES" value="2048" />
+      </Profilers>
+      <option name="DEEP_LINK" value="" />
+      <option name="ACTIVITY_CLASS" value="androidx.compose.ui.tooling.PreviewActivity" />
+      <option name="SEARCH_ACTIVITY_IN_GLOBAL_SCOPE" value="true" />
+      <option name="SKIP_ACTIVITY_VALIDATION" value="false" />
+      <compose-preview-run-configuration composable-fqn="org.orca.pelorus.MainActivityKt.AppAndroidPreview" />
+      <method v="2">
+        <option name="Android.Gradle.BeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="pelorus:composeApp [androidDependencies]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -267,28 +302,6 @@
         <option name="taskNames">
           <list>
             <option value="assemble" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>false</RunAsTest>
-      <method v="2" />
-    </configuration>
-    <configuration name="pelorus:composeApp [desktopRun]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$/composeApp" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value="desktopRun" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -356,11 +369,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.pelorus:composeApp [run]" />
+        <item itemvalue="Compose Preview.AppAndroidPreview" />
         <item itemvalue="Gradle.pelorus:composeApp [assemble]" />
         <item itemvalue="Gradle.pelorus:composeApp [androidDependencies]" />
         <item itemvalue="Gradle.pelorus:composeApp [packageReleaseDistributionForCurrentOS]" />
-        <item itemvalue="Gradle.pelorus:composeApp [run]" />
-        <item itemvalue="Gradle.pelorus:composeApp [desktopRun]" />
       </list>
     </recent_temporary>
   </component>
@@ -589,7 +602,15 @@
       <option name="project" value="LOCAL" />
       <updated>1700778806395</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="Setup theme, fixing Proguard on desktop.">
+      <option name="closed" value="true" />
+      <created>1701072950258</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1701072950258</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -604,7 +625,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Upgrade Gradle `8.1` -&gt; `8.3`, reduced Gradle Heap size." />
     <MESSAGE value="Made update checker more robust!" />
     <MESSAGE value="Increment version: `1.6.9-BETA`" />
     <MESSAGE value="Changed settings to use `STRINGS`" />
@@ -629,7 +649,8 @@
     <MESSAGE value="Add android internet permission" />
     <MESSAGE value="add `kotlass`, fixed local.properties github packages key, testing K2!" />
     <MESSAGE value="Use local properties for github token, hopefully fix proguard desktop." />
-    <option name="LAST_COMMIT_MESSAGE" value="Use local properties for github token, hopefully fix proguard desktop." />
+    <MESSAGE value="Setup theme, fixing Proguard on desktop." />
+    <option name="LAST_COMMIT_MESSAGE" value="Setup theme, fixing Proguard on desktop." />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

@@ -17,9 +17,9 @@ data class CustomColours(
 
 val LocalCustomColours = staticCompositionLocalOf {
     CustomColours(
-        red = Color(224, 108, 117),
-        green = Color(152, 195, 121),
-        yellow = Color(229, 192, 123)
+        red = Color.Red,
+        green = Color.Green,
+        yellow = Color.Yellow
     )
 }
 
@@ -45,3 +45,9 @@ fun PelorusTheme(
         }
     )
 }
+
+@Composable
+expect fun PelorusAppTheme(
+    darkTheme: Boolean,
+    content: @Composable () -> Unit
+)

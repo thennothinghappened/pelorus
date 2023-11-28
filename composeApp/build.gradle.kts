@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
+    alias(libs.plugins.sqldelight)
 }
 
 version = "2.0.0-SNAPSHOT-1"
@@ -139,6 +140,14 @@ compose.desktop {
         if (System.getProperty("os.name").contains("Mac")) {
             jvmArgs("--add-opens", "java.desktop/sun.lwawt=ALL-UNNAMED")
             jvmArgs("--add-opens", "java.desktop/sun.lwawt.macosx=ALL-UNNAMED")
+        }
+    }
+}
+
+sqldelight {
+    databases {
+        create("Cache") {
+            packageName = "org.orca.pelorus.cache"
         }
     }
 }
