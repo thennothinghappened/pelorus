@@ -14,7 +14,6 @@ import org.orca.pelorus.ui.PelorusAppTheme
 
 @Composable
 fun App() {
-
     ProvideStrings {
         PelorusAppTheme(darkTheme = isSystemInDarkTheme()) {
             Surface(Modifier.fillMaxSize()) {

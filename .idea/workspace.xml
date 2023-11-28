@@ -9,14 +9,24 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bd5edbc8-12c0-4ce8-b2dc-1671b46c8dfd" name="Changes" comment="Remove Material 2 dependencies">
-      <change afterPath="$PROJECT_DIR$/composeApp/src/commonMain/kotlin/org/orca/pelorus/resources/strings/EnglishStrings.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/composeApp/src/commonMain/kotlin/org/orca/pelorus/resources/strings/Strings.kt" afterDir="false" />
+    <list default="true" id="bd5edbc8-12c0-4ce8-b2dc-1671b46c8dfd" name="Changes" comment="Add lyricist">
+      <change afterPath="$PROJECT_DIR$/composeApp/src/androidMain/res/drawable/ic_launcher_foreground.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/composeApp/src/androidMain/res/drawable/pelorus_old.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/composeApp/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/composeApp/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composeApp/src/androidMain/res/drawable-v24/ic_launcher_foreground.xml" beforeDir="false" afterPath="$PROJECT_DIR$/composeApp/src/androidMain/res/drawable-v24/ic_launcher_foreground.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composeApp/src/androidMain/res/mipmap-anydpi-v26/ic_launcher.xml" beforeDir="false" afterPath="$PROJECT_DIR$/composeApp/src/androidMain/res/mipmap-anydpi-v26/ic_launcher.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composeApp/src/androidMain/res/mipmap-anydpi-v26/ic_launcher_round.xml" beforeDir="false" afterPath="$PROJECT_DIR$/composeApp/src/androidMain/res/mipmap-anydpi-v26/ic_launcher_round.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composeApp/src/androidMain/res/mipmap-hdpi/ic_launcher.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/composeApp/src/androidMain/res/mipmap-hdpi/ic_launcher_round.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/composeApp/src/androidMain/res/mipmap-mdpi/ic_launcher.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/composeApp/src/androidMain/res/mipmap-mdpi/ic_launcher_round.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/composeApp/src/androidMain/res/mipmap-xhdpi/ic_launcher.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/composeApp/src/androidMain/res/mipmap-xhdpi/ic_launcher_round.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/composeApp/src/androidMain/res/mipmap-xxhdpi/ic_launcher.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/composeApp/src/androidMain/res/mipmap-xxhdpi/ic_launcher_round.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/composeApp/src/androidMain/res/mipmap-xxxhdpi/ic_launcher.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/composeApp/src/androidMain/res/mipmap-xxxhdpi/ic_launcher_round.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/composeApp/src/commonMain/kotlin/org/orca/pelorus/App.kt" beforeDir="false" afterPath="$PROJECT_DIR$/composeApp/src/commonMain/kotlin/org/orca/pelorus/App.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradle/libs.versions.toml" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/libs.versions.toml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,6 +74,7 @@
         <option value="Kotlin Interface" />
         <option value="Kotlin Data Class" />
         <option value="Kotlin File" />
+        <option value="resourceFile" />
       </list>
     </option>
   </component>
@@ -100,7 +111,7 @@
     "external.system.has.shared.sources": "true",
     "git-widget-placeholder": "2.x",
     "jdk.selected.JAVA_MODULE": "17",
-    "last_opened_file_path": "C:/Users/orca/Documents/GitHub",
+    "last_opened_file_path": "C:/Users/orca/Documents/GitHub/pelorus/composeApp/src/androidMain/res/drawable",
     "project.structure.last.edited": "SDKs",
     "project.structure.proportion": "0.1875",
     "project.structure.side.proportion": "0.2",
@@ -112,17 +123,19 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\orca\Documents\GitHub\pelorus\composeApp\src\androidMain\res\drawable" />
+      <recent name="C:\Users\orca\Documents\GitHub\pelorus\composeApp\src\androidMain\res\drawable-v24" />
       <recent name="$PROJECT_DIR$/composeApp/src/commonMain/resources" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\orca\Documents\GitHub\pelorus\composeApp\src\androidMain\res\drawable" />
+      <recent name="C:\Users\orca\Documents\GitHub\pelorus\composeApp\src\androidMain\res\drawable-v24" />
+      <recent name="C:\Users\orca\Documents\GitHub\pelorus\composeApp\src\androidMain\res\mipmap-hdpi" />
       <recent name="C:\Users\orca\Documents\GitHub\pelorus\composeApp" />
       <recent name="$PROJECT_DIR$/composeApp/src/commonMain/kotlin/org/orca/pelorus" />
-      <recent name="$PROJECT_DIR$/common/src/commonMain/kotlin/org/orca/common/data/utils" />
-      <recent name="$PROJECT_DIR$/common/src/androidMain/kotlin/org/orca/common/ui/components" />
-      <recent name="$PROJECT_DIR$/common/src/desktopMain/kotlin/org/orca/common/ui/views/login" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.pelorus:composeApp [run]">
+  <component name="RunManager" selected="Android App.GitHub.pelorus.composeApp">
     <configuration name="GitHub.pelorus.composeApp" type="AndroidRunConfigurationType" factoryName="Android App">
       <module name="pelorus.composeApp.main" />
       <option name="DEPLOY" value="true" />
@@ -646,7 +659,15 @@
       <option name="project" value="LOCAL" />
       <updated>1701147908548</updated>
     </task>
-    <option name="localTasksCounter" value="33" />
+    <task id="LOCAL-00033" summary="Add lyricist">
+      <option name="closed" value="true" />
+      <created>1701150455209</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1701150455209</updated>
+    </task>
+    <option name="localTasksCounter" value="34" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -661,7 +682,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="refactor settings view slightly + show version." />
     <MESSAGE value="move to using built-in material datepicker now!" />
     <MESSAGE value="rename learning tasks list to be clearer" />
     <MESSAGE value="remove unused imports" />
@@ -686,7 +706,8 @@
     <MESSAGE value="Use signing key on debug builds for easier testing" />
     <MESSAGE value="Modify default app icon colours!" />
     <MESSAGE value="Remove Material 2 dependencies" />
-    <option name="LAST_COMMIT_MESSAGE" value="Remove Material 2 dependencies" />
+    <MESSAGE value="Add lyricist" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add lyricist" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
