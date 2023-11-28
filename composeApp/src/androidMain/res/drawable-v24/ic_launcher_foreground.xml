@@ -1,7 +1,0 @@
-<scale
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:drawable="@drawable/pelorus_new"
-    android:scaleWidth="40%"
-    android:scaleHeight="40%"
-    android:scaleGravity="center"
-    android:level="1" />

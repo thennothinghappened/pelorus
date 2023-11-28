@@ -123,6 +123,7 @@ android {
 }
 
 compose.desktop {
+
     application {
         mainClass = "MainKt"
 
@@ -132,7 +133,11 @@ compose.desktop {
             packageVersion = version.toString().split("-")[0]
 
             windows {
-//                iconFile.set(project.file(""))
+                iconFile.set(project.file("icons/pelorus_logo.ico"))
+            }
+
+            linux {
+                iconFile.set(project.file("icons/pelorus_logo.png"))
             }
         }
 

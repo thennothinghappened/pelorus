@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<scale xmlns:android="http://schemas.android.com/apk/res/android"
+    android:scaleGravity="center"
+    android:scaleWidth="25%"
+    android:scaleHeight="25%"
+    android:drawable="@drawable/pelorus_logo"
+    android:level="1"/>
