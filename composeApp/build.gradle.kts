@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.sqldelight)
+    alias(libs.plugins.ksp)
 }
 
 version = "2.0.0-SNAPSHOT-1"
@@ -36,6 +37,8 @@ kotlin {
             implementation(libs.htmltext)
             implementation(libs.kotlinx.datetime)
             api(libs.compose.webview.multiplatform)
+            implementation(libs.lyricist)
+            implementation(libs.lyricist.processor)
         }
 
         androidMain.dependencies {
@@ -154,4 +157,23 @@ sqldelight {
             packageName = "org.orca.pelorus.cache"
         }
     }
+}
+
+ksp {
+    arg("lyricist.generateStringsProperty", "true")
+}
+
+// Workaround for KSP, see https://github.com/adrielcafe/lyricist#multiplatform-setup
+dependencies {
+    add("kspCommonMainMetadata", libs.lyricist.processor)
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.dsl.KotlinCompile<*>>().all {
+    if(name != "kspCommonMainKotlinMetadata") {
+        dependsOn("kspCommonMainKotlinMetadata")
+    }
+}
+
+kotlin.sourceSets.commonMain {
+    kotlin.srcDir("build/generated/ksp/metadata/commonMain/kotlin")
 }

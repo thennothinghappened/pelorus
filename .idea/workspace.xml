@@ -9,9 +9,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bd5edbc8-12c0-4ce8-b2dc-1671b46c8dfd" name="Changes" comment="Modify default app icon colours!">
-      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
+    <list default="true" id="bd5edbc8-12c0-4ce8-b2dc-1671b46c8dfd" name="Changes" comment="Remove Material 2 dependencies">
+      <change afterPath="$PROJECT_DIR$/composeApp/src/commonMain/kotlin/org/orca/pelorus/resources/strings/EnglishStrings.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/composeApp/src/commonMain/kotlin/org/orca/pelorus/resources/strings/Strings.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/composeApp/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/composeApp/build.gradle.kts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/composeApp/src/commonMain/kotlin/org/orca/pelorus/App.kt" beforeDir="false" afterPath="$PROJECT_DIR$/composeApp/src/commonMain/kotlin/org/orca/pelorus/App.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gradle/libs.versions.toml" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/libs.versions.toml" afterDir="false" />
@@ -60,6 +62,7 @@
         <option value="Kotlin Class" />
         <option value="Kotlin Object" />
         <option value="Kotlin Interface" />
+        <option value="Kotlin Data Class" />
         <option value="Kotlin File" />
       </list>
     </option>
@@ -101,6 +104,7 @@
     "project.structure.last.edited": "SDKs",
     "project.structure.proportion": "0.1875",
     "project.structure.side.proportion": "0.2",
+    "run.code.analysis.last.selected.profile": "pProject Default",
     "settings.editor.selected.configurable": "preferences.pluginManager",
     "show.migrate.to.gradle.popup": "false",
     "stored_options": "{\"dialectConnections\":{\"app.cash.sqldelight.dialects.sqlite_3_18.SqliteDialect\":{\"orderedOptions\":[],\"serializedProperties\":{}}}}"
@@ -118,7 +122,7 @@
       <recent name="$PROJECT_DIR$/common/src/desktopMain/kotlin/org/orca/common/ui/views/login" />
     </key>
   </component>
-  <component name="RunManager" selected="Android App.GitHub.pelorus.composeApp">
+  <component name="RunManager" selected="Gradle.pelorus:composeApp [run]">
     <configuration name="GitHub.pelorus.composeApp" type="AndroidRunConfigurationType" factoryName="Android App">
       <module name="pelorus.composeApp.main" />
       <option name="DEPLOY" value="true" />
@@ -369,8 +373,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Gradle.pelorus [clean]" />
         <item itemvalue="Gradle.pelorus:composeApp [run]" />
+        <item itemvalue="Gradle.pelorus [clean]" />
         <item itemvalue="Compose Preview.AppAndroidPreview" />
         <item itemvalue="Gradle.pelorus:composeApp [assemble]" />
         <item itemvalue="Gradle.pelorus:composeApp [androidDependencies]" />
@@ -634,7 +638,15 @@
       <option name="project" value="LOCAL" />
       <updated>1701147443080</updated>
     </task>
-    <option name="localTasksCounter" value="32" />
+    <task id="LOCAL-00032" summary="Remove Material 2 dependencies">
+      <option name="closed" value="true" />
+      <created>1701147908548</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1701147908548</updated>
+    </task>
+    <option name="localTasksCounter" value="33" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -649,7 +661,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="pretty printing SemVer" />
     <MESSAGE value="refactor settings view slightly + show version." />
     <MESSAGE value="move to using built-in material datepicker now!" />
     <MESSAGE value="rename learning tasks list to be clearer" />
@@ -674,7 +685,8 @@
     <MESSAGE value="Testing SqlDelight" />
     <MESSAGE value="Use signing key on debug builds for easier testing" />
     <MESSAGE value="Modify default app icon colours!" />
-    <option name="LAST_COMMIT_MESSAGE" value="Modify default app icon colours!" />
+    <MESSAGE value="Remove Material 2 dependencies" />
+    <option name="LAST_COMMIT_MESSAGE" value="Remove Material 2 dependencies" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
