@@ -9,20 +9,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bd5edbc8-12c0-4ce8-b2dc-1671b46c8dfd" name="Changes" comment="Testing SqlDelight">
-      <change afterPath="$PROJECT_DIR$/composeApp/src/androidMain/kotlin/org/orca/pelorus/ui/PelorusTheme.android.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/composeApp/src/desktopMain/kotlin/org/orca/pelorus/ui/PelorusTheme.desktop.kt" afterDir="false" />
+    <list default="true" id="bd5edbc8-12c0-4ce8-b2dc-1671b46c8dfd" name="Changes" comment="Modify default app icon colours!">
+      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composeApp/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/composeApp/build.gradle.kts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/composeApp/src/commonMain/kotlin/org/orca/pelorus/App.kt" beforeDir="false" afterPath="$PROJECT_DIR$/composeApp/src/commonMain/kotlin/org/orca/pelorus/App.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/composeApp/src/commonMain/kotlin/org/orca/pelorus/ui/PelorusTheme.kt" beforeDir="false" afterPath="$PROJECT_DIR$/composeApp/src/commonMain/kotlin/org/orca/pelorus/ui/PelorusTheme.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/composeApp/src/desktopMain/kotlin/main.kt" beforeDir="false" afterPath="$PROJECT_DIR$/composeApp/src/desktopMain/kotlin/main.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle/libs.versions.toml" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/libs.versions.toml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[ad2bad3d]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -79,9 +78,10 @@
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="QODANA_PROBLEMS_VIEW_TAB" />
   </component>
-  <component name="ProjectColorInfo">{
-  &quot;associatedIndex&quot;: 7
-}</component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "customColor": "ff3decff",
+  "associatedIndex": 5
+}]]></component>
   <component name="ProjectId" id="2UcIreTsm1KiLO0twzBQcl94Ff4" />
   <component name="ProjectViewState">
     <option name="autoscrollToSource" value="true" />
@@ -101,7 +101,7 @@
     "project.structure.last.edited": "SDKs",
     "project.structure.proportion": "0.1875",
     "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "preferences.keymap",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
     "show.migrate.to.gradle.popup": "false",
     "stored_options": "{\"dialectConnections\":{\"app.cash.sqldelight.dialects.sqlite_3_18.SqliteDialect\":{\"orderedOptions\":[],\"serializedProperties\":{}}}}"
   }
@@ -118,7 +118,7 @@
       <recent name="$PROJECT_DIR$/common/src/desktopMain/kotlin/org/orca/common/ui/views/login" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.pelorus:composeApp [run]">
+  <component name="RunManager" selected="Android App.GitHub.pelorus.composeApp">
     <configuration name="GitHub.pelorus.composeApp" type="AndroidRunConfigurationType" factoryName="Android App">
       <module name="pelorus.composeApp.main" />
       <option name="DEPLOY" value="true" />
@@ -268,6 +268,28 @@
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
       </method>
     </configuration>
+    <configuration name="pelorus [clean]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="clean" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
     <configuration name="pelorus:composeApp [androidDependencies]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -302,28 +324,6 @@
         <option name="taskNames">
           <list>
             <option value="assemble" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>false</RunAsTest>
-      <method v="2" />
-    </configuration>
-    <configuration name="pelorus:composeApp [packageReleaseDistributionForCurrentOS]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$/composeApp" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value="packageReleaseDistributionForCurrentOS" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -369,11 +369,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.pelorus [clean]" />
         <item itemvalue="Gradle.pelorus:composeApp [run]" />
         <item itemvalue="Compose Preview.AppAndroidPreview" />
         <item itemvalue="Gradle.pelorus:composeApp [assemble]" />
         <item itemvalue="Gradle.pelorus:composeApp [androidDependencies]" />
-        <item itemvalue="Gradle.pelorus:composeApp [packageReleaseDistributionForCurrentOS]" />
       </list>
     </recent_temporary>
   </component>
@@ -618,7 +618,23 @@
       <option name="project" value="LOCAL" />
       <updated>1701142589972</updated>
     </task>
-    <option name="localTasksCounter" value="30" />
+    <task id="LOCAL-00030" summary="Use signing key on debug builds for easier testing">
+      <option name="closed" value="true" />
+      <created>1701147375304</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1701147375304</updated>
+    </task>
+    <task id="LOCAL-00031" summary="Modify default app icon colours!">
+      <option name="closed" value="true" />
+      <created>1701147443080</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1701147443080</updated>
+    </task>
+    <option name="localTasksCounter" value="32" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -633,8 +649,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Increment version: `1.6.9-BETA`" />
-    <MESSAGE value="Changed settings to use `STRINGS`" />
     <MESSAGE value="pretty printing SemVer" />
     <MESSAGE value="refactor settings view slightly + show version." />
     <MESSAGE value="move to using built-in material datepicker now!" />
@@ -658,7 +672,9 @@
     <MESSAGE value="Use local properties for github token, hopefully fix proguard desktop." />
     <MESSAGE value="Setup theme, fixing Proguard on desktop." />
     <MESSAGE value="Testing SqlDelight" />
-    <option name="LAST_COMMIT_MESSAGE" value="Testing SqlDelight" />
+    <MESSAGE value="Use signing key on debug builds for easier testing" />
+    <MESSAGE value="Modify default app icon colours!" />
+    <option name="LAST_COMMIT_MESSAGE" value="Modify default app icon colours!" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
