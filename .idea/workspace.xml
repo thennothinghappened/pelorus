@@ -9,13 +9,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bd5edbc8-12c0-4ce8-b2dc-1671b46c8dfd" name="Changes" comment="Setup theme, fixing Proguard on desktop.">
+    <list default="true" id="bd5edbc8-12c0-4ce8-b2dc-1671b46c8dfd" name="Changes" comment="Testing SqlDelight">
+      <change afterPath="$PROJECT_DIR$/composeApp/src/androidMain/kotlin/org/orca/pelorus/ui/PelorusTheme.android.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/composeApp/src/desktopMain/kotlin/org/orca/pelorus/ui/PelorusTheme.desktop.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/composeApp/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/composeApp/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composeApp/src/commonMain/kotlin/org/orca/pelorus/App.kt" beforeDir="false" afterPath="$PROJECT_DIR$/composeApp/src/commonMain/kotlin/org/orca/pelorus/App.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/composeApp/src/commonMain/kotlin/org/orca/pelorus/ui/PelorusTheme.kt" beforeDir="false" afterPath="$PROJECT_DIR$/composeApp/src/commonMain/kotlin/org/orca/pelorus/ui/PelorusTheme.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/composeApp/src/desktopMain/kotlin/main.kt" beforeDir="false" afterPath="$PROJECT_DIR$/composeApp/src/desktopMain/kotlin/main.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradle/libs.versions.toml" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/libs.versions.toml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -97,11 +97,11 @@
     "external.system.has.shared.sources": "true",
     "git-widget-placeholder": "2.x",
     "jdk.selected.JAVA_MODULE": "17",
-    "last_opened_file_path": "/Users/orca/Documents/GitHub/pelorus/composeApp/src/commonMain/resources",
+    "last_opened_file_path": "C:/Users/orca/Documents/GitHub",
     "project.structure.last.edited": "SDKs",
     "project.structure.proportion": "0.1875",
     "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "settings.editor.selected.configurable": "preferences.keymap",
     "show.migrate.to.gradle.popup": "false",
     "stored_options": "{\"dialectConnections\":{\"app.cash.sqldelight.dialects.sqlite_3_18.SqliteDialect\":{\"orderedOptions\":[],\"serializedProperties\":{}}}}"
   }
@@ -610,7 +610,15 @@
       <option name="project" value="LOCAL" />
       <updated>1701072950258</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="Testing SqlDelight">
+      <option name="closed" value="true" />
+      <created>1701142589972</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1701142589972</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -625,7 +633,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Made update checker more robust!" />
     <MESSAGE value="Increment version: `1.6.9-BETA`" />
     <MESSAGE value="Changed settings to use `STRINGS`" />
     <MESSAGE value="pretty printing SemVer" />
@@ -650,7 +657,8 @@
     <MESSAGE value="add `kotlass`, fixed local.properties github packages key, testing K2!" />
     <MESSAGE value="Use local properties for github token, hopefully fix proguard desktop." />
     <MESSAGE value="Setup theme, fixing Proguard on desktop." />
-    <option name="LAST_COMMIT_MESSAGE" value="Setup theme, fixing Proguard on desktop." />
+    <MESSAGE value="Testing SqlDelight" />
+    <option name="LAST_COMMIT_MESSAGE" value="Testing SqlDelight" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

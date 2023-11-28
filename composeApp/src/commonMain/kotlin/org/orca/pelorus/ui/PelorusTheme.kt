@@ -1,7 +1,9 @@
 package org.orca.pelorus.ui
 
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material.*
+import androidx.compose.material3.ColorScheme
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Shapes
+import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
@@ -25,6 +27,7 @@ val LocalCustomColours = staticCompositionLocalOf {
 
 @Composable
 fun PelorusTheme(
+    colourScheme: ColorScheme,
     content: @Composable () -> Unit
 ) {
     val customColours = CustomColours(
@@ -34,7 +37,7 @@ fun PelorusTheme(
     )
 
     MaterialTheme(
-        colors = if (isSystemInDarkTheme()) darkColors() else lightColors(),
+        colorScheme = colourScheme,
         typography = Typography(),
         shapes = Shapes(),
         content = {
