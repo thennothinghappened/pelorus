@@ -7,7 +7,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cafe.adriel.lyricist.ProvideStrings
@@ -29,7 +28,9 @@ fun App(staffRepository: StaffRepository) {
 
                     if (staff == null) {
                         CircularProgressIndicator()
-                        return@Column
+                        // NOTE: https://issuetracker.google.com/issues/241527709
+                        // Returning @ Column here crashes on Android despite this apparently being fixed...
+                        return@Surface
                     }
 
                     LazyColumn(
