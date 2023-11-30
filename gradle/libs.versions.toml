@@ -1,7 +1,6 @@
 [versions]
 compose = "1.5.4"
-compose-plugin = "1.5.10"
-compose-compiler = "1.5.4"
+compose-plugin = "1.5.11"
 
 # Note: AGP 8.1.0-rc01 is used here due to
 # https://youtrack.jetbrains.com/issue/IDEA-316608
@@ -22,7 +21,7 @@ androidx-espresso-core = "3.5.1"
 
 junit = "4.13.2"
 
-kotlin = "1.9.20"
+kotlin = "1.9.21"
 
 kotlass = "2.0.0-SNAPSHOT-3"
 
