@@ -1,6 +1,6 @@
 [versions]
 compose-plugin = "1.5.11"
-compose-compiler = "1.5.4"
+compose-compiler = "1.5.5"
 
 # Note: AGP 8.1.0-rc01 is used here due to
 # https://youtrack.jetbrains.com/issue/IDEA-316608
