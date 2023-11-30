@@ -24,7 +24,7 @@ junit = "4.13.2"
 
 kotlin = "1.9.21"
 
-kotlass = "2.0.0-SNAPSHOT-3"
+kotlass = "2.0.0-SNAPSHOT-4"
 
 htmltext = "1.2.2"
 
@@ -56,8 +56,14 @@ androidx-constraintlayout = { group = "androidx.constraintlayout", name = "const
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
 
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
+
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
+
 kotlass = { module = "org.orca.kotlass:shared", version.ref = "kotlass" }
+
+sqldelight-driver-android = { module = "app.cash.sqldelight:android-driver", version.ref = "sqldelight" }
+sqldelight-driver-jvm = { module = "app.cash.sqldelight:sqlite-driver", version.ref = "sqldelight" }
+sqldelight-coroutines = { module = "app.cash.sqldelight:coroutines-extensions", version.ref = "sqldelight" }
 
 lyricist = { module = "cafe.adriel.lyricist:lyricist", version.ref = "lyricist" }
 lyricist-processor = { module = "cafe.adriel.lyricist:lyricist-processor", version.ref = "lyricist" }

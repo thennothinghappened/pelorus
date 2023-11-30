@@ -39,16 +39,19 @@ kotlin {
             api(libs.compose.webview.multiplatform)
             implementation(libs.lyricist)
             implementation(libs.lyricist.processor)
+            implementation(libs.sqldelight.coroutines)
         }
 
         androidMain.dependencies {
             implementation(libs.androidx.compose.ui)
             implementation(libs.androidx.compose.ui.tooling.preview)
             implementation(libs.androidx.activity.compose)
+            implementation(libs.sqldelight.driver.android)
         }
 
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
+            implementation(libs.sqldelight.driver.jvm)
         }
     }
 }
