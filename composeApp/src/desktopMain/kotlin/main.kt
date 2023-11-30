@@ -6,6 +6,10 @@ import org.orca.pelorus.App
 import org.orca.pelorus.data.db.DriverFactory
 import org.orca.pelorus.data.db.createCache
 import org.orca.pelorus.data.staff.StaffRepository
+import org.orca.trulysharedprefs.SharedPrefsFactory
+import java.util.prefs.Preferences
+
+class App
 
 @OptIn(ExperimentalResourceApi::class)
 fun main() = application {
@@ -13,6 +17,9 @@ fun main() = application {
     val cache = createCache(driverFactory)
 
     val staffRepository = StaffRepository(cache)
+
+    val preferences = Preferences.userNodeForPackage(App::class.java)
+    val prefs = SharedPrefsFactory(preferences).createSharedPrefs()
 
     Window(
         resizable = true,
@@ -23,6 +30,6 @@ fun main() = application {
         ),
         icon = painterResource("pelorus_logo.png")
     ) {
-        App(staffRepository)
+        App(staffRepository, prefs)
     }
 }

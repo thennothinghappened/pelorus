@@ -40,6 +40,7 @@ kotlin {
             implementation(libs.lyricist)
             implementation(libs.lyricist.processor)
             implementation(libs.sqldelight.coroutines)
+            implementation(libs.trulysharedprefs)
         }
 
         androidMain.dependencies {

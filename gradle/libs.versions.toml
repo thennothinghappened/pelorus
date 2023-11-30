@@ -32,6 +32,8 @@ kotlinx-datetime = "0.4.1"
 
 sqldelight = "2.0.0"
 
+trulysharedprefs = "1.0.1"
+
 composeWebviewMultiplatform = "1.7.0"
 
 koin = "3.5.0"
@@ -64,6 +66,8 @@ kotlass = { module = "org.orca.kotlass:shared", version.ref = "kotlass" }
 sqldelight-driver-android = { module = "app.cash.sqldelight:android-driver", version.ref = "sqldelight" }
 sqldelight-driver-jvm = { module = "app.cash.sqldelight:sqlite-driver", version.ref = "sqldelight" }
 sqldelight-coroutines = { module = "app.cash.sqldelight:coroutines-extensions", version.ref = "sqldelight" }
+
+trulysharedprefs = { module = "org.orca.trulysharedprefs:trulysharedprefs", version.ref = "trulysharedprefs" }
 
 lyricist = { module = "cafe.adriel.lyricist:lyricist", version.ref = "lyricist" }
 lyricist-processor = { module = "cafe.adriel.lyricist:lyricist-processor", version.ref = "lyricist" }
