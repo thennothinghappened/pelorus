@@ -7,6 +7,7 @@ import org.orca.pelorus.cache.Cache
 
 actual class DriverFactory(private val context: Context) {
     actual fun createCacheDriver(): SqlDriver {
-        return AndroidSqliteDriver(Cache.Schema, context, "cache.db")
+        // TODO: feel like this isn't how you're meant to do this!!
+        return AndroidSqliteDriver(Cache.Schema, context, "${context.cacheDir.path}/cache.db")
     }
 }
