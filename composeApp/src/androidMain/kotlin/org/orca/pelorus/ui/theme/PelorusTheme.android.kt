@@ -1,4 +1,4 @@
-package org.orca.pelorus.ui
+package org.orca.pelorus.ui.theme
 
 import android.os.Build
 import androidx.compose.material3.darkColorScheme

@@ -42,7 +42,11 @@ kotlin {
             implementation(libs.lyricist.processor)
             implementation(libs.sqldelight.coroutines)
             implementation(libs.trulysharedprefs)
-            implementation(libs.precompose)
+            implementation(libs.voyager.navigator)
+            implementation(libs.voyager.tabNavigator)
+            implementation(libs.voyager.transitions)
+            implementation(libs.voyager.koin)
+            implementation(libs.material3.windowSizeClassMultiplatform)
         }
 
         androidMain.dependencies {

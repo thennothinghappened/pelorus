@@ -32,7 +32,8 @@ sqldelight = "2.0.0"
 htmltext = "1.2.2"
 composeWebviewMultiplatform = "1.7.0"
 koin = "3.5.0"
-precompose = "1.5.7"
+voyager = "1.0.0-rc10"
+material3-windowSizeClassMultiplatform = "0.3.1"
 
 lyricist = "1.6.2"
 ksp = "1.9.21-1.0.15"
@@ -69,7 +70,12 @@ lyricist = { module = "cafe.adriel.lyricist:lyricist", version.ref = "lyricist" 
 lyricist-processor = { module = "cafe.adriel.lyricist:lyricist-processor", version.ref = "lyricist" }
 htmltext = { module = "org.orca.htmltext:common", version.ref = "htmltext" }
 compose-webview-multiplatform = { module = "io.github.kevinnzou:compose-webview-multiplatform", version.ref = "composeWebviewMultiplatform" }
-precompose = { module = "moe.tlaster:precompose", version.ref = "precompose" }
+material3-windowSizeClassMultiplatform = { module = "dev.chrisbanes.material3:material3-window-size-class-multiplatform", version.ref = "material3-windowSizeClassMultiplatform" }
+
+voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
+voyager-tabNavigator = { module = "cafe.adriel.voyager:voyager-tab-navigator", version.ref = "voyager" }
+voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyager" }
+voyager-koin = { module = "cafe.adriel.voyager:voyager-koin", version.ref = "voyager" }
 
 [plugins]
 jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "compose-plugin" }

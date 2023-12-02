@@ -8,9 +8,6 @@ import cafe.adriel.lyricist.LyricistStrings
 
 @LyricistStrings(languageTag = Locales.ENGLISH, default = true)
 val EnglishStrings = Strings(
-    hi = buildAnnotatedString {
-        withStyle(SpanStyle(color = Color.Green)) {
-            append("hi!!")
-        }
-    }
+    loginWelcome = "Welcome to Pelorus!",
+    loginTagline = "Choose an option to login:"
 )
