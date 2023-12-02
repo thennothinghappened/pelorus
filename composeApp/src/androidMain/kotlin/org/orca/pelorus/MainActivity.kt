@@ -20,9 +20,7 @@ class MainActivity : ComponentActivity() {
             val driverFactory = DriverFactory(LocalContext.current)
             val cache = createCache(driverFactory)
 
-            val staffRepository = StaffRepository(cache)
-
-            App(staffRepository, prefs)
+            App(cache, prefs)
         }
     }
 }

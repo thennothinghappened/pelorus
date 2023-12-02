@@ -2,6 +2,9 @@
 compose-plugin = "1.5.11"
 compose-compiler = "1.5.5"
 
+junit = "4.13.2"
+kotlin = "1.9.21"
+
 # Note: AGP 8.1.0-rc01 is used here due to
 # https://youtrack.jetbrains.com/issue/IDEA-316608
 # AGP >=8.1.0 is needed for updating libs, but is not supported by Intellij.
@@ -20,23 +23,16 @@ androidx-constraintlayout = "2.1.4"
 androidx-test-junit = "1.1.5"
 androidx-espresso-core = "3.5.1"
 
-junit = "4.13.2"
-
-kotlin = "1.9.21"
-
-kotlass = "2.0.0-SNAPSHOT-4"
-
-htmltext = "1.2.2"
+kotlass = "2.0.0-SNAPSHOT-5"
+trulysharedprefs = "1.1.0"
 
 kotlinx-datetime = "0.4.1"
-
 sqldelight = "2.0.0"
 
-trulysharedprefs = "1.0.1"
-
+htmltext = "1.2.2"
 composeWebviewMultiplatform = "1.7.0"
-
 koin = "3.5.0"
+precompose = "1.5.7"
 
 lyricist = "1.6.2"
 ksp = "1.9.21-1.0.15"
@@ -73,6 +69,7 @@ lyricist = { module = "cafe.adriel.lyricist:lyricist", version.ref = "lyricist" 
 lyricist-processor = { module = "cafe.adriel.lyricist:lyricist-processor", version.ref = "lyricist" }
 htmltext = { module = "org.orca.htmltext:common", version.ref = "htmltext" }
 compose-webview-multiplatform = { module = "io.github.kevinnzou:compose-webview-multiplatform", version.ref = "composeWebviewMultiplatform" }
+precompose = { module = "moe.tlaster:precompose", version.ref = "precompose" }
 
 [plugins]
 jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "compose-plugin" }

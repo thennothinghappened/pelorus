@@ -16,10 +16,8 @@ fun main() = application {
     val driverFactory = DriverFactory()
     val cache = createCache(driverFactory)
 
-    val staffRepository = StaffRepository(cache)
-
-    val preferences = Preferences.userNodeForPackage(App::class.java)
-    val prefs = SharedPrefsFactory(preferences).createSharedPrefs()
+    val prefs = SharedPrefsFactory(App::class.java)
+        .createSharedPrefs()
 
     Window(
         resizable = true,
@@ -30,6 +28,6 @@ fun main() = application {
         ),
         icon = painterResource("pelorus_logo.png")
     ) {
-        App(staffRepository, prefs)
+        App(cache, prefs)
     }
 }
