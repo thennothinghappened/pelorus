@@ -1,10 +1,11 @@
 package org.orca.pelorus.resources.strings
 
-import androidx.compose.ui.text.AnnotatedString
-
 data class Strings(
     val loginWelcome: String,
-    val loginTagline: String
+    val loginTagline: String,
+
+    val loginCookieTitle: String,
+    val loginCookieDescription: String
 )
 
 object Locales {

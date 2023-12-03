@@ -9,5 +9,8 @@ import cafe.adriel.lyricist.LyricistStrings
 @LyricistStrings(languageTag = Locales.ENGLISH, default = true)
 val EnglishStrings = Strings(
     loginWelcome = "Welcome to Pelorus!",
-    loginTagline = "Choose an option to login:"
+    loginTagline = "Choose an option to login:",
+
+    loginCookieTitle = "Login via Cookie",
+    loginCookieDescription = "Log into Pelorus by supplying information manually for debugging purposes."
 )
