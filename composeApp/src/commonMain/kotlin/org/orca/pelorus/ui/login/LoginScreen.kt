@@ -12,31 +12,30 @@ import cafe.adriel.lyricist.strings
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import org.koin.dsl.module
+import org.orca.pelorus.ui.login.cookie.CookieLoginScreenModel
 import org.orca.pelorus.ui.theme.sizing
+import org.orca.pelorus.ui.theme.windowSize
 
 
 object LoginScreen : Screen {
     @Composable
     override fun Content() {
         Column {
-            Column(Modifier.width(IntrinsicSize.Min)) {
+            Column {
                 Text(
                     strings.loginWelcome,
-                    modifier = Modifier.fillMaxWidth(),
                     style = MaterialTheme.typography.titleLarge,
                     textAlign = TextAlign.Center
                 )
                 Text(
                     strings.loginTagline,
-                    modifier = Modifier.fillMaxWidth(),
                     style = MaterialTheme.typography.titleMedium,
                     textAlign = TextAlign.Center
                 )
             }
 
             Spacer(Modifier.height(sizing.spacerLarge))
-
-
         }
     }
 
@@ -53,4 +52,8 @@ object LoginScreen : Screen {
         }
     }
 
+}
+
+val loginModule = module {
+    factory { CookieLoginScreenModel(get()) }
 }

@@ -8,7 +8,9 @@ import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import cafe.adriel.lyricist.ProvideStrings
+import cafe.adriel.voyager.navigator.Navigator
 import org.koin.compose.KoinContext
+import org.orca.pelorus.ui.login.LoginScreen
 import org.orca.pelorus.ui.theme.PelorusAppTheme
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
@@ -17,10 +19,8 @@ fun App() {
     KoinContext {
         ProvideStrings {
             PelorusAppTheme(isSystemInDarkTheme()) {
-                val windowSize = calculateWindowSizeClass()
-
                 Surface(Modifier.fillMaxSize()) {
-
+                    Navigator(LoginScreen)
                 }
             }
         }
