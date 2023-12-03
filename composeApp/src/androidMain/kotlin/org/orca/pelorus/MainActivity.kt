@@ -14,13 +14,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            val sharedPreferences = LocalContext.current.getSharedPreferences("preferences", MODE_PRIVATE)
-            val prefs = SharedPrefsFactory(sharedPreferences).createSharedPrefs()
-
-            val driverFactory = DriverFactory(LocalContext.current)
-            val cache = createCache(driverFactory)
-
-            App(cache, prefs)
+            App()
         }
     }
 }
