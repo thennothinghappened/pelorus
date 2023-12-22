@@ -33,7 +33,7 @@ htmltext = "1.2.2"
 composeWebviewMultiplatform = "1.7.0"
 koin = "3.5.0"
 koin-compose = "1.1.0"
-voyager = "1.0.0-rc10"
+voyager = "1.0.0"
 material3-windowSizeClassMultiplatform = "0.3.1"
 
 lyricist = "1.6.2"
