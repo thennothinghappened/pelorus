@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Global -->
+    <string name="app_name">Pelorus</string>
+
+    <!-- Login -->
+    <string name="login_welcome">Welcome to Pelorus!</string>
+    <string name="login_tagline">Choose an option to login</string>
+
+
+</resources>
