@@ -1,7 +1,7 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.compose.ExperimentalComposeLibrary
 import org.jetbrains.compose.internal.utils.getLocalProperty
 import org.jetbrains.kotlin.backend.common.push
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -13,6 +13,12 @@ plugins {
 version = "2.0.0-SNAPSHOT-1"
 
 kotlin {
+
+    @OptIn(ExperimentalKotlinGradlePluginApi::class)
+    compilerOptions {
+        freeCompilerArgs.add("-Xexpect-actual-classes")
+    }
+
     androidTarget {
         compilations.all {
             kotlinOptions {
@@ -40,10 +46,6 @@ kotlin {
             api(libs.compose.webview.multiplatform)
             implementation(libs.sqldelight.coroutines)
             implementation(libs.trulysharedprefs)
-            implementation(libs.voyager.navigator)
-            implementation(libs.voyager.screenModel)
-            implementation(libs.voyager.tabNavigator)
-            implementation(libs.voyager.transitions)
             implementation(libs.material3.windowSizeClassMultiplatform)
         }
 

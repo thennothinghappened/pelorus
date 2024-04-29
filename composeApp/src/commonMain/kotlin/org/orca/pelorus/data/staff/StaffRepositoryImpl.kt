@@ -1,7 +1,7 @@
 package org.orca.pelorus.data.staff
 
 import org.orca.pelorus.cache.Cache
-import org.orca.pelorus.cache.staff.Staff
+import org.orca.pelorus.cache.Staff
 
 class StaffRepositoryImpl(cache: Cache) : StaffRepository {
     private val queries = cache.staffQueries

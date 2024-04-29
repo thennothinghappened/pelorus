@@ -32,7 +32,7 @@ androidx-activityCompose = "1.9.0"
 androidx-appcompat = "1.6.1"
 
 ### Backend ###
-kotlass = "2.0.0-SNAPSHOT-6"
+kotlass = "2.0.0-SNAPSHOT-7"
 sqldelight = "2.0.2"
 
 ### Util ###
@@ -40,7 +40,6 @@ kotlinx-datetime = "0.5.0"
 
 ### Compose ###
 composeWebviewMultiplatform = "1.9.4"
-voyager = "1.0.0"
 trulysharedprefs = "1.1.0"
 htmltext = "1.2.2"
 
@@ -77,11 +76,6 @@ trulysharedprefs = { module = "org.orca.trulysharedprefs:trulysharedprefs", vers
 htmltext = { module = "org.orca.htmltext:common", version.ref = "htmltext" }
 compose-webview-multiplatform = { module = "io.github.kevinnzou:compose-webview-multiplatform", version.ref = "composeWebviewMultiplatform" }
 material3-windowSizeClassMultiplatform = { module = "dev.chrisbanes.material3:material3-window-size-class-multiplatform", version.ref = "material3-windowSizeClassMultiplatform" }
-
-voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
-voyager-screenModel = { module = "cafe.adriel.voyager:voyager-screenmodel", version.ref = "voyager" }
-voyager-tabNavigator = { module = "cafe.adriel.voyager:voyager-tab-navigator", version.ref = "voyager" }
-voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyager" }
 
 [plugins]
 

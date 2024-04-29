@@ -1,6 +1,6 @@
 package org.orca.pelorus.data.staff
 
-import org.orca.pelorus.cache.staff.Staff
+import org.orca.pelorus.cache.Staff
 
 interface StaffRepository {
     fun find(id: Int): Staff?

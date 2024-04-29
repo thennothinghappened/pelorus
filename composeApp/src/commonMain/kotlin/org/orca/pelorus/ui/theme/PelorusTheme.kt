@@ -1,5 +1,6 @@
 package org.orca.pelorus.ui.theme
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Shapes
@@ -53,6 +54,6 @@ fun PelorusTheme(
 
 @Composable
 expect fun PelorusAppTheme(
-    darkTheme: Boolean,
+    darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 )
