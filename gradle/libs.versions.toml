@@ -29,20 +29,33 @@ android-gradle-plugin = "8.2.0"
 ### Android ###
 androidx-compose = "1.6.6"
 androidx-activityCompose = "1.9.0"
+
+# Extended Android metadata "stuff" - gives us the AppCompat adaptive themes.
 androidx-appcompat = "1.6.1"
 
 ### Backend ###
+
+# Core API for talking to Compass
 kotlass = "2.0.0-SNAPSHOT-7"
+
+# SQL Database for caching
 sqldelight = "2.0.2"
 
 ### Util ###
+
+# Kotlin's own DateTime library for formatting dates
 kotlinx-datetime = "0.5.0"
 
 ### Compose ###
 composeWebviewMultiplatform = "1.9.4"
+
 # Experimental Multiplatform Navigation API
 navigationCompose = "2.8.0-alpha01"
+
+# Platform-indepedenent Shared Preferences
 trulysharedprefs = "1.1.0"
+
+# HTML rendering
 htmltext = "1.2.2"
 
 # Unofficial Material 3 window size class port until added to Compose Multiplatform.
