@@ -39,6 +39,7 @@ kotlin {
             implementation(compose.material3)
             implementation(compose.animation)
             implementation(compose.components.resources)
+            implementation(libs.navigation.compose)
 
             implementation(libs.kotlass)
             implementation(libs.htmltext)
