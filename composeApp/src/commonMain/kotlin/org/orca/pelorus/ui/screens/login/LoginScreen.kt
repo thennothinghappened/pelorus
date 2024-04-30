@@ -28,45 +28,28 @@ import org.orca.kotlass.client.CompassApiClient
 import org.orca.kotlass.client.CompassApiError
 import org.orca.kotlass.client.CompassApiResult
 import org.orca.kotlass.client.CompassUserCredentials
-import org.orca.pelorus.data.prefs.PrefsKeys
-import org.orca.trulysharedprefs.ISharedPrefs
+import org.orca.pelorus.data.prefs.IPrefs
 
 @Composable
 fun LoginScreen(
-    prefs: ISharedPrefs,
+    prefs: IPrefs,
     onLoginSuccess: (CompassUserCredentials) -> Unit,
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
     screenModel: LoginScreenModel = remember { LoginScreenModel(coroutineScope) },
 ) {
 
-    val loginState by screenModel.loginState.collectAsState()
+    val loginState = screenModel.state.collectAsState().value
+    val loading = loginState is LoginScreenModel.State.Loading
 
-    // On successful login.
-    if (loginState is LoginScreenModel.LoginState.Authenticated) {
-
-        (loginState as LoginScreenModel.LoginState.Authenticated).credentials.let {
-
-            prefs.editSync {
-                putString(PrefsKeys.CompassDomain.key, it.domain)
-                putInt(PrefsKeys.CompassUserId.key, it.userId)
-                putString(PrefsKeys.CompassCookie.key, it.cookie)
-            }
-
-            onLoginSuccess(it)
-
-        }
-
+    if (loginState is LoginScreenModel.State.Authenticated) {
+        return onLoginSuccess(loginState.credentials)
     }
 
-    val savedDomain = prefs.getStringOrNull(PrefsKeys.CompassDomain.key)
-    val savedUserId = prefs.getIntOrNull(PrefsKeys.CompassUserId.key)
-    val savedCookie = prefs.getStringOrNull(PrefsKeys.CompassCookie.key)
+    val savedCredentials = remember { prefs.getCompassCredentials() }
 
-    val loading = loginState is LoginScreenModel.LoginState.Loading
-
-    var domain by rememberSaveable { mutableStateOf(savedDomain ?: "") }
-    var userId by rememberSaveable { mutableStateOf(savedUserId) }
-    var cookie by rememberSaveable { mutableStateOf(savedCookie ?: "") }
+    var domain by rememberSaveable { mutableStateOf(savedCredentials?.domain ?: "") }
+    var userId by rememberSaveable { mutableStateOf(savedCredentials?.userId) }
+    var cookie by rememberSaveable { mutableStateOf(savedCredentials?.cookie ?: "") }
 
     Column {
 
@@ -98,7 +81,7 @@ fun LoginScreen(
 
         when (loginState) {
 
-            is LoginScreenModel.LoginState.Loading -> {
+            is LoginScreenModel.State.Loading -> {
                 CircularProgressIndicator()
                 return@Column
             }
@@ -128,35 +111,12 @@ fun LoginScreen(
  */
 class LoginScreenModel(private val coroutineScope: CoroutineScope) {
 
-    sealed interface LoginState {
-
-        /**
-         * Have not tried to authenticate.
-         */
-        data object NotAuthenticated : LoginState
-
-        /**
-         * Currently trying to authenticate.
-         */
-        data object Loading : LoginState
-
-        /**
-         * Successfully authenticated!
-         */
-        data class Authenticated(val credentials: CompassUserCredentials) : LoginState
-
-        /**
-         * Failed to authenticate.
-         */
-        data class FailedAuthenticate(val error: CompassApiError) : LoginState
-    }
-
-    private val mutableLoginState: MutableStateFlow<LoginState> = MutableStateFlow(LoginState.NotAuthenticated)
+    private val mutableState: MutableStateFlow<State> = MutableStateFlow(State.NotAuthenticated)
 
     /**
      * The current state for if we've authenticated successfully.
      */
-    val loginState = mutableLoginState.asStateFlow()
+    val state = mutableState.asStateFlow()
 
     /**
      * Job checking authentication currently if so.
@@ -174,7 +134,7 @@ class LoginScreenModel(private val coroutineScope: CoroutineScope) {
 
         authCheckJob = coroutineScope.launch {
 
-            mutableLoginState.update { LoginState.Loading }
+            mutableState.update { State.Loading }
 
             val client = CompassApiClient(credentials)
 
@@ -182,15 +142,38 @@ class LoginScreenModel(private val coroutineScope: CoroutineScope) {
                 client.checkAuth()
             }
 
-            mutableLoginState.update {
+            mutableState.update {
                 when (result) {
-                    is CompassApiResult.Success -> LoginState.Authenticated(credentials)
-                    is CompassApiResult.Failure -> LoginState.FailedAuthenticate(result.error)
+                    is CompassApiResult.Success -> State.Authenticated(credentials)
+                    is CompassApiResult.Failure -> State.FailedAuthenticate(result.error)
                 }
             }
 
         }
 
+    }
+
+    sealed interface State {
+
+        /**
+         * Have not tried to authenticate.
+         */
+        data object NotAuthenticated : State
+
+        /**
+         * Currently trying to authenticate.
+         */
+        data object Loading : State
+
+        /**
+         * Successfully authenticated!
+         */
+        data class Authenticated(val credentials: CompassUserCredentials) : State
+
+        /**
+         * Failed to authenticate.
+         */
+        data class FailedAuthenticate(val error: CompassApiError) : State
     }
 
 }
