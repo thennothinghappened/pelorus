@@ -39,7 +39,6 @@ kotlin {
             implementation(compose.material3)
             implementation(compose.animation)
             implementation(compose.components.resources)
-            implementation(libs.navigation.compose)
 
             implementation(libs.kotlass)
             implementation(libs.htmltext)
@@ -90,7 +89,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.jetbrains.compose.compiler.get()
+        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
 
     packaging {
@@ -155,15 +154,6 @@ compose.desktop {
 
         buildTypes.release.proguard {
             configurationFiles.from(Proguard.COMMON_PATH)
-        }
-
-        // https://github.com/KevinnZou/compose-webview-multiplatform/blob/main/README.desktop.md#flags
-        jvmArgs("--add-opens", "java.desktop/sun.awt=ALL-UNNAMED")
-        jvmArgs("--add-opens", "java.desktop/java.awt.peer=ALL-UNNAMED") // recommended but not necessary
-
-        if (System.getProperty("os.name").contains("Mac")) {
-            jvmArgs("--add-opens", "java.desktop/sun.lwawt=ALL-UNNAMED")
-            jvmArgs("--add-opens", "java.desktop/sun.lwawt.macosx=ALL-UNNAMED")
         }
     }
 }

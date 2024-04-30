@@ -14,7 +14,11 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            App()
+
+            val sharedPreferences = getSharedPreferences("preferences", MODE_PRIVATE)
+            val prefs = SharedPrefsFactory(sharedPreferences).createSharedPrefs()
+
+            App(prefs)
         }
     }
 }

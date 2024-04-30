@@ -1,7 +1,6 @@
 import java.io.FileInputStream
 import java.io.InputStreamReader
 import java.util.Properties
-import kotlin.io.path.toPath
 
 rootProject.name = "pelorus"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")

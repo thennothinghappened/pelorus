@@ -12,7 +12,7 @@
 
 ### Compose Multiplatform ###
 jetbrains-compose-plugin = "1.6.2"
-jetbrains-compose-compiler = "1.5.12"
+compose-compiler = "1.5.11"
 
 ### Kotlin ###
 kotlin = "1.9.23"
@@ -36,7 +36,7 @@ androidx-appcompat = "1.6.1"
 ### Backend ###
 
 # Core API for talking to Compass
-kotlass = "2.0.0-SNAPSHOT-7"
+kotlass = "2.0.0-SNAPSHOT-8"
 
 # SQL Database for caching
 sqldelight = "2.0.2"
