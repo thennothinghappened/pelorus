@@ -1,13 +1,17 @@
 package org.orca.pelorus.ui.screens.login
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -15,6 +19,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -38,33 +44,62 @@ fun LoginScreen(
     screenModel: LoginScreenModel = remember { LoginScreenModel(coroutineScope) },
 ) {
 
-    val loginState = screenModel.state.collectAsState().value
-    val loading = loginState is LoginScreenModel.State.Loading
-
-    if (loginState is LoginScreenModel.State.Authenticated) {
-        return onLoginSuccess(loginState.credentials)
-    }
-
-    val savedCredentials = remember { prefs.getCompassCredentials() }
-
-    var domain by rememberSaveable { mutableStateOf(savedCredentials?.domain ?: "") }
-    var userId by rememberSaveable { mutableStateOf(savedCredentials?.userId) }
-    var cookie by rememberSaveable { mutableStateOf(savedCredentials?.cookie ?: "") }
+    var domain: String by rememberSaveable { mutableStateOf("") }
+    var userId: Int? by rememberSaveable { mutableStateOf(null) }
+    var cookie: String by rememberSaveable { mutableStateOf("") }
 
     Column {
+
+        when (val loginState = screenModel.state.collectAsState().value) {
+
+            is LoginScreenModel.State.Authenticated -> {
+                return onLoginSuccess(loginState.credentials)
+            }
+
+            is LoginScreenModel.State.Loading -> {
+
+                Box(Modifier.fillMaxSize()) {
+                    Column(Modifier.align(Alignment.Center)) {
+                        Text("Logging into Compass...")
+                        CircularProgressIndicator(Modifier.align(Alignment.CenterHorizontally))
+                    }
+                }
+
+                return
+
+            }
+
+            is LoginScreenModel.State.NotAuthenticated -> {
+
+                // If we already have credentials saved, try logging in immediately.
+                prefs.getCompassCredentials()?.let { credentials ->
+                    return LaunchedEffect(Unit) {
+                        screenModel.tryAuthenticate(credentials)
+                    }
+                }
+
+            }
+
+            is LoginScreenModel.State.FailedAuthenticate -> {
+                Text(
+                    text = "Failed to authenticate with the Compass Server:\n${loginState.error}",
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
+
+
+        }
 
         TextField(
             value = domain,
             onValueChange = { domain = it },
-            label = { Text("Domain") },
-            readOnly = loading
+            label = { Text("Domain") }
         )
 
         TextField(
             value = (userId ?: "").toString(),
             onValueChange = { userId = it.toIntOrNull() },
             label = { Text("User ID") },
-            readOnly = loading,
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Number
             )
@@ -73,34 +108,22 @@ fun LoginScreen(
         TextField(
             value = cookie,
             onValueChange = { cookie = it },
-            label = { Text("Cookie") },
-            readOnly = loading
+            label = { Text("Cookie") }
         )
 
         HorizontalDivider()
 
-        when (loginState) {
-
-            is LoginScreenModel.State.Loading -> {
-                CircularProgressIndicator()
-                return@Column
-            }
-
-            else -> {
-                Button(
-                    onClick = {
-                        screenModel.tryAuthenticate(CompassUserCredentials(
-                            domain = domain,
-                            userId = userId!!,
-                            cookie = cookie
-                        ))
-                    },
-                    enabled = userId != null
-                ) {
-                    Text("Login")
-                }
-            }
-
+        Button(
+            onClick = {
+                screenModel.tryAuthenticate(CompassUserCredentials(
+                    domain = domain,
+                    userId = userId!!,
+                    cookie = cookie
+                ))
+            },
+            enabled = (userId != null)
+        ) {
+            Text("Login")
         }
 
     }

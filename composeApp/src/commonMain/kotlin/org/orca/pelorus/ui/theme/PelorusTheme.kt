@@ -17,6 +17,9 @@ val LocalWindowSizeClass: ProvidableCompositionLocal<WindowSizeClass> = composit
     error("No window size class provided!")
 }
 
+/**
+ * The current Material [WindowSizeClass] for the app size.
+ */
 val windowSize: WindowSizeClass
     @Composable
     get() = LocalWindowSizeClass.current
@@ -39,11 +42,8 @@ fun PelorusTheme(
                 LocalPelorusSizing provides pelorusSizing,
                 LocalPelorusColours provides pelorusColours,
                 content = {
-                    // This is really silly!
-                    val windowSizeClass = calculateWindowSizeClass()
-
                     CompositionLocalProvider(
-                        LocalWindowSizeClass provides windowSizeClass,
+                        LocalWindowSizeClass provides calculateWindowSizeClass(),
                         content = content
                     )
                 }
