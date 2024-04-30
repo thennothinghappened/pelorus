@@ -2,22 +2,33 @@ package org.orca.pelorus
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.withContext
 import org.orca.kotlass.client.CompassApiClient
+import org.orca.kotlass.client.CompassApiResult
 import org.orca.kotlass.client.CompassUserCredentials
+import org.orca.kotlass.data.user.UserDetails
 import org.orca.pelorus.data.prefs.Prefs
 import org.orca.pelorus.ui.screens.login.LoginScreen
 import org.orca.pelorus.ui.theme.PelorusAppTheme
 import org.orca.trulysharedprefs.ISharedPrefs
+import kotlin.coroutines.CoroutineContext
 
 /**
  * Main entry point for the app!
@@ -39,7 +50,36 @@ fun App(sharedPrefs: ISharedPrefs) {
 
                 is AppScreenModel.State.Authenticated -> {
                     Column {
-                        Text("Authenticated with client ${it.client}!")
+
+                        val client = it.client
+                        var response: CompassApiResult<UserDetails>? by remember { mutableStateOf(null) }
+
+                        LaunchedEffect(Unit) {
+                            withContext(Dispatchers.IO) {
+                                response = client.getMyUserDetails()
+                            }
+                        }
+
+                        when (val r = response) {
+
+                            null -> {
+                                CircularProgressIndicator()
+                            }
+
+                            is CompassApiResult.Failure -> {
+                                Text("Failed to fetch user details:\n${r.error}")
+                            }
+
+                            is CompassApiResult.Success -> {
+
+                                val details = r.data
+
+                                Text("Welcome to Compass, ${details.firstName}!")
+
+                            }
+
+                        }
+
                     }
                 }
             }
