@@ -1,9 +1,9 @@
-package org.orca.pelorus.data.prefs
+package org.orca.pelorus.prefs
 
 import org.orca.kotlass.client.CompassUserCredentials
 import org.orca.trulysharedprefs.ISharedPrefs
 
-class Prefs(private val prefs: ISharedPrefs) : IPrefs {
+class Prefs(private val prefs: ISharedPrefs) : IMutablePrefs {
 
     override fun getCompassCredentials(): CompassUserCredentials? {
 

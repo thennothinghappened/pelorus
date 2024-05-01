@@ -1,4 +1,4 @@
-package org.orca.pelorus.ui.screens.login
+package org.orca.pelorus.screens.login
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,11 +34,11 @@ import org.orca.kotlass.client.CompassApiClient
 import org.orca.kotlass.client.CompassApiError
 import org.orca.kotlass.client.CompassApiResult
 import org.orca.kotlass.client.CompassUserCredentials
-import org.orca.pelorus.data.prefs.IPrefs
+import org.orca.pelorus.prefs.IPrefs
+import org.orca.pelorus.prefs.ui.prefs
 
 @Composable
 fun LoginScreen(
-    prefs: IPrefs,
     onLoginSuccess: (CompassUserCredentials) -> Unit,
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
     screenModel: LoginScreenModel = remember { LoginScreenModel(coroutineScope) },
@@ -200,4 +200,3 @@ class LoginScreenModel(private val coroutineScope: CoroutineScope) {
     }
 
 }
-
