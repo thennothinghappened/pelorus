@@ -5,16 +5,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -28,7 +27,6 @@ import org.orca.pelorus.data.prefs.Prefs
 import org.orca.pelorus.ui.screens.login.LoginScreen
 import org.orca.pelorus.ui.theme.PelorusAppTheme
 import org.orca.trulysharedprefs.ISharedPrefs
-import kotlin.coroutines.CoroutineContext
 
 /**
  * Main entry point for the app!
@@ -40,9 +38,8 @@ fun App(sharedPrefs: ISharedPrefs) {
         Surface(Modifier.fillMaxSize()) {
 
             val screenModel = remember { AppScreenModel(sharedPrefs) }
-            val state by screenModel.state.collectAsState()
 
-            when (val it = state) {
+            when (val state = screenModel.state.collectAsState().value) {
 
                 is AppScreenModel.State.NotAuthenticated -> {
                     LoginScreen(screenModel.prefs, screenModel::onLoginSuccess)
@@ -51,7 +48,7 @@ fun App(sharedPrefs: ISharedPrefs) {
                 is AppScreenModel.State.Authenticated -> {
                     Column {
 
-                        val client = it.client
+                        val client = state.client
                         var response: CompassApiResult<UserDetails>? by remember { mutableStateOf(null) }
 
                         LaunchedEffect(Unit) {

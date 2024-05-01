@@ -47,6 +47,8 @@ kotlin {
             implementation(libs.sqldelight.coroutines)
             implementation(libs.trulysharedprefs)
             implementation(libs.material3.windowSizeClassMultiplatform)
+            implementation(libs.decompose)
+            implementation(libs.decompose.compose)
         }
 
         androidMain.dependencies {

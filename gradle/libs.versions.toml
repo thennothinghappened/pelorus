@@ -55,11 +55,16 @@ navigationCompose = "2.8.0-alpha01"
 # Platform-indepedenent Shared Preferences
 trulysharedprefs = "1.1.0"
 
+### Compose ###
+
 # HTML rendering
 htmltext = "1.2.2"
 
 # Unofficial Material 3 window size class port until added to Compose Multiplatform.
 material3-windowSizeClassMultiplatform = "0.5.0"
+
+# State, navigation and component management
+decompose = "3.0.0"
 
 #############################
 ###    Non-Gradle Data    ###
@@ -90,8 +95,9 @@ trulysharedprefs = { module = "org.orca.trulysharedprefs:trulysharedprefs", vers
 
 htmltext = { module = "org.orca.htmltext:common", version.ref = "htmltext" }
 compose-webview-multiplatform = { module = "io.github.kevinnzou:compose-webview-multiplatform", version.ref = "composeWebviewMultiplatform" }
-navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 material3-windowSizeClassMultiplatform = { module = "dev.chrisbanes.material3:material3-window-size-class-multiplatform", version.ref = "material3-windowSizeClassMultiplatform" }
+decompose = { group = "com.arkivanov.decompose", name = "decompose", version.ref = "decompose" }
+decompose-compose = { group = "com.arkivanov.decompose", name = "extensions-compose", version.ref = "decompose" }
 
 [plugins]
 

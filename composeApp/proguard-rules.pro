@@ -2,6 +2,9 @@
 -keep class org.cef.** { *; }
 -keep class kotlinx.coroutines.swing.SwingDispatcherFactory
 
+# https://arkivanov.github.io/Decompose/extensions/compose/#proguard-rules-for-compose-for-desktop-jvm
+-keep class com.arkivanov.decompose.extensions.compose.jetbrains.mainthread.SwingMainThreadChecker
+
 -dontwarn javafx.**
 -dontwarn org.eclipse.**
 

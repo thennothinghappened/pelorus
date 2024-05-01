@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!-- Note: this file will start seeing proper use once the app is less testing and more actual thing :P -->
 <resources>
     <!-- Global -->
     <string name="app_name">Pelorus</string>
