@@ -32,6 +32,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import org.orca.pelorus.data.di.LocalAuthenticator
 import org.orca.pelorus.screenmodel.AuthScreenModel
 import org.orca.pelorus.screens.login.LoginLoadingScreen
+import org.orca.pelorus.ui.common.ExpandableError
 import org.orca.pelorus.ui.theme.sizing
 import org.orca.pelorus.ui.utils.collectValue
 
@@ -60,28 +61,11 @@ object ManualLoginScreen : Screen {
             ) {
 
                 if (authState is AuthScreenModel.State.FailedAuthenticate) {
-
-                    var showError by remember { mutableStateOf(false) }
-
-                    Card(
-                        onClick = { showError = !showError },
-                        colors = CardDefaults.cardColors()
-                            .copy(containerColor = MaterialTheme.colorScheme.errorContainer)
-                    ) {
-                        Column(Modifier.padding(sizing.paddingCardInner)) {
-                            Text(
-                                "Failed to login!",
-                                style = MaterialTheme.typography.titleMedium
-                            )
-
-                            AnimatedVisibility(showError) {
-
-                                HorizontalDivider()
-                                Text(authState.error.toString())
-
-                            }
-                        }
-                    }
+                    ExpandableError(
+                        "Login Failed!",
+                        authState.toString(),
+                        "Check that your credentials and domain are correct."
+                    )
                 }
 
                 TextField(
