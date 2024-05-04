@@ -1,10 +1,10 @@
 package org.orca.pelorus
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import com.arkivanov.decompose.defaultComponentContext
-import org.orca.pelorus.screens.root.RootComponent
+import org.orca.pelorus.data.di.WithRootServices
 import org.orca.trulysharedprefs.SharedPrefsFactory
 
 /**
@@ -21,13 +21,21 @@ class MainActivity : ComponentActivity() {
         val sharedPreferences = getSharedPreferences(PREFERENCES_NAME, MODE_PRIVATE)
         val sharedPrefs = SharedPrefsFactory(sharedPreferences).createSharedPrefs()
 
-        val rootComponent = RootComponent(
-            componentContext = defaultComponentContext(),
-            sharedPrefs = sharedPrefs
-        )
-
         setContent {
-            App(rootComponent)
+            WithRootServices(
+                sharedPrefs = sharedPrefs
+            ) {
+                App()
+            }
         }
     }
+
+    override fun onStart() {
+
+        // This override is just so we can see when a config change happens as a sanity check.
+        super.onStart()
+        Log.d("ConfigurationChange", "Configuration Changed!")
+
+    }
+
 }

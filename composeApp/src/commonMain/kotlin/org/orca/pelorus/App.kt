@@ -1,43 +1,62 @@
 package org.orca.pelorus
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.withContext
-import org.orca.kotlass.client.CompassApiClient
-import org.orca.kotlass.client.CompassApiResult
-import org.orca.kotlass.client.CompassUserCredentials
-import org.orca.kotlass.data.user.UserDetails
-import org.orca.pelorus.prefs.Prefs
+import cafe.adriel.voyager.navigator.CurrentScreen
+import cafe.adriel.voyager.navigator.Navigator
+import cafe.adriel.voyager.transitions.ScaleTransition
+import cafe.adriel.voyager.transitions.SlideTransition
+import org.orca.pelorus.data.di.LocalAuthenticator
+import org.orca.pelorus.data.di.WithAuthScreenModel
+import org.orca.pelorus.data.di.WithCompassApiClient
+import org.orca.pelorus.screenmodel.AuthScreenModel
+import org.orca.pelorus.screens.AuthenticatedScreen
 import org.orca.pelorus.screens.login.LoginScreen
-import org.orca.pelorus.screens.root.IRootComponent
 import org.orca.pelorus.screens.root.RootScreen
 import org.orca.pelorus.ui.theme.PelorusAppTheme
-import org.orca.trulysharedprefs.ISharedPrefs
+import org.orca.pelorus.ui.utils.collectValue
 
 /**
  * Main entry point for the app!
  */
 @Composable
-fun App(component: IRootComponent) {
+fun App() {
     PelorusAppTheme {
         Surface(Modifier.fillMaxSize()) {
-            RootScreen(component)
+
+            Navigator(RootScreen) { navigator ->
+
+                WithAuthScreenModel {
+
+                    val authModel = LocalAuthenticator.current
+                    val authState = authModel.state.collectValue()
+
+                    if (authState is AuthScreenModel.State.Success) {
+
+                        if (navigator.lastItem !is AuthenticatedScreen) {
+                            navigator.replaceAll(RootScreen)
+                            return@WithAuthScreenModel
+                        }
+
+                        WithCompassApiClient(authState.credentials) {
+                            SlideTransition(navigator)
+                        }
+
+                    } else {
+
+                        if (navigator.lastItem is AuthenticatedScreen) {
+                            navigator.push(LoginScreen)
+                            return@WithAuthScreenModel
+                        }
+
+                        ScaleTransition(navigator)
+
+                    }
+
+                }
+            }
         }
     }
 }

@@ -1,14 +1,13 @@
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.window.*
-import com.arkivanov.decompose.DefaultComponentContext
-import com.arkivanov.essenty.lifecycle.LifecycleRegistry
-import com.arkivanov.essenty.statekeeper.StateKeeperDispatcher
+import androidx.compose.ui.window.Window
+import androidx.compose.ui.window.WindowPosition
+import androidx.compose.ui.window.WindowState
+import androidx.compose.ui.window.application
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.orca.pelorus.App
-import org.orca.pelorus.screens.root.RootComponent
-import org.orca.pelorus.utils.runOnUiThread
+import org.orca.pelorus.data.di.WithRootServices
 import org.orca.trulysharedprefs.SharedPrefsFactory
 import pelorus.composeapp.generated.resources.Res
 import pelorus.composeapp.generated.resources.app_name
@@ -23,25 +22,6 @@ fun main() {
     val preferences = Preferences.userNodeForPackage(PrefsHook::class.java)
     val sharedPrefs = SharedPrefsFactory(preferences).createSharedPrefs()
 
-    val lifecycle = LifecycleRegistry()
-
-    // Note: We don't use an on-filesystem StateKeeper right now as I'm not entirely sure
-    // why you'd want to do that on Desktop.
-    val stateKeeper = StateKeeperDispatcher()
-
-    /**
-     * The application root component.
-     */
-    val rootComponent = runOnUiThread {
-        RootComponent(
-            componentContext = DefaultComponentContext(
-                lifecycle = lifecycle,
-                stateKeeper = stateKeeper
-            ),
-            sharedPrefs = sharedPrefs
-        )
-    }
-
     application {
         Window(
             resizable = true,
@@ -52,7 +32,11 @@ fun main() {
             ),
             icon = painterResource(Res.drawable.pelorus_logo)
         ) {
-            App(rootComponent)
+            WithRootServices(
+                sharedPrefs = sharedPrefs
+            ) {
+                App()
+            }
         }
     }
 }

@@ -11,7 +11,7 @@
 #############################
 
 ### Compose Multiplatform ###
-jetbrains-compose-plugin = "1.6.2"
+compose = "1.6.2"
 compose-compiler = "1.5.11"
 
 ### Kotlin ###
@@ -47,7 +47,6 @@ sqldelight = "2.0.2"
 kotlinx-datetime = "0.5.0"
 
 ### Compose ###
-composeWebviewMultiplatform = "1.9.4"
 
 # Experimental Multiplatform Navigation API
 navigationCompose = "2.8.0-alpha01"
@@ -64,7 +63,7 @@ htmltext = "1.2.2"
 material3-windowSizeClassMultiplatform = "0.5.0"
 
 # State, navigation and component management
-decompose = "3.0.0"
+voyager = "1.0.0"
 
 #############################
 ###    Non-Gradle Data    ###
@@ -83,6 +82,8 @@ androidx-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
 
+kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "compose" }
+
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
 
 kotlass = { module = "org.orca.kotlass:shared", version.ref = "kotlass" }
@@ -94,15 +95,18 @@ sqldelight-coroutines = { module = "app.cash.sqldelight:coroutines-extensions", 
 trulysharedprefs = { module = "org.orca.trulysharedprefs:trulysharedprefs", version.ref = "trulysharedprefs" }
 
 htmltext = { module = "org.orca.htmltext:common", version.ref = "htmltext" }
-compose-webview-multiplatform = { module = "io.github.kevinnzou:compose-webview-multiplatform", version.ref = "composeWebviewMultiplatform" }
 material3-windowSizeClassMultiplatform = { module = "dev.chrisbanes.material3:material3-window-size-class-multiplatform", version.ref = "material3-windowSizeClassMultiplatform" }
-decompose = { group = "com.arkivanov.decompose", name = "decompose", version.ref = "decompose" }
-decompose-compose = { group = "com.arkivanov.decompose", name = "extensions-compose", version.ref = "decompose" }
+
+voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
+voyager-screenModel = { module = "cafe.adriel.voyager:voyager-screenmodel", version.ref = "voyager" }
+voyager-tabNavigator = { module = "cafe.adriel.voyager:voyager-tab-navigator", version.ref = "voyager" }
+voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyager" }
 
 [plugins]
 
-jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "jetbrains-compose-plugin" }
+jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "compose" }
 androidApplication = { id = "com.android.application", version.ref = "android-gradle-plugin" }
 androidLibrary = { id = "com.android.library", version.ref = "android-gradle-plugin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlinxSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }

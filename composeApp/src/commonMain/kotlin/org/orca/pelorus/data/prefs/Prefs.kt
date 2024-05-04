@@ -1,4 +1,4 @@
-package org.orca.pelorus.prefs
+package org.orca.pelorus.data.prefs
 
 import org.orca.kotlass.client.CompassUserCredentials
 import org.orca.trulysharedprefs.ISharedPrefs
@@ -20,6 +20,10 @@ class Prefs(private val prefs: ISharedPrefs) : IMutablePrefs {
     }
 
     override fun setCompassCredentials(credentials: CompassUserCredentials) {
+
+        if (getCompassCredentials() == credentials) {
+            return
+        }
 
         prefs.editSync {
             putString(PrefKey.CompassDomain.name, credentials.domain)

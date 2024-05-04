@@ -5,6 +5,7 @@ import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.kotlinxSerialization)
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.sqldelight)
@@ -17,6 +18,7 @@ kotlin {
     @OptIn(ExperimentalKotlinGradlePluginApi::class)
     compilerOptions {
         freeCompilerArgs.add("-Xexpect-actual-classes")
+        freeCompilerArgs.add("-Xcontext-receivers")
     }
 
     androidTarget {
@@ -43,12 +45,14 @@ kotlin {
             implementation(libs.kotlass)
             implementation(libs.htmltext)
             implementation(libs.kotlinx.datetime)
-            api(libs.compose.webview.multiplatform)
+            implementation(libs.kotlinx.coroutines.swing)
             implementation(libs.sqldelight.coroutines)
             implementation(libs.trulysharedprefs)
             implementation(libs.material3.windowSizeClassMultiplatform)
-            implementation(libs.decompose)
-            implementation(libs.decompose.compose)
+            implementation(libs.voyager.navigator)
+            implementation(libs.voyager.tabNavigator)
+            implementation(libs.voyager.screenModel)
+            implementation(libs.voyager.transitions)
         }
 
         androidMain.dependencies {
