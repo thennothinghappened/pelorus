@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import cafe.adriel.voyager.navigator.CurrentScreen
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.ScaleTransition
 import cafe.adriel.voyager.transitions.SlideTransition
@@ -13,6 +12,7 @@ import org.orca.pelorus.data.di.WithAuthScreenModel
 import org.orca.pelorus.data.di.WithCompassApiClient
 import org.orca.pelorus.screenmodel.AuthScreenModel
 import org.orca.pelorus.screens.AuthenticatedScreen
+import org.orca.pelorus.screens.login.LoginLoadingScreen
 import org.orca.pelorus.screens.login.LoginScreen
 import org.orca.pelorus.screens.root.RootScreen
 import org.orca.pelorus.ui.theme.PelorusAppTheme
@@ -47,7 +47,15 @@ fun App() {
                     } else {
 
                         if (navigator.lastItem is AuthenticatedScreen) {
-                            navigator.push(LoginScreen)
+
+                            navigator.push(
+                                if (authState is AuthScreenModel.State.Loading) {
+                                    LoginLoadingScreen
+                                } else {
+                                    LoginScreen
+                                }
+                            )
+                            
                             return@WithAuthScreenModel
                         }
 
