@@ -1,9 +1,9 @@
 package org.orca.pelorus.data.repository.userdetails
 
-import app.cash.sqldelight.coroutines.*
+import app.cash.sqldelight.coroutines.asFlow
+import app.cash.sqldelight.coroutines.mapToOneNotNull
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.withContext
 import org.orca.kotlass.client.CompassApiResult
 import org.orca.kotlass.client.requests.IUsersClient
@@ -36,8 +36,7 @@ class UserDetailsRepository(
             is CompassApiResult.Success -> response.data.toUserDetails()
         }
 
-        localQueries.clear()
-        add(userDetails)
+        set(userDetails)
 
         return ApiResponse.Success(Unit)
 
@@ -46,7 +45,7 @@ class UserDetailsRepository(
     /**
      * Add a set of user details to the table.
      */
-    private fun add(userDetails: UserDetails) {
+    private fun set(userDetails: UserDetails) {
         localQueries.insert(
             userDetails.id,
             userDetails.firstName,
