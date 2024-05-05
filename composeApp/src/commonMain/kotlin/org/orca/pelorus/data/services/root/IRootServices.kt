@@ -1,6 +1,7 @@
 package org.orca.pelorus.data.services.root
 
 import androidx.compose.runtime.Composable
+import kotlinx.coroutines.CoroutineScope
 import org.orca.kotlass.client.CompassUserCredentials
 import org.orca.pelorus.cache.Cache
 import org.orca.pelorus.data.prefs.IMutablePrefs
@@ -34,6 +35,11 @@ interface IRootServices {
      * Shared screen model for authenticating and auth status.
      */
     val authScreenModel: AuthScreenModel
+
+    /**
+     * Scope to use for running coroutines in the data layer.
+     */
+    val dataCoroutineScope: CoroutineScope
 
     /**
      * Get a remembered instance of authed services bound to the given credentials.

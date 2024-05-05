@@ -5,13 +5,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.orca.kotlass.client.CompassApiResult
 import org.orca.kotlass.client.requests.IUsersClient
-import org.orca.kotlass.data.user.User
+import org.orca.kotlass.data.user.User as KotlassUser
 import org.orca.pelorus.cache.Cache
 import org.orca.pelorus.cache.Staff
+import org.orca.pelorus.cache.UserDetails
 import org.orca.pelorus.data.repository.ApiResponse
 
 class StaffRepository(
     cache: Cache,
+    private val currentUserId: Int,
     private val remoteClient: IUsersClient,
     private val ioContext: CoroutineDispatcher = Dispatchers.IO
 ) : IStaffRepository {
@@ -22,11 +24,21 @@ class StaffRepository(
     private val localQueries = cache.staffQueries
 
     override suspend fun find(id: Int): Staff? {
-        return localQueries.selectById(id.toLong()).executeAsOneOrNull()
+        return localQueries
+            .selectById(id.toLong())
+            .executeAsOneOrNull()
     }
 
     override suspend fun find(codeName: String): Staff? {
-        return localQueries.selectByCodeName(codeName).executeAsOneOrNull()
+        return localQueries
+            .selectByCodeName(codeName)
+            .executeAsOneOrNull()
+    }
+
+    override suspend fun getCurrentUser(): Staff {
+        return localQueries
+            .selectById(currentUserId.toLong())
+            .executeAsOne()
     }
 
     override suspend fun refresh(): ApiResponse<Unit> {
@@ -51,20 +63,20 @@ class StaffRepository(
     private fun add(staff: Staff) {
         localQueries.insert(
             staff.id,
-            staff.code_name,
-            staff.first_name,
-            staff.last_name
+            staff.codeName,
+            staff.firstName,
+            staff.lastName
         )
     }
 
 }
 
 /**
- * Convert the Compass User to a staff member.
+ * Convert the Compass User to our user type.
  */
-private fun User.toStaff(): Staff = Staff(
+private fun KotlassUser.toStaff(): Staff = Staff(
     id = id.toLong(),
-    code_name = codeName,
-    first_name = firstName,
-    last_name = lastName
+    codeName = codeName,
+    firstName = firstName,
+    lastName = lastName
 )

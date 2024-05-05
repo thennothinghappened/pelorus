@@ -2,9 +2,9 @@
 -- Cached list of staff for names in place of codes!
 CREATE TABLE Staff (
     id INTEGER NOT NULL PRIMARY KEY,
-    code_name TEXT NOT NULL,
-    first_name TEXT NOT NULL,
-    last_name TEXT NOT NULL
+    codeName TEXT NOT NULL,
+    firstName TEXT NOT NULL,
+    lastName TEXT NOT NULL
 );
 
 -- Get a staff member by their ID.
@@ -13,7 +13,7 @@ SELECT *
 FROM Staff
 WHERE id = ?;
 
--- Get all staff.
+-- Get all staff members.
 getAll:
 SELECT *
 FROM Staff;
@@ -22,13 +22,13 @@ FROM Staff;
 selectByCodeName:
 SELECT *
 FROM Staff
-WHERE code_name = ?;
+WHERE codeName = ?;
 
 -- Add a staff member to the cache
 insert:
 INSERT OR REPLACE INTO Staff
 VALUES (?, ?, ?, ?);
 
--- Clear the list of staff.
+-- Clear the list of staff member.
 clear:
 DELETE FROM Staff;

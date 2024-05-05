@@ -6,7 +6,6 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.runtime.Composable
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.Tab
-import org.orca.pelorus.screens.home.HomeScreen
 
 /**
  * Reusable Tab navigation item for a given tab.

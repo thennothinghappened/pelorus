@@ -6,22 +6,15 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import org.orca.kotlass.client.CompassApiResult
-import org.orca.kotlass.data.user.UserDetails
 import org.orca.pelorus.data.di.authedServices
 import org.orca.pelorus.screens.AuthenticatedScreen
+import org.orca.pelorus.ui.utils.collectValue
 
-object HomeScreen : AuthenticatedScreen, Tab {
+object HomeTab : AuthenticatedScreen, Tab {
 
     override val options: TabOptions
         @Composable
@@ -42,33 +35,19 @@ object HomeScreen : AuthenticatedScreen, Tab {
     @Composable
     override fun Content() {
 
+        val screenModel = authedServices.homeScreenModel()
+        val state = screenModel.state.collectValue()
+
         Column {
 
-            val client = authedServices.client
-            var response: CompassApiResult<UserDetails>? by remember { mutableStateOf(null) }
+            when (state) {
 
-            LaunchedEffect(Unit) {
-                withContext(Dispatchers.IO) {
-                    response = client.getMyUserDetails()
-                }
-            }
-
-            when (val r = response) {
-
-                null -> {
+                is HomeScreenModel.State.Loading -> {
                     CircularProgressIndicator()
                 }
 
-                is CompassApiResult.Failure -> {
-                    Text("Failed to fetch user details:\n${r.error}")
-                }
-
-                is CompassApiResult.Success -> {
-
-                    val details = r.data
-
-                    Text("Welcome to Compass, ${details.firstName}!")
-
+                is HomeScreenModel.State.Success -> {
+                    Text(state.currentUser.toString())
                 }
 
             }
@@ -77,6 +56,6 @@ object HomeScreen : AuthenticatedScreen, Tab {
 
     }
 
-    private fun readResolve(): Any = HomeScreen
+    private fun readResolve(): Any = HomeTab
 
 }

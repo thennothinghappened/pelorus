@@ -3,6 +3,9 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.application
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -25,7 +28,8 @@ fun main() {
     val preferences = Preferences.userNodeForPackage(PrefsHook::class.java)
     val sharedPrefs = SharedPrefsFactory(preferences).createSharedPrefs()
     val cache = createCache(DriverFactory())
-    val rootServices = RootServices(cache, sharedPrefs)
+    val dataCoroutineScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
+    val rootServices = RootServices(cache, dataCoroutineScope, sharedPrefs)
 
     application {
         Window(

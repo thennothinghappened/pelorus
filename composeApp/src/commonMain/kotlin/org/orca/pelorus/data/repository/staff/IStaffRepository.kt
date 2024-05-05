@@ -9,17 +9,22 @@ import org.orca.pelorus.data.repository.ApiResponse
 interface IStaffRepository {
 
     /**
-     * Find a staff by their ID.
+     * Find a staff member by their ID.
      */
     suspend fun find(id: Int): Staff?
 
     /**
-     * Find a staff by their code name.
+     * Find a staff member by their code name.
      */
     suspend fun find(codeName: String): Staff?
 
     /**
-     * Refresh the list of staff from the remote.
+     * Get the current logged-in user.
+     */
+    suspend fun getCurrentUser(): Staff
+
+    /**
+     * Refresh the list of staff members from the remote.
      */
     suspend fun refresh(): ApiResponse<Unit>
 

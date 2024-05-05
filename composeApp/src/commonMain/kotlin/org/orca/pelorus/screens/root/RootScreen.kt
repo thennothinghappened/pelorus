@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import cafe.adriel.voyager.navigator.tab.CurrentTab
 import cafe.adriel.voyager.navigator.tab.TabNavigator
 import org.orca.pelorus.screens.AuthenticatedScreen
-import org.orca.pelorus.screens.home.HomeScreen
+import org.orca.pelorus.screens.home.HomeTab
 import org.orca.pelorus.screens.settings.SettingsScreen
 import org.orca.pelorus.ui.common.TabNavigationItem
 
@@ -18,13 +18,13 @@ object RootScreen : AuthenticatedScreen {
     @Composable
     override fun Content() {
 
-        TabNavigator(HomeScreen) {
+        TabNavigator(HomeTab) {
 
             Scaffold(
                 bottomBar = {
                     NavigationBar {
                         TabNavigationItem(SettingsScreen)
-                        TabNavigationItem(HomeScreen)
+                        TabNavigationItem(HomeTab)
                     }
                 }
             ) {

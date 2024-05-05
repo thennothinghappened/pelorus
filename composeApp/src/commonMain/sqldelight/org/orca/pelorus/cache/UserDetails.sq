@@ -1,0 +1,27 @@
+
+-- Cached details for users. This generally just contains the details of the current user.
+CREATE TABLE UserDetails (
+    id INTEGER NOT NULL PRIMARY KEY,
+    firstName TEXT NOT NULL,
+    lastName TEXT NOT NULL
+);
+
+-- Get a user by their ID.
+selectById:
+SELECT *
+FROM UserDetails
+WHERE id = ?;
+
+-- Get all users.
+getAll:
+SELECT *
+FROM UserDetails;
+
+-- Add a user to the cache
+insert:
+INSERT OR REPLACE INTO UserDetails
+VALUES (?, ?, ?);
+
+-- Clear the list of users' details.
+clear:
+DELETE FROM UserDetails;

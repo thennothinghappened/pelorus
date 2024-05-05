@@ -10,26 +10,19 @@ import org.orca.kotlass.client.CompassApiClient
 import org.orca.kotlass.client.CompassApiError
 import org.orca.kotlass.client.CompassApiResult
 import org.orca.kotlass.client.CompassUserCredentials
-import org.orca.pelorus.data.prefs.usecases.GetSavedCredentialsUseCase
-import org.orca.pelorus.data.prefs.usecases.SaveCredentialsUseCase
+import org.orca.pelorus.data.prefs.IMutablePrefs
 import org.orca.pelorus.screenmodel.AuthScreenModel.State
 
 /**
  * Shared ScreenModel for Compass authentication state.
  */
 class AuthScreenModel(
-    private val getCredentials: GetSavedCredentialsUseCase,
-    private val saveCredentials: SaveCredentialsUseCase
+    private val mutablePrefs: IMutablePrefs
 ) : StateScreenModel<State>(State.NotAuthenticated) {
 
     init {
-
-        val savedCredentials = getCredentials()
-
-        if (savedCredentials != null) {
-            tryLogin(savedCredentials)
-        }
-
+        mutablePrefs.getCompassCredentials()
+            ?.let(::tryLogin)
     }
 
     /**
@@ -52,7 +45,7 @@ class AuthScreenModel(
                 is CompassApiResult.Failure -> mutableState.update { State.FailedAuthenticate(result.error) }
 
                 is CompassApiResult.Success -> {
-                    saveCredentials(credentials)
+                    mutablePrefs.setCompassCredentials(credentials)
                     mutableState.update { State.Success(credentials) }
                 }
 
@@ -66,7 +59,7 @@ class AuthScreenModel(
      * Log out - clear credentials.
      */
     fun logout() {
-        saveCredentials(null)
+        mutablePrefs.clearCompassCredentials()
         mutableState.update { State.NotAuthenticated }
     }
 

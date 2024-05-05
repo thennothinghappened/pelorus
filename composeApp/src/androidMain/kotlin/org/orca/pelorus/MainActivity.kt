@@ -5,6 +5,9 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.ui.platform.LocalContext
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import org.orca.pelorus.data.repository.cache.DriverFactory
 import org.orca.pelorus.data.repository.cache.createCache
 import org.orca.pelorus.data.di.WithRootServices
@@ -24,10 +27,12 @@ class MainActivity : ComponentActivity() {
 
         val sharedPreferences = getSharedPreferences(PREFERENCES_NAME, MODE_PRIVATE)
         val sharedPrefs = SharedPrefsFactory(sharedPreferences).createSharedPrefs()
-        val cache = createCache(DriverFactory(LocalContext.current))
-        val rootServices = RootServices(cache, sharedPrefs)
+        val dataCoroutineScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
 
         setContent {
+            val cache = createCache(DriverFactory(LocalContext.current))
+            val rootServices = RootServices(cache, dataCoroutineScope, sharedPrefs)
+
             WithRootServices(rootServices) {
                 App()
             }
