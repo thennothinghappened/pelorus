@@ -33,18 +33,3 @@ interface IMutablePrefs : IPrefs {
     fun clearCompassCredentials()
 
 }
-
-/**
- * Provided [IMutablePrefs] instance for the application, that can modify the preferences.
- * This is only needed in cases where we actually need to modify them.
- */
-val LocalMutablePrefs = staticCompositionLocalOf<IMutablePrefs> {
-    error("No MutablePrefs provided!!")
-}
-
-/**
- * Provided [IPrefs] instance for the application.
- */
-val LocalPrefs = staticCompositionLocalOf<IPrefs> {
-    error("No MutablePrefs provided!!")
-}

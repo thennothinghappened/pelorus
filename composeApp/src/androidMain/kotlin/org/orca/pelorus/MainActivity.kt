@@ -4,7 +4,11 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.ui.platform.LocalContext
+import org.orca.pelorus.data.repository.cache.DriverFactory
+import org.orca.pelorus.data.repository.cache.createCache
 import org.orca.pelorus.data.di.WithRootServices
+import org.orca.pelorus.data.services.root.RootServices
 import org.orca.trulysharedprefs.SharedPrefsFactory
 
 /**
@@ -20,11 +24,11 @@ class MainActivity : ComponentActivity() {
 
         val sharedPreferences = getSharedPreferences(PREFERENCES_NAME, MODE_PRIVATE)
         val sharedPrefs = SharedPrefsFactory(sharedPreferences).createSharedPrefs()
+        val cache = createCache(DriverFactory(LocalContext.current))
+        val rootServices = RootServices(cache, sharedPrefs)
 
         setContent {
-            WithRootServices(
-                sharedPrefs = sharedPrefs
-            ) {
+            WithRootServices(rootServices) {
                 App()
             }
         }

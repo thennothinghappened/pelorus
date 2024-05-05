@@ -7,7 +7,10 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.orca.pelorus.App
+import org.orca.pelorus.data.repository.cache.DriverFactory
+import org.orca.pelorus.data.repository.cache.createCache
 import org.orca.pelorus.data.di.WithRootServices
+import org.orca.pelorus.data.services.root.RootServices
 import org.orca.trulysharedprefs.SharedPrefsFactory
 import pelorus.composeapp.generated.resources.Res
 import pelorus.composeapp.generated.resources.app_name
@@ -21,6 +24,8 @@ fun main() {
 
     val preferences = Preferences.userNodeForPackage(PrefsHook::class.java)
     val sharedPrefs = SharedPrefsFactory(preferences).createSharedPrefs()
+    val cache = createCache(DriverFactory())
+    val rootServices = RootServices(cache, sharedPrefs)
 
     application {
         Window(
@@ -32,11 +37,10 @@ fun main() {
             ),
             icon = painterResource(Res.drawable.pelorus_logo)
         ) {
-            WithRootServices(
-                sharedPrefs = sharedPrefs
-            ) {
+            WithRootServices(rootServices) {
                 App()
             }
         }
     }
+
 }

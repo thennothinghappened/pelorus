@@ -16,10 +16,9 @@ import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.orca.kotlass.client.CompassApiClient
 import org.orca.kotlass.client.CompassApiResult
 import org.orca.kotlass.data.user.UserDetails
-import org.orca.pelorus.data.di.LocalCompassApiClient
+import org.orca.pelorus.data.di.authedServices
 import org.orca.pelorus.screens.AuthenticatedScreen
 
 object HomeScreen : AuthenticatedScreen, Tab {
@@ -43,10 +42,9 @@ object HomeScreen : AuthenticatedScreen, Tab {
     @Composable
     override fun Content() {
 
-        val client = LocalCompassApiClient.current
-
         Column {
 
+            val client = authedServices.client
             var response: CompassApiResult<UserDetails>? by remember { mutableStateOf(null) }
 
             LaunchedEffect(Unit) {

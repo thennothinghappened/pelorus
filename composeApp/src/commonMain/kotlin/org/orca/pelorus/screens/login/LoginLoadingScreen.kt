@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import org.orca.pelorus.data.di.LocalAuthenticator
+import org.orca.pelorus.data.di.rootServices
 import org.orca.pelorus.screenmodel.AuthScreenModel
 import org.orca.pelorus.ui.utils.collectValue
 
@@ -24,7 +24,7 @@ object LoginLoadingScreen : Screen {
     override fun Content() {
 
         val navigator = LocalNavigator.currentOrThrow
-        val authModel = LocalAuthenticator.current
+        val authModel = rootServices.authScreenModel
         val state = authModel.state.collectValue()
 
         if (state is AuthScreenModel.State.FailedAuthenticate) {

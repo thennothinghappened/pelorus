@@ -1,4 +1,4 @@
-package org.orca.pelorus.data.db
+package org.orca.pelorus.data.repository.cache
 
 import app.cash.sqldelight.db.SqlDriver
 import org.orca.pelorus.cache.Cache

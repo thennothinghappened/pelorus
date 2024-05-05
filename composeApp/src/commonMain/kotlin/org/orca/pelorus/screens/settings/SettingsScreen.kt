@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
-import org.orca.pelorus.data.di.LocalAuthenticator
+import org.orca.pelorus.data.di.rootServices
 import org.orca.pelorus.screens.AuthenticatedScreen
 import org.orca.pelorus.ui.theme.sizing
 
@@ -43,7 +43,7 @@ object SettingsScreen : AuthenticatedScreen, Tab {
     @Composable
     override fun Content() {
 
-        val authModel = LocalAuthenticator.current
+        val authModel = rootServices.authScreenModel
         val scrollState = rememberScrollState()
 
         Column(

@@ -1,4 +1,4 @@
-package org.orca.pelorus.data.db
+package org.orca.pelorus.data.repository.cache
 
 import android.content.Context
 import app.cash.sqldelight.db.SqlDriver

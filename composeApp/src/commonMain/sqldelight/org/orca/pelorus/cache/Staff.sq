@@ -28,3 +28,7 @@ WHERE code_name = ?;
 insert:
 INSERT OR REPLACE INTO Staff
 VALUES (?, ?, ?, ?);
+
+-- Clear the list of staff.
+clear:
+DELETE FROM Staff;
