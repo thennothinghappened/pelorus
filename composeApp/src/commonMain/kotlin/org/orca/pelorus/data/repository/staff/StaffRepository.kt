@@ -5,15 +5,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.orca.kotlass.client.CompassApiResult
 import org.orca.kotlass.client.requests.IUsersClient
-import org.orca.kotlass.data.user.User as KotlassUser
 import org.orca.pelorus.cache.Cache
 import org.orca.pelorus.cache.Staff
-import org.orca.pelorus.cache.UserDetails
-import org.orca.pelorus.data.repository.ApiResponse
+import org.orca.pelorus.data.repository.Response
+import org.orca.pelorus.data.repository.asResponse
+import org.orca.kotlass.data.user.User as NetworkUser
 
 class StaffRepository(
     cache: Cache,
-    private val currentUserId: Int,
     private val remoteClient: IUsersClient,
     private val ioContext: CoroutineDispatcher = Dispatchers.IO
 ) : IStaffRepository {
@@ -23,28 +22,22 @@ class StaffRepository(
      */
     private val localQueries = cache.staffQueries
 
-    override suspend fun find(id: Int): Staff? {
+    override fun find(id: Int): Staff? {
         return localQueries
             .selectById(id.toLong())
             .executeAsOneOrNull()
     }
 
-    override suspend fun find(codeName: String): Staff? {
+    override fun find(codeName: String): Staff? {
         return localQueries
             .selectByCodeName(codeName)
             .executeAsOneOrNull()
     }
 
-    override suspend fun getCurrentUser(): Staff {
-        return localQueries
-            .selectById(currentUserId.toLong())
-            .executeAsOne()
-    }
-
-    override suspend fun refresh(): ApiResponse<Unit> {
+    override suspend fun refresh(): Response<Unit> {
 
         val users = when(val response = withContext(ioContext) { remoteClient.getAllStaff() }) {
-            is CompassApiResult.Failure -> return ApiResponse.Failure(response.error)
+            is CompassApiResult.Failure -> return response.error.asResponse()
             is CompassApiResult.Success -> response.data
         }
 
@@ -53,7 +46,7 @@ class StaffRepository(
         users.map { it.toStaff() }
             .forEach(::add)
 
-        return ApiResponse.Success(Unit)
+        return Response.Success(Unit)
 
     }
 
@@ -74,7 +67,7 @@ class StaffRepository(
 /**
  * Convert the Compass User to our user type.
  */
-private fun KotlassUser.toStaff(): Staff = Staff(
+private fun NetworkUser.toStaff(): Staff = Staff(
     id = id.toLong(),
     codeName = codeName,
     firstName = firstName,

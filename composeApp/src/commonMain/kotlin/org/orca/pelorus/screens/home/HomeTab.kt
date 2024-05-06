@@ -50,6 +50,10 @@ object HomeTab : AuthenticatedScreen, Tab {
                     Text(state.currentUser.toString())
                 }
 
+                is HomeScreenModel.State.Failure -> {
+                    Text("Failed to load user details: ${state.error}")
+                }
+
             }
 
         }
