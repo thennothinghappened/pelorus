@@ -37,13 +37,14 @@ class StaffRepository(
     override suspend fun refresh(): Response<Unit> {
 
         val users = when(val response = withContext(ioContext) { remoteClient.getAllStaff() }) {
-            is CompassApiResult.Failure -> return response.error.asResponse()
+            is CompassApiResult.Failure -> return response.asResponse()
             is CompassApiResult.Success -> response.data
         }
 
         localQueries.clear()
 
-        users.map { it.toStaff() }
+        users
+            .map { it.toStaff() }
             .forEach(::add)
 
         return Response.Success(Unit)

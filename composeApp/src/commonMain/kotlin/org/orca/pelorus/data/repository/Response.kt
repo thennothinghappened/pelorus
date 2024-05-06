@@ -1,6 +1,7 @@
 package org.orca.pelorus.data.repository
 
 import org.orca.kotlass.client.CompassApiError
+import org.orca.kotlass.client.CompassApiResult
 
 /**
  * A response from a repository.
@@ -38,9 +39,19 @@ sealed interface RepositoryError {
 
 }
 
+fun <T> CompassApiResult<T>.asResponse(): Response<T> = when (this) {
+    is CompassApiResult.Failure -> this.asResponse()
+    is CompassApiResult.Success -> this.asResponse()
+}
+
 /**
- * Convert a CompassApiError from Kotlass to our Response form.
+ * Convert a failed API result to our form.
  */
-fun <T> CompassApiError.asResponse() = Response.Failure<T>(
-    RepositoryError.RemoteClientError(this)
+fun <T, R> CompassApiResult.Failure<T>.asResponse() = Response.Failure<R>(
+    RepositoryError.RemoteClientError(this.error)
 )
+
+/**
+ * Convert a successful API result to our form.
+ */
+fun <T> CompassApiResult.Success<T>.asResponse() = Response.Success(this.data)

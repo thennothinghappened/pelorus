@@ -13,7 +13,7 @@ interface IUserDetailsRepository {
     /**
      * Flow representing current logged-in user.
      */
-    val userDetails: Flow<Response<UserDetails>>
+    val userDetails: Flow<UserDetails>
 
     /**
      * Refresh the user details local cache.

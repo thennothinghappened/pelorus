@@ -1,16 +1,14 @@
 package org.orca.pelorus.data.repository.userdetails
 
 import app.cash.sqldelight.coroutines.asFlow
-import app.cash.sqldelight.coroutines.mapToOneOrNull
+import app.cash.sqldelight.coroutines.mapToOneNotNull
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import org.orca.kotlass.client.CompassApiResult
 import org.orca.kotlass.client.requests.IUsersClient
 import org.orca.pelorus.cache.Cache
 import org.orca.pelorus.cache.UserDetails
-import org.orca.pelorus.data.repository.RepositoryError
 import org.orca.pelorus.data.repository.Response
 import org.orca.pelorus.data.repository.asResponse
 import org.orca.kotlass.data.user.UserDetails as NetworkUserDetails
@@ -30,19 +28,12 @@ class UserDetailsRepository(
     override val userDetails = localQueries
         .selectById(currentUserId.toLong())
         .asFlow()
-        .mapToOneOrNull(ioContext)
-        .map {
-            if (it == null) {
-                Response.Failure(RepositoryError.NotFoundError)
-            } else {
-                Response.Success(it)
-            }
-        }
+        .mapToOneNotNull(ioContext)
 
     override suspend fun refresh(): Response<Unit> {
 
         val userDetails = when (val response = withContext(ioContext) { remoteClient.getUserDetails(currentUserId) }) {
-            is CompassApiResult.Failure -> return response.error.asResponse()
+            is CompassApiResult.Failure -> return response.asResponse()
             is CompassApiResult.Success -> response.data.toUserDetails()
         }
 
