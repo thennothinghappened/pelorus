@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
+import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -34,7 +35,7 @@ object ManualLoginScreen : Screen {
 
         val navigator = LocalNavigator.currentOrThrow
         val authModel = rootServices.authScreenModel
-        val screenModel = ManualLoginScreenModel.getForScreen()
+        val screenModel = rememberScreenModel { ManualLoginScreenModel() }
 
         val authState = authModel.state.collectValue()
         val state = screenModel.state.collectValue()

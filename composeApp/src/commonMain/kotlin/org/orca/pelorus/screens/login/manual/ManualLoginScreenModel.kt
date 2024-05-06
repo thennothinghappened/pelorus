@@ -9,7 +9,6 @@ import cafe.adriel.voyager.core.screen.Screen
 import kotlinx.coroutines.flow.update
 import org.orca.kotlass.client.CompassUserCredentials
 import org.orca.pelorus.screens.login.manual.ManualLoginScreenModel.*
-import org.orca.pelorus.screenmodel.DependentScreenModel
 
 /**
  * Screen model for the manual login page.
@@ -57,27 +56,5 @@ class ManualLoginScreenModel : StateScreenModel<FieldState>(FieldState()) {
         val userId: String = "",
         val cookie: String = ""
     )
-
-    companion object : DependentScreenModel<ManualLoginScreenModel>() {
-
-        @Composable
-        override fun instantiate(): ManualLoginScreenModel {
-            return ManualLoginScreenModel()
-        }
-
-        context(Screen)
-        @Composable
-        override fun getForScreen(): ManualLoginScreenModel {
-            val screenModel = instantiate()
-            return rememberScreenModel { screenModel }
-        }
-
-        @Composable
-        override fun getForNavigator(): ManualLoginScreenModel {
-            val screenModel = instantiate()
-            return navigator.rememberNavigatorScreenModel { screenModel }
-        }
-
-    }
 
 }
