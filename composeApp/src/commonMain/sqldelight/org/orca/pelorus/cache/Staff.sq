@@ -1,0 +1,34 @@
+
+-- Cached list of staff for names in place of codes!
+CREATE TABLE Staff (
+    id INTEGER NOT NULL PRIMARY KEY,
+    codeName TEXT NOT NULL,
+    firstName TEXT NOT NULL,
+    lastName TEXT NOT NULL
+);
+
+-- Get a staff member by their ID.
+selectById:
+SELECT *
+FROM Staff
+WHERE id = ?;
+
+-- Get all staff members.
+getAll:
+SELECT *
+FROM Staff;
+
+-- Get a staff member by their `code_name`
+selectByCodeName:
+SELECT *
+FROM Staff
+WHERE codeName = ?;
+
+-- Add a staff member to the cache
+insert:
+INSERT OR REPLACE INTO Staff
+VALUES (?, ?, ?, ?);
+
+-- Clear the list of staff member.
+clear:
+DELETE FROM Staff;

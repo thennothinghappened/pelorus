@@ -1,65 +1,87 @@
+#
+# Note to future self:
+# Looking at this toml file makes me sad. Don't look at it. This is a cursed way of doing
+# library versioning :(((
+#
+
 [versions]
-compose-plugin = "1.5.11"
-compose-compiler = "1.5.5"
 
-junit = "4.13.2"
-kotlin = "1.9.21"
+#############################
+###    Plugin Versions    ###
+#############################
 
-# Note: AGP 8.1.0-rc01 is used here due to
-# https://youtrack.jetbrains.com/issue/IDEA-316608
-# AGP >=8.1.0 is needed for updating libs, but is not supported by Intellij.
-agp = "8.1.0-rc01"
+### Compose Multiplatform ###
+compose = "1.6.2"
+compose-compiler = "1.5.11"
 
-android-minSdk = "24"
-android-compileSdk = "34"
-android-targetSdk = "34"
+### Kotlin ###
+kotlin = "1.9.23"
 
-androix-compose = "1.5.4"
-androidx-activityCompose = "1.8.1"
-androidx-core-ktx = "1.12.0"
+### Gradle ###
+# Latest supported by Intellij IDEA 2024.2 is AGP 8.2.0
+# noinspection GradleDependency
+android-gradle-plugin = "8.2.0"
+
+#############################
+###   Library Versions    ###
+#############################
+
+### Android ###
+androidx-compose = "1.6.7"
+androidx-activityCompose = "1.9.0"
+
+# Extended Android metadata "stuff" - gives us the AppCompat adaptive themes.
 androidx-appcompat = "1.6.1"
-androidx-material3 = "1.1.2"
-androidx-constraintlayout = "2.1.4"
-androidx-test-junit = "1.1.5"
-androidx-espresso-core = "3.5.1"
 
-kotlass = "2.0.0-SNAPSHOT-5"
+### Backend ###
+
+# Core API for talking to Compass
+kotlass = "2.0.0-SNAPSHOT-9"
+
+# SQL Database for caching
+sqldelight = "2.0.2"
+
+### Util ###
+
+# Kotlin's own DateTime library for formatting dates
+kotlinx-datetime = "0.5.0"
+
+### Compose ###
+
+# Platform-indepedenent Shared Preferences
 trulysharedprefs = "1.1.0"
 
-kotlinx-datetime = "0.4.1"
-sqldelight = "2.0.0"
+### Compose ###
 
+# HTML rendering
 htmltext = "1.2.2"
-composeWebviewMultiplatform = "1.7.0"
-koin = "3.5.0"
-koin-compose = "1.1.0"
-voyager = "1.0.0"
-material3-windowSizeClassMultiplatform = "0.3.1"
 
-lyricist = "1.6.2"
-ksp = "1.9.21-1.0.15"
+# Unofficial Material 3 window size class port until added to Compose Multiplatform.
+material3-windowSizeClassMultiplatform = "0.5.0"
+
+# State, navigation and component management
+voyager = "1.0.0"
+
+#############################
+###    Non-Gradle Data    ###
+#############################
+
+# Android SDK targets in Gradle
+android-sdk-minSdk = "24"
+android-sdk-compileSdk = "34"
+android-sdk-targetSdk = "34"
 
 [libraries]
-kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
-kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
-junit = { group = "junit", name = "junit", version.ref = "junit" }
 
-androidx-compose-ui = { module = "androidx.compose.ui:ui", version.ref = "androix-compose" }
-androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "androix-compose" }
-androidx-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "androix-compose" }
-androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidx-core-ktx" }
-androidx-test-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-junit" }
-androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidx-espresso-core" }
+androidx-compose-ui = { module = "androidx.compose.ui:ui", version.ref = "androidx-compose" }
+androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "androidx-compose" }
+androidx-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "androidx-compose" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }
-androidx-material3 = { group = "com.google.android.material3", name = "material3", version.ref = "androidx-material3" }
-androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "androidx-constraintlayout" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
 
-kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
+kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "compose" }
 
-koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
-koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
-koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin-compose" }
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
 
 kotlass = { module = "org.orca.kotlass:shared", version.ref = "kotlass" }
 
@@ -69,21 +91,19 @@ sqldelight-coroutines = { module = "app.cash.sqldelight:coroutines-extensions", 
 
 trulysharedprefs = { module = "org.orca.trulysharedprefs:trulysharedprefs", version.ref = "trulysharedprefs" }
 
-lyricist = { module = "cafe.adriel.lyricist:lyricist", version.ref = "lyricist" }
-lyricist-processor = { module = "cafe.adriel.lyricist:lyricist-processor", version.ref = "lyricist" }
 htmltext = { module = "org.orca.htmltext:common", version.ref = "htmltext" }
-compose-webview-multiplatform = { module = "io.github.kevinnzou:compose-webview-multiplatform", version.ref = "composeWebviewMultiplatform" }
 material3-windowSizeClassMultiplatform = { module = "dev.chrisbanes.material3:material3-window-size-class-multiplatform", version.ref = "material3-windowSizeClassMultiplatform" }
 
 voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
+voyager-screenModel = { module = "cafe.adriel.voyager:voyager-screenmodel", version.ref = "voyager" }
 voyager-tabNavigator = { module = "cafe.adriel.voyager:voyager-tab-navigator", version.ref = "voyager" }
 voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyager" }
-voyager-koin = { module = "cafe.adriel.voyager:voyager-koin", version.ref = "voyager" }
 
 [plugins]
-jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "compose-plugin" }
-androidApplication = { id = "com.android.application", version.ref = "agp" }
-androidLibrary = { id = "com.android.library", version.ref = "agp" }
+
+jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "compose" }
+androidApplication = { id = "com.android.application", version.ref = "android-gradle-plugin" }
+androidLibrary = { id = "com.android.library", version.ref = "android-gradle-plugin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlinxSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

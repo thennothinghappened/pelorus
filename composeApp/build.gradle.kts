@@ -1,19 +1,26 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.compose.ExperimentalComposeLibrary
 import org.jetbrains.compose.internal.utils.getLocalProperty
 import org.jetbrains.kotlin.backend.common.push
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.kotlinxSerialization)
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.sqldelight)
-    alias(libs.plugins.ksp)
 }
 
 version = "2.0.0-SNAPSHOT-1"
 
 kotlin {
+
+    @OptIn(ExperimentalKotlinGradlePluginApi::class)
+    compilerOptions {
+        freeCompilerArgs.add("-Xexpect-actual-classes")
+        freeCompilerArgs.add("-Xcontext-receivers")
+    }
+
     androidTarget {
         compilations.all {
             kotlinOptions {
@@ -28,28 +35,24 @@ kotlin {
         val desktopMain by getting
 
         commonMain.dependencies {
+
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)
             implementation(compose.animation)
-            @OptIn(ExperimentalComposeLibrary::class)
             implementation(compose.components.resources)
+
             implementation(libs.kotlass)
             implementation(libs.htmltext)
             implementation(libs.kotlinx.datetime)
-            api(libs.compose.webview.multiplatform)
-            implementation(libs.lyricist)
-            implementation(libs.lyricist.processor)
+            implementation(libs.kotlinx.coroutines.swing)
             implementation(libs.sqldelight.coroutines)
             implementation(libs.trulysharedprefs)
-            implementation(libs.koin.core)
-            implementation(libs.koin.android)
-            implementation(libs.koin.compose)
+            implementation(libs.material3.windowSizeClassMultiplatform)
             implementation(libs.voyager.navigator)
             implementation(libs.voyager.tabNavigator)
+            implementation(libs.voyager.screenModel)
             implementation(libs.voyager.transitions)
-            implementation(libs.voyager.koin)
-            implementation(libs.material3.windowSizeClassMultiplatform)
         }
 
         androidMain.dependencies {
@@ -73,7 +76,7 @@ object Proguard {
 
 android {
     namespace = "org.orca.pelorus"
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
+    compileSdk = libs.versions.android.sdk.compileSdk.get().toInt()
 
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     sourceSets["main"].res.srcDirs("src/androidMain/res")
@@ -81,8 +84,8 @@ android {
 
     defaultConfig {
         applicationId = "org.orca.pelorus"
-        minSdk = libs.versions.android.minSdk.get().toInt()
-        targetSdk = libs.versions.android.targetSdk.get().toInt()
+        minSdk = libs.versions.android.sdk.minSdk.get().toInt()
+        targetSdk = libs.versions.android.sdk.targetSdk.get().toInt()
         versionCode = 31
         versionName = version.toString()
     }
@@ -158,15 +161,6 @@ compose.desktop {
         buildTypes.release.proguard {
             configurationFiles.from(Proguard.COMMON_PATH)
         }
-
-        // https://github.com/KevinnZou/compose-webview-multiplatform/blob/main/README.desktop.md#flags
-        jvmArgs("--add-opens", "java.desktop/sun.awt=ALL-UNNAMED")
-        jvmArgs("--add-opens", "java.desktop/java.awt.peer=ALL-UNNAMED") // recommended but not necessary
-
-        if (System.getProperty("os.name").contains("Mac")) {
-            jvmArgs("--add-opens", "java.desktop/sun.lwawt=ALL-UNNAMED")
-            jvmArgs("--add-opens", "java.desktop/sun.lwawt.macosx=ALL-UNNAMED")
-        }
     }
 }
 
@@ -176,23 +170,4 @@ sqldelight {
             packageName = "org.orca.pelorus.cache"
         }
     }
-}
-
-ksp {
-    arg("lyricist.generateStringsProperty", "true")
-}
-
-// Workaround for KSP, see https://github.com/adrielcafe/lyricist#multiplatform-setup
-dependencies {
-    add("kspCommonMainMetadata", libs.lyricist.processor)
-}
-
-tasks.withType<org.jetbrains.kotlin.gradle.dsl.KotlinCompile<*>>().all {
-    if(name != "kspCommonMainKotlinMetadata") {
-        dependsOn("kspCommonMainKotlinMetadata")
-    }
-}
-
-kotlin.sourceSets.commonMain {
-    kotlin.srcDir("build/generated/ksp/metadata/commonMain/kotlin")
 }
