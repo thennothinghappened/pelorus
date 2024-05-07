@@ -34,7 +34,7 @@ class UserDetailsRepository(
 
         val userDetails = when (val response = withContext(ioContext) { remoteClient.getUserDetails(currentUserId) }) {
             is CompassApiResult.Failure -> return response.asResponse()
-            is CompassApiResult.Success -> response.data.toUserDetails()
+            is CompassApiResult.Success -> response.data.asUserDetails()
         }
 
         set(userDetails)
@@ -59,7 +59,7 @@ class UserDetailsRepository(
 /**
  * Convert the Compass UserDetails to our user type.
  */
-private fun NetworkUserDetails.toUserDetails(): UserDetails = UserDetails(
+private fun NetworkUserDetails.asUserDetails(): UserDetails = UserDetails(
     id = id.toLong(),
     firstName = firstName,
     lastName = lastName

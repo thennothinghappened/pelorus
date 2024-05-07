@@ -1,10 +1,23 @@
+import kotlinx.datetime.Instant;
 
 -- Cached list of staff for names in place of codes!
 CREATE TABLE Staff (
+
+    --- Unique ID of the staff member.
     id INTEGER NOT NULL PRIMARY KEY,
+
+    --- 3 letter code-name of the staff member used in some places.
     codeName TEXT NOT NULL,
+
+    --- The staff member's first name.
     firstName TEXT NOT NULL,
-    lastName TEXT NOT NULL
+
+    --- The staff member's last name.
+    lastName TEXT NOT NULL,
+
+    --- The time when this entry was added to the cache for cleanup.
+    cachedAt INTEGER AS Instant NOT NULL
+
 );
 
 -- Get a staff member by their ID.
@@ -27,8 +40,8 @@ WHERE codeName = ?;
 -- Add a staff member to the cache
 insert:
 INSERT OR REPLACE INTO Staff
-VALUES (?, ?, ?, ?);
+VALUES (?, ?, ?, ?, ?);
 
--- Clear the list of staff member.
+-- Clear the list of staff members.
 clear:
 DELETE FROM Staff;

@@ -3,12 +3,17 @@ package org.orca.pelorus.data.repository.staff
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.datetime.Clock
+import kotlinx.datetime.DateTimePeriod
+import kotlinx.datetime.Instant
 import org.orca.kotlass.client.CompassApiResult
 import org.orca.kotlass.client.requests.IUsersClient
 import org.orca.pelorus.cache.Cache
 import org.orca.pelorus.cache.Staff
 import org.orca.pelorus.data.repository.Response
 import org.orca.pelorus.data.repository.asResponse
+import org.orca.pelorus.utils.isInFuture
+import org.orca.pelorus.utils.plus
 import org.orca.kotlass.data.user.User as NetworkUser
 
 class StaffRepository(
@@ -22,16 +27,33 @@ class StaffRepository(
      */
     private val localQueries = cache.staffQueries
 
-    override fun find(id: Int): Staff? {
-        return localQueries
-            .selectById(id.toLong())
-            .executeAsOneOrNull()
+    private companion object {
+
+        /**
+         * How long to consider a cached entry valid for.
+         */
+        val cacheValidDuration = DateTimePeriod(minutes = 1)
+
     }
 
-    override fun find(codeName: String): Staff? {
-        return localQueries
-            .selectByCodeName(codeName)
+    override suspend fun find(id: Int): Staff? {
+
+        localQueries
+            .selectById(id.toLong())
             .executeAsOneOrNull()
+            ?.let {
+
+                if ((it.cachedAt + cacheValidDuration).isInFuture()) {
+                    return it
+                }
+
+                refresh()
+                return find(id)
+
+            }
+
+        return null
+
     }
 
     override suspend fun refresh(): Response<Unit> {
@@ -41,26 +63,32 @@ class StaffRepository(
             is CompassApiResult.Success -> response.data
         }
 
-        localQueries.clear()
+        val cachedAt = Clock.System.now()
 
-        users
-            .map { it.toStaff() }
-            .forEach(::add)
-
+        updateLocalCache(users.map { it.asStaff(cachedAt) })
         return Response.Success(Unit)
 
     }
 
     /**
-     * Add a staff member to the list.
+     * Update the local cached list of staff.
      */
-    private fun add(staff: Staff) {
-        localQueries.insert(
-            staff.id,
-            staff.codeName,
-            staff.firstName,
-            staff.lastName
-        )
+    private fun updateLocalCache(staff: List<Staff>) {
+        localQueries.transaction {
+
+            localQueries.clear()
+
+            staff.forEach {
+                localQueries.insert(
+                    it.id,
+                    it.codeName,
+                    it.firstName,
+                    it.lastName,
+                    it.cachedAt
+                )
+            }
+
+        }
     }
 
 }
@@ -68,9 +96,10 @@ class StaffRepository(
 /**
  * Convert the Compass User to our user type.
  */
-private fun NetworkUser.toStaff(): Staff = Staff(
+private fun NetworkUser.asStaff(cachedAt: Instant): Staff = Staff(
     id = id.toLong(),
     codeName = codeName,
     firstName = firstName,
-    lastName = lastName
+    lastName = lastName,
+    cachedAt = cachedAt
 )

@@ -11,12 +11,7 @@ interface IStaffRepository {
     /**
      * Find a staff member by their ID.
      */
-    fun find(id: Int): Staff?
-
-    /**
-     * Find a staff member by their code name.
-     */
-    fun find(codeName: String): Staff?
+    suspend fun find(id: Int): Staff?
 
     /**
      * Refresh the list of staff members from the remote.

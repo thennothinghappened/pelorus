@@ -1,0 +1,67 @@
+import java.time.LocalDate;
+import kotlin.Boolean;
+import kotlinx.datetime.Instant;
+
+--- Table of calendar events for days.
+CREATE TABLE CalendarEvent (
+
+    --- Unique ID of this event, corresponding to an instance ID in Compass.
+    id TEXT NOT NULL PRIMARY KEY,
+
+    --- The title of this event.
+    title TEXT NOT NULL,
+
+    --- Whether this event goes for the entire day.
+    allDay INTEGER AS Boolean NOT NULL,
+
+    --- The start time of this event.
+    start INTEGER AS Instant NOT NULL,
+
+    --- The finish time of this event.
+    finish INTEGER AS Instant NOT NULL,
+
+    --- The ID of the activity linked to this event, if there is one.
+    activityId INTEGER,
+
+    --- The ID of the student this event is for.
+    studentId INTEGER NOT NULL,
+
+    --- Id of the Staff member in charge of this event.
+    staffId INTEGER NOT NULL,
+
+    --- Id of the original staff member for this event if they were covered by another.
+    originalStaffMember INTEGER,
+
+    --- The time when this entry was added to the cache for cleanup.
+    cachedAt INTEGER AS Instant NOT NULL
+
+-- TODO: for some reason foreign keys causes SQLDelight to fail to compile the statement with "Index: 0" index out of bounds.
+--     FOREIGN KEY(studentId) REFERENCES UserDetails
+--     FOREIGN KEY (staffId) REFERENCES Staff,
+--     FOREIGN KEY (originalStaffMember) REFERENCES Staff
+
+);
+
+--- Select a given Calendar Event by its ID.
+selectById:
+SELECT * FROM CalendarEvent
+WHERE CalendarEvent.id = ?;
+
+--- Select all events matching the given activity ID.
+selectByActivityId:
+SELECT * FROM CalendarEvent
+WHERE CalendarEvent.activityId = ?;
+
+--- Select all events matching the given Staff ID.
+selectByStaffId:
+SELECT * FROM CalendarEvent
+WHERE CalendarEvent.staffId = ?;
+
+--- Select all events between a given date range.
+selectInDateRange:
+SELECT * FROM CalendarEvent
+WHERE CalendarEvent.start >= ? AND CalendarEvent.finish <= ?;
+
+--- Clear the events cache.
+clear:
+DELETE FROM CalendarEvent;
