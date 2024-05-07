@@ -47,6 +47,7 @@ kotlin {
             implementation(libs.kotlinx.datetime)
             implementation(libs.kotlinx.coroutines.swing)
             implementation(libs.sqldelight.coroutines)
+            implementation(libs.sqldelight.primitiveAdapters)
             implementation(libs.trulysharedprefs)
             implementation(libs.material3.windowSizeClassMultiplatform)
             implementation(libs.voyager.navigator)

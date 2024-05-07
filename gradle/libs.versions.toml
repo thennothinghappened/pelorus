@@ -88,6 +88,7 @@ kotlass = { module = "org.orca.kotlass:shared", version.ref = "kotlass" }
 sqldelight-driver-android = { module = "app.cash.sqldelight:android-driver", version.ref = "sqldelight" }
 sqldelight-driver-jvm = { module = "app.cash.sqldelight:sqlite-driver", version.ref = "sqldelight" }
 sqldelight-coroutines = { module = "app.cash.sqldelight:coroutines-extensions", version.ref = "sqldelight" }
+sqldelight-primitiveAdapters = { module = "app.cash.sqldelight:primitive-adapters", version.ref = "sqldelight" }
 
 trulysharedprefs = { module = "org.orca.trulysharedprefs:trulysharedprefs", version.ref = "trulysharedprefs" }
 
