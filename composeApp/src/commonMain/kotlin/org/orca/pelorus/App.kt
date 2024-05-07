@@ -8,16 +8,14 @@ import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.ScaleTransition
 import cafe.adriel.voyager.transitions.SlideTransition
 import org.orca.pelorus.data.di.WithAuthedServices
-import org.orca.pelorus.data.di.authedServices
 import org.orca.pelorus.data.di.rootServices
-import org.orca.pelorus.data.services.root.RootServices
 import org.orca.pelorus.screenmodel.AuthScreenModel
 import org.orca.pelorus.screens.AuthenticatedScreen
 import org.orca.pelorus.screens.login.LoginLoadingScreen
 import org.orca.pelorus.screens.login.LoginScreen
 import org.orca.pelorus.screens.root.RootScreen
 import org.orca.pelorus.ui.theme.PelorusAppTheme
-import org.orca.pelorus.ui.utils.collectValue
+import org.orca.pelorus.ui.utils.collectValueWithLifecycle
 
 /**
  * Main entry point for the app!
@@ -30,7 +28,7 @@ fun App() {
             Navigator(RootScreen) { navigator ->
 
                 val authModel = rootServices.authScreenModel
-                val authState = authModel.state.collectValue()
+                val authState = authModel.state.collectValueWithLifecycle()
 
                 if (authState is AuthScreenModel.State.Success) {
 

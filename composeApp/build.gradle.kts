@@ -61,6 +61,7 @@ kotlin {
             implementation(libs.androidx.compose.ui.tooling.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.androidx.appcompat)
+            implementation(libs.androidx.lifecycle)
             implementation(libs.sqldelight.driver.android)
         }
 

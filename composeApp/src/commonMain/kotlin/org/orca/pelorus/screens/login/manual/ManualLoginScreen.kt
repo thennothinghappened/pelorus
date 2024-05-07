@@ -23,7 +23,7 @@ import org.orca.pelorus.screenmodel.AuthScreenModel
 import org.orca.pelorus.screens.login.LoginLoadingScreen
 import org.orca.pelorus.ui.common.ExpandableError
 import org.orca.pelorus.ui.theme.sizing
-import org.orca.pelorus.ui.utils.collectValue
+import org.orca.pelorus.ui.utils.collectValueWithLifecycle
 
 /**
  * Screen for manually logging in by pasting the user cookie & other info from the browser dev inspector.
@@ -37,8 +37,8 @@ object ManualLoginScreen : Screen {
         val authModel = rootServices.authScreenModel
         val screenModel = rememberScreenModel { ManualLoginScreenModel() }
 
-        val authState = authModel.state.collectValue()
-        val state = screenModel.state.collectValue()
+        val authState = authModel.state.collectValueWithLifecycle()
+        val state = screenModel.state.collectValueWithLifecycle()
 
         Box(Modifier.fillMaxSize()) {
             Column(

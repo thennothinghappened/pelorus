@@ -17,7 +17,7 @@ import org.orca.pelorus.cache.CalendarEvent
 import org.orca.pelorus.data.di.authedServices
 import org.orca.pelorus.screens.AuthenticatedScreen
 import org.orca.pelorus.ui.theme.sizing
-import org.orca.pelorus.ui.utils.collectValue
+import org.orca.pelorus.ui.utils.collectValueWithLifecycle
 
 object HomeTab : AuthenticatedScreen, Tab {
 
@@ -41,7 +41,7 @@ object HomeTab : AuthenticatedScreen, Tab {
     override fun Content() {
 
         val screenModel = authedServices.homeScreenModel()
-        val state = screenModel.state.collectValue()
+        val state = screenModel.state.collectValueWithLifecycle()
 
         Column {
 

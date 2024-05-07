@@ -13,7 +13,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import org.orca.pelorus.data.di.rootServices
 import org.orca.pelorus.screenmodel.AuthScreenModel
-import org.orca.pelorus.ui.utils.collectValue
+import org.orca.pelorus.ui.utils.collectValueWithLifecycle
 
 /**
  * The loading screen when you are logging in.
@@ -25,7 +25,7 @@ object LoginLoadingScreen : Screen {
 
         val navigator = LocalNavigator.currentOrThrow
         val authModel = rootServices.authScreenModel
-        val state = authModel.state.collectValue()
+        val state = authModel.state.collectValueWithLifecycle()
 
         if (state is AuthScreenModel.State.FailedAuthenticate) {
             navigator.popUntil { screen -> screen !is LoginLoadingScreen }
