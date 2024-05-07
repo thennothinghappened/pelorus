@@ -1,15 +1,16 @@
 package org.orca.pelorus.utils
 
-import kotlinx.datetime.Clock
-import kotlinx.datetime.LocalDate
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.LocalTime
+import kotlinx.datetime.*
 
-internal fun LocalDateTime.Companion.now() =
+fun LocalDateTime.Companion.now() =
     Clock.System.now().toLocalDateTime()
 
-internal fun LocalDate.Companion.now() =
+fun LocalDate.Companion.now() =
     LocalDateTime.now().date
 
-internal fun LocalTime.Companion.now() =
+fun LocalTime.Companion.now() =
     LocalDateTime.now().time
+
+fun LocalDateTime.toInstant() = toInstant(TimeZone.currentSystemDefault())
+
+fun LocalDate.toInstant() = atTime(0, 0, 0, 0).toInstant()

@@ -13,7 +13,7 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.util.fastForEach
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
-import org.orca.kotlass.data.calendar.CalendarEvent
+import org.orca.pelorus.cache.CalendarEvent
 import org.orca.pelorus.data.di.authedServices
 import org.orca.pelorus.screens.AuthenticatedScreen
 import org.orca.pelorus.ui.theme.sizing
@@ -82,12 +82,11 @@ object HomeTab : AuthenticatedScreen, Tab {
         Card {
             Column(Modifier.fillMaxWidth().padding(sizing.paddingCardInner)) {
                 Row {
-                    Text(event.name)
+                    Text(event.title)
                     Spacer(Modifier.weight(1f))
-                    Text(event.targetStudentId.toString())
+                    Text(event.studentId.toString())
                 }
                 Row {
-                    Text(event.shortName)
                     Spacer(Modifier.weight(1f))
                 }
             }

@@ -2,9 +2,7 @@ package org.orca.pelorus.data.repository.calendar
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.LocalDateTime
-import org.orca.kotlass.client.CompassApiResult
-import org.orca.kotlass.data.calendar.CalendarEvent
+import org.orca.pelorus.cache.CalendarEvent
 import org.orca.pelorus.data.repository.Response
 
 /**

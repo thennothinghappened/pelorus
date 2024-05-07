@@ -39,7 +39,7 @@ class StaffRepository(
     override suspend fun find(id: Int): Staff? {
 
         localQueries
-            .selectById(id.toLong())
+            .selectById(id)
             .executeAsOneOrNull()
             ?.let {
 
@@ -97,7 +97,7 @@ class StaffRepository(
  * Convert the Compass User to our user type.
  */
 private fun NetworkUser.asStaff(cachedAt: Instant): Staff = Staff(
-    id = id.toLong(),
+    id = id,
     codeName = codeName,
     firstName = firstName,
     lastName = lastName,

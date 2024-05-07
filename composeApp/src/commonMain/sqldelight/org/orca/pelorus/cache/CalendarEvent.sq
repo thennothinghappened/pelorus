@@ -1,12 +1,28 @@
-import java.time.LocalDate;
 import kotlin.Boolean;
+import kotlin.Int;
 import kotlinx.datetime.Instant;
+import kotlinx.datetime.LocalTime;
+import kotlinx.datetime.LocalDate;
+
+--- Table of days that are cached in the calendar.
+CREATE TABLE CachedCalendarDays (
+
+    --- The date in question.
+    date TEXT AS LocalDate NOT NULL PRIMARY KEY,
+
+    --- The time when this entry was added to the cache for cleanup.
+    cachedAt INTEGER AS Instant NOT NULL
+
+);
 
 --- Table of calendar events for days.
 CREATE TABLE CalendarEvent (
 
     --- Unique ID of this event, corresponding to an instance ID in Compass.
     id TEXT NOT NULL PRIMARY KEY,
+
+    --- The date this event is on, corresponding to a date in the [CachedCalendarDays] table.
+    date TEXT AS LocalDate NOT NULL,
 
     --- The title of this event.
     title TEXT NOT NULL,
@@ -15,25 +31,22 @@ CREATE TABLE CalendarEvent (
     allDay INTEGER AS Boolean NOT NULL,
 
     --- The start time of this event.
-    start INTEGER AS Instant NOT NULL,
+    start TEXT AS LocalTime NOT NULL,
 
     --- The finish time of this event.
-    finish INTEGER AS Instant NOT NULL,
+    finish TEXT AS LocalTime NOT NULL,
 
     --- The ID of the activity linked to this event, if there is one.
-    activityId INTEGER,
+    activityId INTEGER AS Int,
 
     --- The ID of the student this event is for.
-    studentId INTEGER NOT NULL,
+    studentId INTEGER AS Int,
 
     --- Id of the Staff member in charge of this event.
-    staffId INTEGER NOT NULL,
+    staffId INTEGER AS Int NOT NULL,
 
     --- Id of the original staff member for this event if they were covered by another.
-    originalStaffMember INTEGER,
-
-    --- The time when this entry was added to the cache for cleanup.
-    cachedAt INTEGER AS Instant NOT NULL
+    originalStaffId INTEGER AS Int
 
 -- TODO: for some reason foreign keys causes SQLDelight to fail to compile the statement with "Index: 0" index out of bounds.
 --     FOREIGN KEY(studentId) REFERENCES UserDetails
@@ -45,23 +58,68 @@ CREATE TABLE CalendarEvent (
 --- Select a given Calendar Event by its ID.
 selectById:
 SELECT * FROM CalendarEvent
-WHERE CalendarEvent.id = ?;
+WHERE CalendarEvent.id = :id;
 
 --- Select all events matching the given activity ID.
 selectByActivityId:
 SELECT * FROM CalendarEvent
-WHERE CalendarEvent.activityId = ?;
+WHERE CalendarEvent.activityId = :activityId;
 
 --- Select all events matching the given Staff ID.
 selectByStaffId:
 SELECT * FROM CalendarEvent
-WHERE CalendarEvent.staffId = ?;
+WHERE CalendarEvent.staffId = :staffId;
 
 --- Select all events between a given date range.
 selectInDateRange:
 SELECT * FROM CalendarEvent
-WHERE CalendarEvent.start >= ? AND CalendarEvent.finish <= ?;
+WHERE CalendarEvent.date >= :startDate AND CalendarEvent.date <= :finishDate;
+
+--- Select all events on a given date.
+selectOnDate:
+SELECT * FROM CalendarEvent
+WHERE CalendarEvent.date = :date;
+
+--- Select the cached at field for the given date.
+selectCacheInfoOnDate:
+SELECT CachedCalendarDays.cachedAt FROM CachedCalendarDays
+WHERE CachedCalendarDays.date = :date;
+
+--- Insert an event into the cache.
+insertEvent {
+
+    INSERT OR IGNORE INTO CachedCalendarDays
+    VALUES (:date, :cachedAt);
+
+    INSERT INTO CalendarEvent
+    VALUES (
+        :id,
+        :date,
+        :title,
+        :allDay,
+        :start,
+        :finish,
+        :activityId,
+        :studentId,
+        :staffId,
+        :originalStaffId
+    );
+
+}
+
+--- Delete the cache entry for the given date.
+deleteOnDate {
+
+    DELETE FROM CachedCalendarDays
+    WHERE CachedCalendarDays.date = :date;
+
+    DELETE FROM CalendarEvent
+    WHERE CalendarEvent.date = :date;
+
+}
 
 --- Clear the events cache.
-clear:
-DELETE FROM CalendarEvent;
+clear {
+    DELETE FROM CalendarEvent;
+    DELETE FROM CachedCalendarDays;
+}

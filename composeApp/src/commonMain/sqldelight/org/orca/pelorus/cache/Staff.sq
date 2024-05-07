@@ -1,10 +1,11 @@
+import kotlin.Int;
 import kotlinx.datetime.Instant;
 
 -- Cached list of staff for names in place of codes!
 CREATE TABLE Staff (
 
     --- Unique ID of the staff member.
-    id INTEGER NOT NULL PRIMARY KEY,
+    id INTEGER AS Int NOT NULL PRIMARY KEY,
 
     --- 3 letter code-name of the staff member used in some places.
     codeName TEXT NOT NULL,

@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.datetime.Clock
-import org.orca.kotlass.data.calendar.CalendarEvent
+import org.orca.pelorus.cache.CalendarEvent
 import org.orca.pelorus.cache.UserDetails
 import org.orca.pelorus.data.repository.RepositoryError
 import org.orca.pelorus.data.repository.Response

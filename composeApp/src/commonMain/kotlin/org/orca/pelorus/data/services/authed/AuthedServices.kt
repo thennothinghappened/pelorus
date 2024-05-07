@@ -35,6 +35,7 @@ class AuthedServices(
     )
 
     private val calendarRepository = CalendarRepository(
+        cache = cache,
         remoteClient = client
     )
 
