@@ -55,3 +55,20 @@ fun <T, R> CompassApiResult.Failure<T>.asResponse() = Response.Failure<R>(
  * Convert a successful API result to our form.
  */
 fun <T> CompassApiResult.Success<T>.asResponse() = Response.Success(this.data)
+
+
+inline fun <R, T> CompassApiResult<T>.fold(
+    onSuccess: (value: T) -> R,
+    onFailure: (error: CompassApiError) -> R
+) = when(this) {
+    is CompassApiResult.Success -> onSuccess(this.data)
+    is CompassApiResult.Failure -> onFailure(this.error)
+}
+
+inline fun <R, T : R> CompassApiResult<T>.getOrElse(
+    onFailure: (error: CompassApiError) -> R
+) = when(this) {
+    is CompassApiResult.Success -> this.data
+    is CompassApiResult.Failure -> onFailure(this.error)
+}
+
