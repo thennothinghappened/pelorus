@@ -14,6 +14,7 @@ import androidx.compose.ui.util.fastForEach
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import org.orca.pelorus.cache.CalendarEvent
+import org.orca.pelorus.cache.Staff
 import org.orca.pelorus.cache.UserDetails
 import org.orca.pelorus.data.di.authedServices
 import org.orca.pelorus.screens.AuthenticatedScreen
@@ -67,10 +68,10 @@ object HomeTab : AuthenticatedScreen, Tab {
     }
 
     @Composable
-    private fun CalendarContent(events: List<CalendarEvent>, userDetails: UserDetails) {
+    private fun CalendarContent(eventStaffPairs: List<Pair<CalendarEvent, Staff>>, userDetails: UserDetails) {
 
         Column {
-            events.fastForEach {
+            eventStaffPairs.fastForEach {
                 CalendarEvent(it, userDetails)
             }
         }
@@ -78,14 +79,14 @@ object HomeTab : AuthenticatedScreen, Tab {
     }
 
     @Composable
-    private fun CalendarEvent(event: CalendarEvent, userDetails: UserDetails) {
+    private fun CalendarEvent(eventStaffPair: Pair<CalendarEvent, Staff>, userDetails: UserDetails) {
 
         Card {
             Column(Modifier.fillMaxWidth().padding(sizing.paddingCardInner)) {
                 Row {
-                    Text(event.title)
+                    Text(eventStaffPair.first.title)
                     Spacer(Modifier.weight(1f))
-                    Text(userDetails.lastName)
+                    Text(eventStaffPair.second.firstName)
                 }
                 Row {
                     Spacer(Modifier.weight(1f))

@@ -7,6 +7,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
+import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimePeriod
 import org.orca.pelorus.cache.Cache
 import org.orca.pelorus.cache.Staff
@@ -45,12 +46,23 @@ class LocalStaffDataSource(
             }
         }
 
-    override fun clear() {
-        TODO("Not yet implemented")
+    override fun clear() = cache.transaction {
+        cache.staffQueries.clear()
+        cache.generalCacheDateQueries.updateCache(table, null)
     }
 
-    override fun update(staff: List<Staff>) {
-        TODO("Not yet implemented")
+    override fun update(staff: List<Staff>) = cache.transaction {
+
+        staff.forEach {
+            cache.staffQueries.insert(
+                id = it.id,
+                codeName = it.codeName,
+                firstName = it.firstName,
+                lastName = it.lastName
+            )
+        }
+
+        cache.generalCacheDateQueries.updateCache(table, Clock.System.now())
     }
 
 }

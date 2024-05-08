@@ -5,7 +5,7 @@ import kotlinx.datetime.Instant;
 CREATE TABLE Staff (
 
     --- Unique ID of the staff member.
-    id INTEGER AS Int NOT NULL PRIMARY KEY,
+    id INTEGER AS Int PRIMARY KEY NOT NULL,
 
     --- 3 letter code-name of the staff member used in some places.
     codeName TEXT NOT NULL,

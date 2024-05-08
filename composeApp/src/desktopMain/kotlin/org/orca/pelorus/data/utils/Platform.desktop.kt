@@ -1,4 +1,4 @@
-package org.orca.pelorus.utils
+package org.orca.pelorus.data.utils
 
 import org.orca.pelorus.data.utils.Platform
 

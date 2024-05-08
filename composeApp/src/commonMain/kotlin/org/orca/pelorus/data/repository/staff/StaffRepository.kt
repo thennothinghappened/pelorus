@@ -33,7 +33,7 @@ class StaffRepository(
                 },
 
                 onNotCached = {
-                    fetch().fold(
+                    withContext(ioContext) { fetch() }.fold(
                         onFailure = {
                             Response.Failure(it)
                         },

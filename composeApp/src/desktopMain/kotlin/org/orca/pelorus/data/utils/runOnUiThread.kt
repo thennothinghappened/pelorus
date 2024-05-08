@@ -1,4 +1,4 @@
-package org.orca.pelorus.utils
+package org.orca.pelorus.data.utils
 
 import javax.swing.SwingUtilities
 
