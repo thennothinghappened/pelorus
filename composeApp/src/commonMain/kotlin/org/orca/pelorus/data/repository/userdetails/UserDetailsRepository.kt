@@ -23,7 +23,6 @@ class UserDetailsRepository(
     override val userDetails = localUserDetailsDataSource
         .cacheEntry
         .map { cacheEntry ->
-            println(cacheEntry)
             cacheEntry.fold(
 
                 onData = {

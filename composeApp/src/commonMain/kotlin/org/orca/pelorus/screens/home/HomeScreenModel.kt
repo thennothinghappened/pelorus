@@ -27,10 +27,6 @@ class HomeScreenModel(
         .getEventsForDate(Clock.System.now().toLocalDateTime().date)
 
     val state: StateFlow<State> = userDetailsRepository.userDetails
-        .map {
-            println(it)
-            it
-        }
         .combine(todayCalendarEventsFlow) { userDetailsResponse, calendarEventsResponse ->
 
             if (userDetailsResponse !is Response.Result) {

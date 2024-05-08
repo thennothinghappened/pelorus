@@ -26,7 +26,6 @@ class StaffRepository(
     override fun get(id: Int): Flow<Response<Staff?>> = localStaffDataSource
         .get(id)
         .mapLatest { cacheEntry ->
-            println(cacheEntry)
             cacheEntry.fold(
 
                 onData = {
