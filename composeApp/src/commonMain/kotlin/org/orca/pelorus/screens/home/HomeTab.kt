@@ -14,6 +14,7 @@ import androidx.compose.ui.util.fastForEach
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import org.orca.pelorus.cache.CalendarEvent
+import org.orca.pelorus.cache.UserDetails
 import org.orca.pelorus.data.di.authedServices
 import org.orca.pelorus.screens.AuthenticatedScreen
 import org.orca.pelorus.ui.theme.sizing
@@ -52,7 +53,7 @@ object HomeTab : AuthenticatedScreen, Tab {
                 }
 
                 is HomeScreenModel.State.Success -> {
-                    CalendarContent(state.todayEvents)
+                    CalendarContent(state.todayEvents, state.currentUser)
                 }
 
                 is HomeScreenModel.State.Failure -> {
@@ -66,25 +67,25 @@ object HomeTab : AuthenticatedScreen, Tab {
     }
 
     @Composable
-    private fun CalendarContent(events: List<CalendarEvent>) {
+    private fun CalendarContent(events: List<CalendarEvent>, userDetails: UserDetails) {
 
         Column {
             events.fastForEach {
-                CalendarEvent(it)
+                CalendarEvent(it, userDetails)
             }
         }
 
     }
 
     @Composable
-    private fun CalendarEvent(event: CalendarEvent) {
+    private fun CalendarEvent(event: CalendarEvent, userDetails: UserDetails) {
 
         Card {
             Column(Modifier.fillMaxWidth().padding(sizing.paddingCardInner)) {
                 Row {
                     Text(event.title)
                     Spacer(Modifier.weight(1f))
-                    Text(event.studentId.toString())
+                    Text(userDetails.lastName)
                 }
                 Row {
                     Spacer(Modifier.weight(1f))
