@@ -15,7 +15,7 @@ import org.orca.pelorus.data.repository.Response
 import org.orca.pelorus.data.repository.calendar.ICalendarRepository
 import org.orca.pelorus.data.repository.staff.IStaffRepository
 import org.orca.pelorus.data.repository.userdetails.IUserDetailsRepository
-import org.orca.pelorus.utils.toLocalDateTime
+import org.orca.pelorus.data.utils.toLocalDateTime
 
 class HomeScreenModel(
     private val userDetailsRepository: IUserDetailsRepository,

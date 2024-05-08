@@ -1,5 +1,7 @@
 package org.orca.pelorus.utils
 
+import org.orca.pelorus.data.utils.Platform
+
 private val os = System.getProperty("os.name").lowercase()
 
 actual val platform: Platform =

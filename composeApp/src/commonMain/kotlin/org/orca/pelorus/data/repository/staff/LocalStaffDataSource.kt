@@ -12,8 +12,8 @@ import org.orca.pelorus.cache.Cache
 import org.orca.pelorus.cache.Staff
 import org.orca.pelorus.data.repository.cache.CacheEntry
 import org.orca.pelorus.data.repository.cache.GeneralCacheDateTable
-import org.orca.pelorus.utils.isInFuture
-import org.orca.pelorus.utils.plus
+import org.orca.pelorus.data.utils.isInFuture
+import org.orca.pelorus.data.utils.plus
 import kotlin.coroutines.CoroutineContext
 
 class LocalStaffDataSource(
