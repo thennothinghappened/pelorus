@@ -1,7 +1,8 @@
+import kotlin.Int;
 
 -- Cached details for users. This generally just contains the details of the current user.
 CREATE TABLE UserDetails (
-    id INTEGER NOT NULL PRIMARY KEY,
+    id INTEGER AS Int NOT NULL PRIMARY KEY,
     firstName TEXT NOT NULL,
     lastName TEXT NOT NULL
 );
@@ -10,12 +11,7 @@ CREATE TABLE UserDetails (
 selectById:
 SELECT *
 FROM UserDetails
-WHERE id = ?;
-
--- Get all users.
-getAll:
-SELECT *
-FROM UserDetails;
+WHERE id = :id;
 
 -- Add a user to the cache
 insert:
@@ -23,5 +19,11 @@ INSERT OR REPLACE INTO UserDetails
 VALUES (?, ?, ?);
 
 -- Clear the list of users' details.
-clear:
-DELETE FROM UserDetails;
+clear {
+
+    DELETE FROM GeneralCacheDate
+    WHERE GeneralCacheDate.tableName=:tableName;
+
+    DELETE FROM UserDetails;
+
+}

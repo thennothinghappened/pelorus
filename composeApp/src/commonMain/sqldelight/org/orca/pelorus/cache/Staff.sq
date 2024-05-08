@@ -14,10 +14,7 @@ CREATE TABLE Staff (
     firstName TEXT NOT NULL,
 
     --- The staff member's last name.
-    lastName TEXT NOT NULL,
-
-    --- The time when this entry was added to the cache for cleanup.
-    cachedAt INTEGER AS Instant NOT NULL
+    lastName TEXT NOT NULL
 
 );
 
@@ -28,7 +25,7 @@ FROM Staff
 WHERE id = ?;
 
 -- Get all staff members.
-getAll:
+selectAll:
 SELECT *
 FROM Staff;
 
@@ -41,7 +38,7 @@ WHERE codeName = ?;
 -- Add a staff member to the cache
 insert:
 INSERT OR REPLACE INTO Staff
-VALUES (?, ?, ?, ?, ?);
+VALUES (?, ?, ?, ?);
 
 -- Clear the list of staff members.
 clear:

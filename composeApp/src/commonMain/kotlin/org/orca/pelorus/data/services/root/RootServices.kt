@@ -37,7 +37,13 @@ class RootServices(
 
     @Composable
     override fun rememberAuthedServices(credentials: CompassUserCredentials): IAuthedServices {
-        return remember { AuthedServices(credentials, cache, dataCoroutineScope) }
+        return remember {
+            AuthedServices(
+                credentials,
+                cache,
+                dataCoroutineScope,
+            )
+        }
     }
 
 }

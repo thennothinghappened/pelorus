@@ -1,58 +1,60 @@
 package org.orca.pelorus.data.repository.userdetails
 
-import app.cash.sqldelight.coroutines.asFlow
-import app.cash.sqldelight.coroutines.mapToOneNotNull
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.withContext
-import org.orca.kotlass.client.CompassApiResult
 import org.orca.kotlass.client.requests.IUsersClient
-import org.orca.pelorus.cache.Cache
 import org.orca.pelorus.cache.UserDetails
+import org.orca.pelorus.data.repository.RepositoryError
 import org.orca.pelorus.data.repository.Response
-import org.orca.pelorus.data.repository.asResponse
+import org.orca.pelorus.data.repository.fold
 import org.orca.kotlass.data.user.UserDetails as NetworkUserDetails
 
 class UserDetailsRepository(
-    cache: Cache,
+    private val localUserDetailsDataSource: ILocalUserDetailsDataSource,
     private val currentUserId: Int,
     private val remoteClient: IUsersClient,
     private val ioContext: CoroutineDispatcher = Dispatchers.IO
 ) : IUserDetailsRepository {
 
-    /**
-     * Queries for the local cache database.
-     */
-    private val localQueries = cache.userDetailsQueries
+    override val userDetails = localUserDetailsDataSource
+        .cacheEntry
+        .map { cacheEntry ->
+            println(cacheEntry)
+            cacheEntry.fold(
 
-    override val userDetails = localQueries
-        .selectById(currentUserId.toLong())
-        .asFlow()
-        .mapToOneNotNull(ioContext)
+                onData = {
+                    Response.Success(it)
+                },
 
-    override suspend fun refresh(): Response<Unit> {
+                onNotCached = {
+                    fetchAndCache()
+                }
 
-        val userDetails = when (val response = withContext(ioContext) { remoteClient.getUserDetails(currentUserId) }) {
-            is CompassApiResult.Failure -> return response.asResponse()
-            is CompassApiResult.Success -> response.data.asUserDetails()
+            )
         }
 
-        set(userDetails)
+    private suspend fun fetchAndCache(): Response.Result<UserDetails> =
+        when (val response = fetch()) {
 
-        return Response.Success(Unit)
+            is Response.Failure -> response
 
-    }
+            is Response.Success -> {
+                localUserDetailsDataSource.update(response.data)
+                response
+            }
 
-    /**
-     * Add a set of user details to the table.
-     */
-    private fun set(userDetails: UserDetails) {
-        localQueries.insert(
-            userDetails.id,
-            userDetails.firstName,
-            userDetails.lastName
-        )
-    }
+        }
+
+    private suspend fun fetch() =
+        withContext(ioContext) { remoteClient.getUserDetails(currentUserId) }
+            .fold(
+                onFailure = { Response.Failure(RepositoryError.RemoteClientError(it)) },
+                onSuccess = { Response.Success(it.asUserDetails()) }
+            )
 
 }
 
@@ -60,7 +62,7 @@ class UserDetailsRepository(
  * Convert the Compass UserDetails to our user type.
  */
 private fun NetworkUserDetails.asUserDetails(): UserDetails = UserDetails(
-    id = id.toLong(),
+    id = id,
     firstName = firstName,
     lastName = lastName
 )

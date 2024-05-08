@@ -8,17 +8,39 @@ import org.orca.kotlass.client.CompassApiResult
  */
 sealed interface Response<T> {
 
+    /**
+     * A final result from a repository.
+     */
+    sealed class Result<T> : Response<T> {
+
+        inline fun <R> fold(
+            onSuccess: (value: T) -> R,
+            onFailure: (error: RepositoryError) -> R
+        ) = when(this) {
+            is Success -> onSuccess(data)
+            is Failure -> onFailure(error)
+        }
+
+        inline fun <R : T> getOrElse(
+            onFailure: (error: RepositoryError) -> R
+        ) = when(this) {
+            is Success -> data
+            is Failure -> onFailure(error)
+        }
+
+    }
+
     data class Loading<T>(val progress: T? = null) : Response<T>
 
     /**
      * A successful response from the remote.
      */
-    data class Success<T>(val data: T) : Response<T>
+    data class Success<T>(val data: T) : Result<T>()
 
     /**
      * A failure response from the remote.
      */
-    data class Failure<T>(val error: RepositoryError) : Response<T>
+    data class Failure<T>(val error: RepositoryError) : Result<T>()
 
 }
 

@@ -1,5 +1,6 @@
 package org.orca.pelorus.data.repository.staff
 
+import kotlinx.coroutines.flow.Flow
 import org.orca.pelorus.cache.Staff
 import org.orca.pelorus.data.repository.Response
 
@@ -9,13 +10,13 @@ import org.orca.pelorus.data.repository.Response
 interface IStaffRepository {
 
     /**
-     * Find a staff member by their ID.
+     * Get a staff member by their ID.
      */
-    suspend fun find(id: Int): Staff?
+    fun get(id: Int): Flow<Response<Staff?>>
 
     /**
-     * Refresh the list of staff members from the remote.
+     * Fetch the list of staff members from the remote.
      */
-    suspend fun refresh(): Response<Unit>
+    suspend fun fetch(): Response.Result<List<Staff>>
 
 }

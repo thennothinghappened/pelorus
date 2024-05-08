@@ -9,7 +9,9 @@ import kotlinx.datetime.LocalTime
 import org.orca.pelorus.cache.Cache
 import org.orca.pelorus.cache.CachedCalendarDays
 import org.orca.pelorus.cache.CalendarEvent
+import org.orca.pelorus.cache.GeneralCacheDate
 import org.orca.pelorus.cache.Staff
+import org.orca.pelorus.cache.UserDetails
 
 /**
  * Factory class for creating the driver for our cache.
@@ -34,7 +36,9 @@ fun createCache(driverFactory: DriverFactory): Cache {
         driver = driver,
         CalendarEventAdapter = calendarEventAdaptor,
         StaffAdapter = staffAdapter,
-        CachedCalendarDaysAdapter = cachedCalendarDaysAdapter
+        CachedCalendarDaysAdapter = cachedCalendarDaysAdapter,
+        GeneralCacheDateAdapter = generalCacheDateAdapter,
+        UserDetailsAdapter = userDetailsAdapter
     )
 
     return database
@@ -80,6 +84,13 @@ private val cachedCalendarDaysAdapter = CachedCalendarDays.Adapter(
 )
 
 private val staffAdapter = Staff.Adapter(
-    cachedAtAdapter = InstantAdaptor,
+    idAdapter = IntColumnAdapter
+)
+
+private val generalCacheDateAdapter = GeneralCacheDate.Adapter(
+    cachedAtAdapter = InstantAdaptor
+)
+
+private val userDetailsAdapter = UserDetails.Adapter(
     idAdapter = IntColumnAdapter
 )

@@ -1,0 +1,23 @@
+import kotlinx.datetime.Instant;
+
+--- General shared table for when items were cached.
+--- This table is used for tables which are fetched all at once, such as [Staff].
+CREATE TABLE GeneralCacheDate (
+
+    --- The name of the table this cache item is for.
+    tableName TEXT NOT NULL PRIMARY KEY,
+
+    --- The time when this entry was added to the cache.
+    cachedAt INTEGER AS Instant
+
+);
+
+--- A caching event that the data has been updated.
+updateCache:
+INSERT OR REPLACE INTO GeneralCacheDate
+VALUES (:tableName, :cachedAt);
+
+--- Query the time that a cache entry was made, if it was.
+queryCachedAt:
+SELECT cachedAt FROM GeneralCacheDate
+WHERE tableName = :tableName;

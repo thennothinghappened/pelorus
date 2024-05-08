@@ -2,104 +2,72 @@ package org.orca.pelorus.data.repository.staff
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.withContext
-import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimePeriod
-import kotlinx.datetime.Instant
-import org.orca.kotlass.client.CompassApiResult
 import org.orca.kotlass.client.requests.IUsersClient
-import org.orca.pelorus.cache.Cache
 import org.orca.pelorus.cache.Staff
+import org.orca.pelorus.data.repository.RepositoryError
 import org.orca.pelorus.data.repository.Response
-import org.orca.pelorus.data.repository.asResponse
-import org.orca.pelorus.utils.isInFuture
-import org.orca.pelorus.utils.plus
+import org.orca.pelorus.data.repository.getOrElse
 import org.orca.kotlass.data.user.User as NetworkUser
 
 class StaffRepository(
-    cache: Cache,
+    private val localStaffDataSource: ILocalStaffDataSource,
     private val remoteClient: IUsersClient,
     private val ioContext: CoroutineDispatcher = Dispatchers.IO
 ) : IStaffRepository {
 
-    /**
-     * Queries for the local cache database.
-     */
-    private val localQueries = cache.staffQueries
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun get(id: Int): Flow<Response<Staff?>> = localStaffDataSource
+        .get(id)
+        .mapLatest { cacheEntry ->
+            println(cacheEntry)
+            cacheEntry.fold(
 
-    private companion object {
+                onData = {
+                    Response.Success(it)
+                },
 
-        /**
-         * How long to consider a cached entry valid for.
-         */
-        val cacheValidDuration = DateTimePeriod(minutes = 1)
-
-    }
-
-    override suspend fun find(id: Int): Staff? {
-
-        localQueries
-            .selectById(id)
-            .executeAsOneOrNull()
-            ?.let {
-
-                if ((it.cachedAt + cacheValidDuration).isInFuture()) {
-                    return it
+                onNotCached = {
+                    fetch().fold(
+                        onFailure = {
+                            Response.Failure(it)
+                        },
+                        onSuccess = {
+                            localStaffDataSource.update(it)
+                            Response.Loading()
+                        }
+                    )
                 }
 
-                refresh()
-                return find(id)
-
-            }
-
-        return null
-
-    }
-
-    override suspend fun refresh(): Response<Unit> {
-
-        val users = when(val response = withContext(ioContext) { remoteClient.getAllStaff() }) {
-            is CompassApiResult.Failure -> return response.asResponse()
-            is CompassApiResult.Success -> response.data
+            )
+        }
+        .onStart {
+            emit(Response.Loading())
         }
 
-        val cachedAt = Clock.System.now()
-
-        updateLocalCache(users.map { it.asStaff(cachedAt) })
-        return Response.Success(Unit)
-
-    }
-
-    /**
-     * Update the local cached list of staff.
-     */
-    private fun updateLocalCache(staff: List<Staff>) {
-        localQueries.transaction {
-
-            localQueries.clear()
-
-            staff.forEach {
-                localQueries.insert(
-                    it.id,
-                    it.codeName,
-                    it.firstName,
-                    it.lastName,
-                    it.cachedAt
-                )
-            }
-
-        }
-    }
+    override suspend fun fetch(): Response.Result<List<Staff>> =
+        Response.Success(
+            withContext(ioContext) { remoteClient.getAllStaff() }
+                .getOrElse {
+                    return Response.Failure(RepositoryError.RemoteClientError(it))
+                }
+                .map { it.asStaff() }
+        )
 
 }
 
 /**
  * Convert the Compass User to our user type.
  */
-private fun NetworkUser.asStaff(cachedAt: Instant): Staff = Staff(
+private fun NetworkUser.asStaff(): Staff = Staff(
     id = id,
     codeName = codeName,
     firstName = firstName,
-    lastName = lastName,
-    cachedAt = cachedAt
+    lastName = lastName
 )

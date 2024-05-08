@@ -5,6 +5,7 @@ import cafe.adriel.voyager.core.model.screenModelScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.datetime.Clock
 import org.orca.pelorus.cache.CalendarEvent
@@ -26,12 +27,30 @@ class HomeScreenModel(
         .getEventsForDate(Clock.System.now().toLocalDateTime().date)
 
     val state: StateFlow<State> = userDetailsRepository.userDetails
-        .combine(todayCalendarEventsFlow) { userDetails, calendarEventsResponse ->
-            return@combine when (calendarEventsResponse) {
-                is Response.Loading -> State.Loading
-                is Response.Success -> State.Success(userDetails, calendarEventsResponse.data)
-                is Response.Failure -> State.Failure(calendarEventsResponse.error)
+        .map {
+            println(it)
+            it
+        }
+        .combine(todayCalendarEventsFlow) { userDetailsResponse, calendarEventsResponse ->
+
+            if (userDetailsResponse !is Response.Result) {
+                return@combine State.Loading
             }
+
+            if (calendarEventsResponse !is Response.Result) {
+                return@combine State.Loading
+            }
+
+            val userDetails = userDetailsResponse
+                .getOrElse { return@combine State.Failure(it) }
+
+            val calendarEvents = calendarEventsResponse
+                .getOrElse { return@combine State.Failure(it) }
+
+            State.Success(
+                currentUser = userDetails,
+                todayEvents = calendarEvents
+            )
         }
         .stateIn(
             scope = screenModelScope,

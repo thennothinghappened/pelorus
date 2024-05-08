@@ -8,7 +8,9 @@ import org.orca.kotlass.client.CompassApiClient
 import org.orca.kotlass.client.CompassUserCredentials
 import org.orca.pelorus.cache.Cache
 import org.orca.pelorus.data.repository.calendar.CalendarRepository
+import org.orca.pelorus.data.repository.staff.LocalStaffDataSource
 import org.orca.pelorus.data.repository.staff.StaffRepository
+import org.orca.pelorus.data.repository.userdetails.LocalUserDetailsDataSource
 import org.orca.pelorus.data.repository.userdetails.UserDetailsRepository
 import org.orca.pelorus.screens.home.HomeScreenModel
 
@@ -24,14 +26,19 @@ class AuthedServices(
     private val client = CompassApiClient(credentials)
 
     private val userDetailsRepository = UserDetailsRepository(
-        cache = cache,
         currentUserId = credentials.userId,
-        remoteClient = client
+        remoteClient = client,
+        localUserDetailsDataSource = LocalUserDetailsDataSource(
+            cache = cache,
+            currentUserId = credentials.userId
+        )
     )
 
     private val staffRepository = StaffRepository(
-        cache = cache,
-        remoteClient = client
+        remoteClient = client,
+        localStaffDataSource = LocalStaffDataSource(
+            cache = cache,
+        )
     )
 
     private val calendarRepository = CalendarRepository(
@@ -42,13 +49,6 @@ class AuthedServices(
     @Composable
     override fun homeScreenModel() = remember {
         HomeScreenModel(userDetailsRepository, staffRepository, calendarRepository)
-    }
-
-    init {
-        dataCoroutineScope.launch {
-            launch { userDetailsRepository.refresh() }
-            launch { staffRepository.refresh() }
-        }
     }
 
 }
