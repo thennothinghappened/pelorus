@@ -36,8 +36,7 @@ class LocalStaffDataSource(
         }
 
     override fun clear() = cache.transaction {
-        cache.staffQueries.clear()
-        cache.generalCacheDateQueries.updateCache(table, null)
+        cache.staffQueries.clear(table)
     }
 
     override fun update(staff: List<Staff>) = cache.transaction {

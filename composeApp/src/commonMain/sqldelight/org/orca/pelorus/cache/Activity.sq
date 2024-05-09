@@ -24,3 +24,7 @@ VALUES (?, ?, ?);
 selectById:
 SELECT * FROM Activity
 WHERE id = :id;
+
+--- Clear the cached list of activities.
+clear:
+DELETE FROM Activity;

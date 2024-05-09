@@ -13,10 +13,12 @@ import org.orca.pelorus.data.repository.staff.LocalStaffDataSource
 import org.orca.pelorus.data.repository.staff.StaffRepository
 import org.orca.pelorus.data.repository.userdetails.LocalUserDetailsDataSource
 import org.orca.pelorus.data.repository.userdetails.UserDetailsRepository
+import org.orca.pelorus.data.services.root.IRootServices
 import org.orca.pelorus.data.usecases.GetCalendarEventsWithStaffAndActivityUseCase
 import org.orca.pelorus.screens.tabs.home.HomeScreenModel
 
 class AuthedServices(
+    rootServices: IRootServices,
     credentials: CompassUserCredentials,
     cache: Cache,
     dataCoroutineScope: CoroutineScope
@@ -38,9 +40,7 @@ class AuthedServices(
 
     private val staffRepository = StaffRepository(
         remoteClient = client,
-        localStaffDataSource = LocalStaffDataSource(
-            cache = cache,
-        )
+        localStaffDataSource = rootServices.localStaffDataSource
     )
 
     private val calendarRepository = CalendarRepository(
@@ -49,7 +49,7 @@ class AuthedServices(
     )
 
     private val activityRepository = ActivityRepository(
-        localActivityDataSource = LocalActivityDataSource(cache),
+        localActivityDataSource = rootServices.localActivityDataSource,
         remoteClient = client
     )
 

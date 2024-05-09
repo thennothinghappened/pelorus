@@ -6,6 +6,9 @@ import org.orca.kotlass.client.CompassUserCredentials
 import org.orca.pelorus.cache.Cache
 import org.orca.pelorus.data.prefs.IMutablePrefs
 import org.orca.pelorus.data.prefs.IPrefs
+import org.orca.pelorus.data.repository.activity.ILocalActivityDataSource
+import org.orca.pelorus.data.repository.staff.ILocalStaffDataSource
+import org.orca.pelorus.data.repository.userdetails.ILocalUserDetailsDataSource
 import org.orca.pelorus.data.services.authed.IAuthedServices
 import org.orca.pelorus.screenmodel.AuthScreenModel
 
@@ -40,6 +43,9 @@ interface IRootServices {
      * Scope to use for running coroutines in the data layer.
      */
     val dataCoroutineScope: CoroutineScope
+
+    val localStaffDataSource: ILocalStaffDataSource
+    val localActivityDataSource: ILocalActivityDataSource
 
     /**
      * Get a remembered instance of authed services bound to the given credentials.
