@@ -10,6 +10,7 @@ import cafe.adriel.voyager.navigator.tab.CurrentTab
 import cafe.adriel.voyager.navigator.tab.TabNavigator
 import org.orca.pelorus.screens.AuthenticatedScreen
 import org.orca.pelorus.screens.tabs.home.HomeTab
+import org.orca.pelorus.screens.tabs.profile.ProfileTab
 import org.orca.pelorus.screens.tabs.settings.SettingsTab
 import org.orca.pelorus.ui.common.TabNavigationItem
 
@@ -28,6 +29,7 @@ object RootScreen : AuthenticatedScreen {
                     NavigationBar {
                         TabNavigationItem(SettingsTab)
                         TabNavigationItem(HomeTab)
+                        TabNavigationItem(ProfileTab)
                     }
                 }
             ) { paddingValues ->
