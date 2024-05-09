@@ -14,7 +14,10 @@ CREATE TABLE Staff (
     firstName TEXT NOT NULL,
 
     --- The staff member's last name.
-    lastName TEXT NOT NULL
+    lastName TEXT NOT NULL,
+
+    --- URL of the staff member's photo, if one is known.
+    photoUrl TEXT
 
 );
 
@@ -24,21 +27,10 @@ SELECT *
 FROM Staff
 WHERE id = ?;
 
--- Get all staff members.
-selectAll:
-SELECT *
-FROM Staff;
-
--- Get a staff member by their `code_name`
-selectByCodeName:
-SELECT *
-FROM Staff
-WHERE codeName = ?;
-
 -- Add a staff member to the cache
 insert:
 INSERT OR REPLACE INTO Staff
-VALUES (?, ?, ?, ?);
+VALUES (?, ?, ?, ?, ?);
 
 -- Clear the list of staff members.
 clear {

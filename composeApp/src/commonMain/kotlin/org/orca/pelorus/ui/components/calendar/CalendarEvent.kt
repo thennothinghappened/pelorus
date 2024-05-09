@@ -9,12 +9,15 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import kotlinx.datetime.LocalTime
 import org.orca.pelorus.ui.theme.sizing
 
 @Composable
 fun CalendarEvent(
     title: String,
     staffName: String,
+    startTime: LocalTime,
+    finishTime: LocalTime,
     modifier: Modifier = Modifier
 ) {
 
@@ -29,6 +32,7 @@ fun CalendarEvent(
 
             Row {
                 Spacer(Modifier.weight(1f))
+                Text("$startTime - $finishTime")
             }
 
         }

@@ -1,0 +1,15 @@
+import kotlin.Int;
+
+
+--- Table of cached activity instances, that correspond to matching calendar events.
+CREATE TABLE ActivityInstance (
+
+    --- ID of this activity instance, additionally corresponding to a CalendarEvent.
+    instanceId TEXT NOT NULL PRIMARY KEY,
+
+    --- ID of the activity this instance belongs to.
+    activityId INTEGER NOT NULL
+
+);
+
+

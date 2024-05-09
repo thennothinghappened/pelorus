@@ -39,6 +39,7 @@ class ActivityRepository(
                 .getOrElse {
                     return Response.Failure(RepositoryError.RemoteClientError(it))
                 }
+                .let { println(it); it }
                 .asActivity(Clock.System.now())
         )
 

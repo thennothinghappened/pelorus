@@ -57,5 +57,6 @@ private fun NetworkUser.asStaff(): Staff = Staff(
     id = id,
     codeName = codeName,
     firstName = firstName,
-    lastName = lastName
+    lastName = lastName,
+    photoUrl = null
 )

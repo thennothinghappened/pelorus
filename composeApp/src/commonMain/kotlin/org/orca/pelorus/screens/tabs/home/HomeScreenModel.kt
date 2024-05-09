@@ -10,8 +10,11 @@ import kotlinx.datetime.Clock
 import org.orca.pelorus.cache.UserDetails
 import org.orca.pelorus.data.objects.CalendarEventData
 import org.orca.pelorus.data.repository.RepositoryError
+import org.orca.pelorus.data.repository.Response
 import org.orca.pelorus.data.repository.userdetails.IUserDetailsRepository
 import org.orca.pelorus.data.usecases.GetCalendarEventsWithStaffAndActivityUseCase
+import org.orca.pelorus.data.utils.combineOrLoading
+import org.orca.pelorus.data.utils.foldResponse
 import org.orca.pelorus.data.utils.toLocalDateTime
 
 class HomeScreenModel(
@@ -23,22 +26,25 @@ class HomeScreenModel(
         getCalendarEventsWithStaff(Clock.System.now().toLocalDateTime().date)
 
     val state: StateFlow<State> = userDetailsRepository.userDetails
-        .combine(calendarEventsWithStaff) { userDetailsResponse, calendarEventsResponse ->
+        .combineOrLoading(calendarEventsWithStaff) { userDetailsResponse, calendarEventsResponse ->
 
             val userDetails = userDetailsResponse
-                .resultOrElse { return@combine State.Loading }
-                .getOrElse { return@combine State.Failure(it) }
+                .getOrElse { return@combineOrLoading Response.Failure(it) }
 
             val calendarEvents = calendarEventsResponse
-                .resultOrElse { return@combine State.Loading }
-                .getOrElse { return@combine State.Failure(it) }
+                .getOrElse { return@combineOrLoading Response.Failure(it) }
 
-            State.Success(
+            Response.Success(State.Success(
                 user = userDetails,
                 events = calendarEvents
-            )
+            ))
 
         }
+        .foldResponse(
+            transformLoading = { State.Loading },
+            transformFailure = { State.Failure(it.error) },
+            transformSuccess = { it.data }
+        )
         .stateIn(
             scope = screenModelScope,
             started = SharingStarted.Lazily,

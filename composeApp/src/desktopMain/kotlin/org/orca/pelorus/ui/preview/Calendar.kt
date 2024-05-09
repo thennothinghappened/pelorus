@@ -10,6 +10,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import kotlinx.datetime.LocalTime
 import org.orca.pelorus.ui.components.calendar.CalendarEvent
 import org.orca.pelorus.ui.theme.PelorusAppTheme
 import org.orca.pelorus.ui.theme.sizing
@@ -30,7 +31,9 @@ private fun CalendarEventPreview() {
 
                     CalendarEvent(
                         title = "Test event",
-                        staffName = "Teacher"
+                        staffName = "Teacher",
+                        startTime = LocalTime(0, 0, 0, 0),
+                        finishTime = LocalTime(0, 0, 0, 0)
                     )
 
                 }

@@ -46,7 +46,8 @@ class LocalStaffDataSource(
                 id = it.id,
                 codeName = it.codeName,
                 firstName = it.firstName,
-                lastName = it.lastName
+                lastName = it.lastName,
+                photoUrl = it.photoUrl
             )
         }
 

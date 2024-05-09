@@ -104,7 +104,9 @@ object HomeTab : AuthenticatedScreen, Tab {
                 .fastForEach {
                     CalendarEvent(
                         title = it.activity?.name ?: it.event.title,
-                        staffName = "${it.staff.firstName} ${it.staff.lastName}"
+                        staffName = "${it.staff.firstName} ${it.staff.lastName}",
+                        startTime = it.event.start,
+                        finishTime = it.event.finish
                     )
                 }
 

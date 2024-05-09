@@ -24,15 +24,8 @@ class UserDetailsRepository(
         .cacheEntry
         .map { cacheEntry ->
             cacheEntry.fold(
-
-                onData = {
-                    Response.Success(it)
-                },
-
-                onNotCached = {
-                    fetchAndCache()
-                }
-
+                onData = { Response.Success(it) },
+                onNotCached = { fetchAndCache() }
             )
         }
 
