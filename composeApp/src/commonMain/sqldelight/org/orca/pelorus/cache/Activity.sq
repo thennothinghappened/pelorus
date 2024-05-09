@@ -1,0 +1,26 @@
+import kotlin.Int;
+import kotlinx.datetime.Instant;
+
+--- Table for Compass activities!
+CREATE TABLE Activity (
+
+    --- Unique ID of this activity.
+    id INTEGER AS Int NOT NULL PRIMARY KEY,
+
+    --- Name of this activity.
+    name TEXT NOT NULL,
+
+    --- When this activity was added to the cache.
+    cachedAt INTEGER AS Instant NOT NULL
+
+);
+
+--- Insert an activity into the cache.
+insert:
+INSERT OR REPLACE INTO Activity
+VALUES (?, ?, ?);
+
+--- Select a given activity by its ID.
+selectById:
+SELECT * FROM Activity
+WHERE id = :id;

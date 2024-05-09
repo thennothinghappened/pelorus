@@ -3,16 +3,11 @@ package org.orca.pelorus.screens.tabs.home
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -22,14 +17,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.util.fastForEach
-import androidx.compose.ui.util.fastMap
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.stringResource
 import org.orca.pelorus.cache.UserDetails
 import org.orca.pelorus.data.di.authedServices
-import org.orca.pelorus.data.objects.CalendarEventWithStaff
+import org.orca.pelorus.data.objects.CalendarEventData
 import org.orca.pelorus.screens.AuthenticatedScreen
 import org.orca.pelorus.ui.common.MediumHorizontalDivider
 import org.orca.pelorus.ui.components.calendar.CalendarEvent
@@ -96,7 +90,7 @@ object HomeTab : AuthenticatedScreen, Tab {
 
     @OptIn(ExperimentalResourceApi::class)
     @Composable
-    private fun CalendarContent(events: List<CalendarEventWithStaff>, user: UserDetails) {
+    private fun CalendarContent(events: List<CalendarEventData>, user: UserDetails) {
 
         Text(stringResource(Res.string.calendar_title), style = MaterialTheme.typography.titleLarge)
 
@@ -109,8 +103,8 @@ object HomeTab : AuthenticatedScreen, Tab {
                 .sortedBy { it.event.start }
                 .fastForEach {
                     CalendarEvent(
-                        title = it.event.title,
-                        staffName = it.staff?.firstName ?: "Unknown Staff Member"
+                        title = it.activity?.name ?: it.event.title,
+                        staffName = "${it.staff.firstName} ${it.staff.lastName}"
                     )
                 }
 

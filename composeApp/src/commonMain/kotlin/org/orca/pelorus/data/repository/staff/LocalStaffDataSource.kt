@@ -1,12 +1,5 @@
 package org.orca.pelorus.data.repository.staff
 
-import app.cash.sqldelight.coroutines.asFlow
-import app.cash.sqldelight.coroutines.mapToOneOrNull
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.mapLatest
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimePeriod
 import org.orca.pelorus.cache.Cache
@@ -15,11 +8,9 @@ import org.orca.pelorus.data.repository.cache.CacheEntry
 import org.orca.pelorus.data.repository.cache.GeneralCacheDateTable
 import org.orca.pelorus.data.utils.isInFuture
 import org.orca.pelorus.data.utils.plus
-import kotlin.coroutines.CoroutineContext
 
 class LocalStaffDataSource(
-    private val cache: Cache,
-    private val ioContext: CoroutineContext = Dispatchers.IO
+    private val cache: Cache
 ) : ILocalStaffDataSource {
 
     private companion object {

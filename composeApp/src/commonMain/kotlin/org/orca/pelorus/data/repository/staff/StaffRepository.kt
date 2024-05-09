@@ -24,27 +24,20 @@ class StaffRepository(
 
     override suspend fun get(id: Int): Response.Result<Staff?> = localStaffDataSource
         .get(id)
-        .let { cacheEntry ->
-            cacheEntry.fold(
-
-                onData = {
-                    Response.Success(it)
-                },
-
-                onNotCached = {
-                    withContext(ioContext) { fetch() }.fold(
-                        onFailure = {
-                            Response.Failure(it)
-                        },
-                        onSuccess = {
-                            localStaffDataSource.update(it)
-                            get(id)
-                        }
-                    )
-                }
-
-            )
-        }
+        .fold(
+            onData = { Response.Success(it) },
+            onNotCached = {
+                fetch().fold(
+                    onFailure = {
+                        Response.Failure(it)
+                    },
+                    onSuccess = {
+                        localStaffDataSource.update(it)
+                        get(id)
+                    }
+                )
+            }
+        )
 
     override suspend fun fetch(): Response.Result<List<Staff>> =
         Response.Success(

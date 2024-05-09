@@ -39,7 +39,7 @@ androidx-appcompat = "1.6.1"
 ### Backend ###
 
 # Core API for talking to Compass
-kotlass = "2.0.0-SNAPSHOT-11"
+kotlass = "2.0.0-SNAPSHOT-12"
 
 # SQL Database for caching
 sqldelight = "2.0.2"

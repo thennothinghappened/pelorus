@@ -6,6 +6,7 @@ import app.cash.sqldelight.db.SqlDriver
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
+import org.orca.pelorus.cache.Activity
 import org.orca.pelorus.cache.Cache
 import org.orca.pelorus.cache.CachedCalendarDays
 import org.orca.pelorus.cache.CalendarEvent
@@ -38,7 +39,8 @@ fun createCache(driverFactory: DriverFactory): Cache {
         StaffAdapter = staffAdapter,
         CachedCalendarDaysAdapter = cachedCalendarDaysAdapter,
         GeneralCacheDateAdapter = generalCacheDateAdapter,
-        UserDetailsAdapter = userDetailsAdapter
+        UserDetailsAdapter = userDetailsAdapter,
+        ActivityAdapter = activityAdapter
     )
 
     return database
@@ -94,3 +96,9 @@ private val generalCacheDateAdapter = GeneralCacheDate.Adapter(
 private val userDetailsAdapter = UserDetails.Adapter(
     idAdapter = IntColumnAdapter
 )
+
+private val activityAdapter = Activity.Adapter(
+    idAdapter = IntColumnAdapter,
+    cachedAtAdapter = InstantAdaptor
+)
+
