@@ -36,13 +36,19 @@ class LocalUserDetailsDataSource(
         .mapToOneOrNull(ioContext)
         .map { it?.cachedAt }
         .mapLatest { cachedAt ->
-            if (cachedAt?.plus(cacheValidDuration)?.isInFuture() != true) {
-                CacheEntry.NotCached()
-            } else {
-                CacheEntry.Data(cache.userDetailsQueries
+            if (cachedAt?.plus(cacheValidDuration)?.isInFuture() == true) {
+                cache.userDetailsQueries
                     .selectById(currentUserId)
-                    .executeAsOne()
-                )
+                    .executeAsOneOrNull()
+            } else {
+                null
+            }
+        }
+        .map { userDetails ->
+            if (userDetails != null) {
+                CacheEntry.Data(userDetails)
+            } else {
+                CacheEntry.NotCached()
             }
         }
 
