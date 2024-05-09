@@ -15,8 +15,8 @@ import org.orca.pelorus.data.usecases.GetCalendarEventsWithStaffUseCase
 import org.orca.pelorus.data.utils.toLocalDateTime
 
 class HomeScreenModel(
-    private val userDetailsRepository: IUserDetailsRepository,
-    private val getCalendarEventsWithStaff: GetCalendarEventsWithStaffUseCase
+    userDetailsRepository: IUserDetailsRepository,
+    getCalendarEventsWithStaff: GetCalendarEventsWithStaffUseCase
 ) : ScreenModel {
 
     private val calendarEventsWithStaff =
@@ -37,6 +37,7 @@ class HomeScreenModel(
                 user = userDetails,
                 events = calendarEvents
             )
+
         }
         .stateIn(
             scope = screenModelScope,
