@@ -2,7 +2,6 @@ package org.orca.pelorus.data.repository
 
 import org.orca.kotlass.client.CompassApiError
 import org.orca.kotlass.client.CompassApiResult
-import pelorus.composeapp.generated.resources.Res
 
 /**
  * A response from a repository.
