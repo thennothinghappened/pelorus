@@ -22,10 +22,9 @@ class StaffRepository(
     private val ioContext: CoroutineDispatcher = Dispatchers.IO
 ) : IStaffRepository {
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    override fun get(id: Int): Flow<Response<Staff?>> = localStaffDataSource
+    override suspend fun get(id: Int): Response.Result<Staff?> = localStaffDataSource
         .get(id)
-        .mapLatest { cacheEntry ->
+        .let { cacheEntry ->
             cacheEntry.fold(
 
                 onData = {
@@ -39,15 +38,12 @@ class StaffRepository(
                         },
                         onSuccess = {
                             localStaffDataSource.update(it)
-                            Response.Loading()
+                            get(id)
                         }
                     )
                 }
 
             )
-        }
-        .onStart {
-            emit(Response.Loading())
         }
 
     override suspend fun fetch(): Response.Result<List<Staff>> =

@@ -12,7 +12,7 @@ interface ILocalStaffDataSource {
     /**
      * Get a staff member by their ID.
      */
-    fun get(id: Int): Flow<CacheEntry<Staff?>>
+    fun get(id: Int): CacheEntry<Staff?>
 
     /**
      * Clear the staff cache.

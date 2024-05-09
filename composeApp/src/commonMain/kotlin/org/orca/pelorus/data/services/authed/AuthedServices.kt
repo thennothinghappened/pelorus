@@ -12,6 +12,7 @@ import org.orca.pelorus.data.repository.staff.LocalStaffDataSource
 import org.orca.pelorus.data.repository.staff.StaffRepository
 import org.orca.pelorus.data.repository.userdetails.LocalUserDetailsDataSource
 import org.orca.pelorus.data.repository.userdetails.UserDetailsRepository
+import org.orca.pelorus.data.usecases.GetCalendarEventsWithStaffUseCase
 import org.orca.pelorus.screens.home.HomeScreenModel
 
 class AuthedServices(
@@ -48,7 +49,10 @@ class AuthedServices(
 
     @Composable
     override fun homeScreenModel() = remember {
-        HomeScreenModel(userDetailsRepository, staffRepository, calendarRepository)
+        HomeScreenModel(userDetailsRepository, GetCalendarEventsWithStaffUseCase(
+            calendarRepository,
+            staffRepository
+        ))
     }
 
 }

@@ -17,6 +17,7 @@ import org.orca.pelorus.cache.CalendarEvent
 import org.orca.pelorus.cache.Staff
 import org.orca.pelorus.cache.UserDetails
 import org.orca.pelorus.data.di.authedServices
+import org.orca.pelorus.data.objects.CalendarEventWithStaff
 import org.orca.pelorus.screens.AuthenticatedScreen
 import org.orca.pelorus.ui.theme.sizing
 import org.orca.pelorus.ui.utils.collectValueWithLifecycle
@@ -54,7 +55,7 @@ object HomeTab : AuthenticatedScreen, Tab {
                 }
 
                 is HomeScreenModel.State.Success -> {
-                    CalendarContent(state.todayEvents, state.currentUser)
+                    CalendarContent(state.events, state.user)
                 }
 
                 is HomeScreenModel.State.Failure -> {
@@ -68,25 +69,25 @@ object HomeTab : AuthenticatedScreen, Tab {
     }
 
     @Composable
-    private fun CalendarContent(eventStaffPairs: List<Pair<CalendarEvent, Staff>>, userDetails: UserDetails) {
+    private fun CalendarContent(events: List<CalendarEventWithStaff>, user: UserDetails) {
 
         Column {
-            eventStaffPairs.fastForEach {
-                CalendarEvent(it, userDetails)
+            events.fastForEach {
+                CalendarEvent(it, user)
             }
         }
 
     }
 
     @Composable
-    private fun CalendarEvent(eventStaffPair: Pair<CalendarEvent, Staff>, userDetails: UserDetails) {
+    private fun CalendarEvent(eventStaffPair: CalendarEventWithStaff, user: UserDetails) {
 
         Card {
             Column(Modifier.fillMaxWidth().padding(sizing.paddingCardInner)) {
                 Row {
-                    Text(eventStaffPair.first.title)
+                    Text(eventStaffPair.event.title)
                     Spacer(Modifier.weight(1f))
-                    Text(eventStaffPair.second.firstName)
+                    Text(eventStaffPair.staff?.firstName ?: "Unknown Staff Member")
                 }
                 Row {
                     Spacer(Modifier.weight(1f))

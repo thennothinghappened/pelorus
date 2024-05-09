@@ -2,16 +2,17 @@ package org.orca.pelorus.data.repository
 
 import org.orca.kotlass.client.CompassApiError
 import org.orca.kotlass.client.CompassApiResult
+import pelorus.composeapp.generated.resources.Res
 
 /**
  * A response from a repository.
  */
-sealed interface Response<T> {
+sealed class Response<T> {
 
     /**
      * A final result from a repository.
      */
-    sealed class Result<T> : Response<T> {
+    sealed class Result<T> : Response<T>() {
 
         inline fun <R> fold(
             onSuccess: (value: T) -> R,
@@ -30,7 +31,10 @@ sealed interface Response<T> {
 
     }
 
-    data class Loading<T>(val progress: T? = null) : Response<T>
+    /**
+     * The response is loading.
+     */
+    class Loading<T> : Response<T>()
 
     /**
      * A successful response from the remote.
@@ -41,6 +45,13 @@ sealed interface Response<T> {
      * A failure response from the remote.
      */
     data class Failure<T>(val error: RepositoryError) : Result<T>()
+
+    inline fun resultOrElse(
+        onLoading: () -> Result<T>
+    ) = when(this) {
+        is Result -> this
+        is Loading -> onLoading()
+    }
 
 }
 

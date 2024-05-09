@@ -12,7 +12,7 @@ interface IStaffRepository {
     /**
      * Get a staff member by their ID.
      */
-    fun get(id: Int): Flow<Response<Staff?>>
+    suspend fun get(id: Int): Response.Result<Staff?>
 
     /**
      * Fetch the list of staff members from the remote.

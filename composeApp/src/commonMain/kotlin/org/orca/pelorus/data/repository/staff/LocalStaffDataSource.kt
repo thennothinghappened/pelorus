@@ -25,17 +25,15 @@ class LocalStaffDataSource(
     private companion object {
 
         val table = GeneralCacheDateTable.Staff.name
-        val cacheValidDuration = DateTimePeriod(minutes = 1)
+        val cacheValidDuration = DateTimePeriod(seconds = 8)
 
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     override fun get(id: Int) = cache.generalCacheDateQueries
         .queryCachedAt(table)
-        .asFlow()
-        .mapToOneOrNull(ioContext)
-        .map { it?.cachedAt }
-        .mapLatest { cachedAt ->
+        .executeAsOneOrNull()
+        .let { it?.cachedAt }
+        .let { cachedAt ->
             if (cachedAt?.plus(cacheValidDuration)?.isInFuture() != true) {
                 CacheEntry.NotCached()
             } else {
