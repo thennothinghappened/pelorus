@@ -1,4 +1,4 @@
-package org.orca.pelorus.screens.settings
+package org.orca.pelorus.screens.tabs.settings
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -15,20 +15,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.stringResource
 import org.orca.pelorus.data.di.rootServices
 import org.orca.pelorus.screens.AuthenticatedScreen
 import org.orca.pelorus.ui.theme.sizing
+import pelorus.composeapp.generated.resources.Res
+import pelorus.composeapp.generated.resources.tab_settings
 
 /**
  * The application settings screen.
  */
-object SettingsScreen : AuthenticatedScreen, Tab {
+object SettingsTab : AuthenticatedScreen, Tab {
 
+    @OptIn(ExperimentalResourceApi::class)
     override val options: TabOptions
         @Composable
         get() {
-            // TODO: string resources!
-            val title = "Settings"
+            val title = stringResource(Res.string.tab_settings)
             val icon = rememberVectorPainter(Icons.Default.Settings)
 
             return remember {
@@ -63,6 +67,6 @@ object SettingsScreen : AuthenticatedScreen, Tab {
 
     }
 
-    private fun readResolve(): Any = SettingsScreen
+    private fun readResolve(): Any = SettingsTab
 
 }

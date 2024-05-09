@@ -18,6 +18,8 @@ import org.jetbrains.compose.resources.stringResource
 import org.orca.pelorus.screens.login.manual.ManualLoginScreen
 import org.orca.pelorus.ui.common.MediumHorizontalDivider
 import pelorus.composeapp.generated.resources.Res
+import pelorus.composeapp.generated.resources.login_cookie
+import pelorus.composeapp.generated.resources.login_cookie_desc
 import pelorus.composeapp.generated.resources.login_tagline
 import pelorus.composeapp.generated.resources.login_welcome
 
@@ -51,17 +53,48 @@ object LoginScreen : Screen {
 
             MediumHorizontalDivider()
 
-            ListItem(
-                headlineContent = {
-                    Text("Login via Cookie")
-                },
-                modifier = Modifier.clickable {
-                    navigator.push(ManualLoginScreen)
-                }
-            )
+            Column {
+
+                LoginOption(
+                    title = stringResource(Res.string.login_cookie),
+                    description = stringResource(Res.string.login_cookie_desc),
+                    onClick = {
+                        navigator.push(ManualLoginScreen)
+                    }
+                )
+
+            }
 
         }
 
+    }
+
+    /**
+     * A card providing an option on how to log in.
+     */
+    @Composable
+    private fun LoginOption(
+        title: String,
+        description: String,
+        onClick: () -> Unit
+    ) {
+        ListItem(
+            headlineContent = {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleMedium
+                )
+            },
+            supportingContent = {
+                Text(
+                    text = description,
+                    style = MaterialTheme.typography.titleSmall
+                )
+            },
+            modifier = Modifier.clickable {
+                onClick()
+            }
+        )
     }
 
     private fun readResolve(): Any = LoginScreen

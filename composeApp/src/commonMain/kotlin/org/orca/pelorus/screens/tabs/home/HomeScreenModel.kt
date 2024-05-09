@@ -1,4 +1,4 @@
-package org.orca.pelorus.screens.home
+package org.orca.pelorus.screens.tabs.home
 
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope

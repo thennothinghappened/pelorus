@@ -1,4 +1,4 @@
-package org.orca.pelorus.screens.home
+package org.orca.pelorus.screens.tabs.home
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -25,6 +25,8 @@ import androidx.compose.ui.util.fastForEach
 import androidx.compose.ui.util.fastMap
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.stringResource
 import org.orca.pelorus.cache.UserDetails
 import org.orca.pelorus.data.di.authedServices
 import org.orca.pelorus.data.objects.CalendarEventWithStaff
@@ -33,14 +35,17 @@ import org.orca.pelorus.ui.common.MediumHorizontalDivider
 import org.orca.pelorus.ui.components.calendar.CalendarEvent
 import org.orca.pelorus.ui.theme.sizing
 import org.orca.pelorus.ui.utils.collectValueWithLifecycle
+import pelorus.composeapp.generated.resources.Res
+import pelorus.composeapp.generated.resources.calendar_title
+import pelorus.composeapp.generated.resources.tab_home
 
 object HomeTab : AuthenticatedScreen, Tab {
 
+    @OptIn(ExperimentalResourceApi::class)
     override val options: TabOptions
         @Composable
         get() {
-            // TODO: string resources!
-            val title = "Home"
+            val title = stringResource(Res.string.tab_home)
             val icon = rememberVectorPainter(Icons.Default.Home)
 
             return remember {
@@ -89,10 +94,11 @@ object HomeTab : AuthenticatedScreen, Tab {
 
     }
 
+    @OptIn(ExperimentalResourceApi::class)
     @Composable
     private fun CalendarContent(events: List<CalendarEventWithStaff>, user: UserDetails) {
 
-        Text("Calendar", style = MaterialTheme.typography.titleLarge)
+        Text(stringResource(Res.string.calendar_title), style = MaterialTheme.typography.titleLarge)
 
         Column(
             verticalArrangement = Arrangement.spacedBy(sizing.spacerMedium)

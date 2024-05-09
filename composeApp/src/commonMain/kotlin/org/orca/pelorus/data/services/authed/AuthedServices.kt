@@ -13,7 +13,7 @@ import org.orca.pelorus.data.repository.staff.StaffRepository
 import org.orca.pelorus.data.repository.userdetails.LocalUserDetailsDataSource
 import org.orca.pelorus.data.repository.userdetails.UserDetailsRepository
 import org.orca.pelorus.data.usecases.GetCalendarEventsWithStaffUseCase
-import org.orca.pelorus.screens.home.HomeScreenModel
+import org.orca.pelorus.screens.tabs.home.HomeScreenModel
 
 class AuthedServices(
     credentials: CompassUserCredentials,

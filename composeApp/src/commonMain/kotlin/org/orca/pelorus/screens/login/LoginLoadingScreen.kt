@@ -11,15 +11,20 @@ import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.stringResource
 import org.orca.pelorus.data.di.rootServices
 import org.orca.pelorus.screenmodel.AuthScreenModel
 import org.orca.pelorus.ui.utils.collectValueWithLifecycle
+import pelorus.composeapp.generated.resources.Res
+import pelorus.composeapp.generated.resources.login_loading_message
 
 /**
  * The loading screen when you are logging in.
  */
 object LoginLoadingScreen : Screen {
 
+    @OptIn(ExperimentalResourceApi::class)
     @Composable
     override fun Content() {
 
@@ -36,7 +41,7 @@ object LoginLoadingScreen : Screen {
 
             Column(Modifier.align(Alignment.Center)) {
 
-                Text("Logging into Compass...")
+                Text(stringResource(Res.string.login_loading_message))
                 CircularProgressIndicator(Modifier.align(Alignment.CenterHorizontally))
 
             }

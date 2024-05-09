@@ -2,12 +2,24 @@
 
 <!-- Note: this file will start seeing proper use once the app is less testing and more actual thing :P -->
 <resources>
+
     <!-- Global -->
     <string name="app_name">Pelorus</string>
 
     <!-- Login -->
     <string name="login_welcome">Welcome to Pelorus!</string>
     <string name="login_tagline">Choose an option to login</string>
+    <string name="login_cookie">Login via Cookie</string>
+    <string name="login_cookie_desc">Use your browser's login cookie via the F12 developer tools to log in.</string>
+    <string name="login_loading_message">Logging into Compass...</string>
+
+    <!-- Tabs -->
+    <string name="tab_home">Home</string>
+    <string name="tab_settings">Settings</string>
+    <string name="tab_profile">Profile</string>
+
+    <!-- Calendar -->
+    <string name="calendar_title">Calendar</string>
 
 
 </resources>

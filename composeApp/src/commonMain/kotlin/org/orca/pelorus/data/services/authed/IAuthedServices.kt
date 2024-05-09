@@ -1,7 +1,7 @@
 package org.orca.pelorus.data.services.authed
 
 import androidx.compose.runtime.Composable
-import org.orca.pelorus.screens.home.HomeScreenModel
+import org.orca.pelorus.screens.tabs.home.HomeScreenModel
 
 /**
  * The main app authenticated-scope services provider.
