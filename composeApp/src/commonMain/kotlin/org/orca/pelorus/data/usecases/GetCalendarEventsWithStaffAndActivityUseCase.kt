@@ -1,6 +1,7 @@
 package org.orca.pelorus.data.usecases
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.datetime.LocalDate
 import org.orca.pelorus.data.objects.CalendarEventData
@@ -22,17 +23,17 @@ class GetCalendarEventsWithStaffAndActivityUseCase(
     @OptIn(ExperimentalCoroutinesApi::class)
     operator fun invoke(date: LocalDate) = calendarRepository
         .getEventsForDate(date)
-        .mapLatest { result ->
+        .mapLatest res@ { result ->
 
             result
-                .resultOrElse { return@mapLatest Response.Loading() }
-                .getOrElse { return@mapLatest Response.Failure(it) }
+                .resultOrElse { return@res Response.Loading() }
+                .getOrElse { return@res Response.Failure(it) }
                 .map { event ->
 
                     val staff = staffRepository
                         .get(event.staffId)
-                        .getOrElse { return@mapLatest Response.Failure(it) }
-                        .let { it ?: return@mapLatest Response.Failure(RepositoryError.NotFoundError) }
+                        .getOrElse { return@res Response.Failure(it) }
+                        .let { it ?: return@res Response.Failure(RepositoryError.NotFoundError) }
 
                     val activity = event.activityId
                         ?.let { id ->

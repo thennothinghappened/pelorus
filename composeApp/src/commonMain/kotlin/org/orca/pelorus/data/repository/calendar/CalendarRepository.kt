@@ -55,11 +55,7 @@ class CalendarRepository(
                 }
 
                 val remoteList = withContext(ioContext) { remoteClient.getCalendarEvents(date) }
-                    .getOrElse {
-                        return@mapLatest Response.Failure(RepositoryError.RemoteClientError(it))
-                    }
-
-                val newCachedAt = Clock.System.now()
+                    .getOrElse { return@mapLatest Response.Failure(RepositoryError.RemoteClientError(it)) }
 
                 localQueries.transaction {
 
@@ -77,7 +73,6 @@ class CalendarRepository(
 
                         localQueries.insertEvent(
                             date = date,
-                            cachedAt = newCachedAt,
                             id = it.id,
                             title = it.name,
                             allDay = it.allDay,
@@ -88,15 +83,17 @@ class CalendarRepository(
                             staffId = staffId,
                             originalStaffId = originalStaffId,
                         )
+
                     }
+
+                    localQueries.insertCachedDate(date, Clock.System.now())
 
                 }
 
-                return@mapLatest Response.Success(
+                Response.Success(
                     localQueries
                         .selectOnDate(date)
                         .executeAsList()
-
                 )
 
             }

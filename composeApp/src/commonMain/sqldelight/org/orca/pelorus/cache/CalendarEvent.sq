@@ -85,27 +85,31 @@ selectCacheInfoOnDate:
 SELECT CachedCalendarDays.cachedAt FROM CachedCalendarDays
 WHERE CachedCalendarDays.date = :date;
 
+--- Select the cached at field for the given date.
+selectInfoOnDate:
+SELECT * FROM CachedCalendarDays
+WHERE CachedCalendarDays.date = :date;
+
 --- Insert an event into the cache.
-insertEvent {
+insertEvent:
+INSERT INTO CalendarEvent
+VALUES (
+    :id,
+    :date,
+    :title,
+    :allDay,
+    :start,
+    :finish,
+    :activityId,
+    :studentId,
+    :staffId,
+    :originalStaffId
+);
 
-    INSERT OR IGNORE INTO CachedCalendarDays
-    VALUES (:date, :cachedAt);
-
-    INSERT INTO CalendarEvent
-    VALUES (
-        :id,
-        :date,
-        :title,
-        :allDay,
-        :start,
-        :finish,
-        :activityId,
-        :studentId,
-        :staffId,
-        :originalStaffId
-    );
-
-}
+--- Insert a cache entry for the given date.
+insertCachedDate:
+INSERT OR REPLACE INTO CachedCalendarDays
+VALUES (:date, :cachedAt);
 
 --- Delete the cache entry for the given date.
 deleteOnDate {
