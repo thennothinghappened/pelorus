@@ -26,19 +26,13 @@ private object PrefsHook
 @OptIn(ExperimentalResourceApi::class)
 fun main() {
 
-    println("IT BEGINS")
-
     val preferences = Preferences.userNodeForPackage(PrefsHook::class.java)
     val sharedPrefs = SharedPrefsFactory(preferences).createSharedPrefs()
     val cache = createCache(DriverFactory())
     val dataCoroutineScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
     val rootServices = RootServices(cache, dataCoroutineScope, sharedPrefs)
 
-    println("LOADED SERVICES")
-
     application {
-        println("APP CONTEXT")
-
         Window(
             resizable = true,
             onCloseRequest = ::exitApplication,
@@ -48,7 +42,6 @@ fun main() {
             ),
             icon = painterResource(Res.drawable.pelorus_logo)
         ) {
-            println("WINDOW!")
             WithRootServices(rootServices) {
                 App()
             }
