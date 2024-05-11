@@ -42,18 +42,27 @@ kotlin {
             implementation(compose.animation)
             implementation(compose.components.resources)
 
-            implementation(libs.kotlass)
-            implementation(libs.htmltext)
-            implementation(libs.kotlinx.datetime)
-            implementation(libs.kotlinx.coroutines.swing)
-            implementation(libs.sqldelight.coroutines)
-            implementation(libs.sqldelight.primitiveAdapters)
-            implementation(libs.trulysharedprefs)
-            implementation(libs.material3.windowSizeClassMultiplatform)
             implementation(libs.voyager.navigator)
             implementation(libs.voyager.tabNavigator)
             implementation(libs.voyager.screenModel)
             implementation(libs.voyager.transitions)
+            implementation(libs.htmltext)
+            implementation(libs.material3.windowSizeClassMultiplatform)
+
+            implementation(libs.kotlinx.datetime)
+            implementation(libs.kotlinx.serialization.json)
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.okhttp)
+            implementation(libs.ktor.client.resources)
+            implementation(libs.ktor.client.contentNegotiation)
+            implementation(libs.ktor.client.logging)
+            implementation(libs.ktor.serialization.kotlinx.json)
+            implementation(libs.kotlass)
+            implementation(libs.trulysharedprefs)
+            implementation(libs.sqldelight.coroutines)
+            implementation(libs.sqldelight.primitiveAdapters)
+
+
         }
 
         androidMain.dependencies {
@@ -68,11 +77,12 @@ kotlin {
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.sqldelight.driver.jvm)
+            implementation(libs.kotlinx.coroutines.swing)
         }
     }
 }
 
-val proguardPath = "${projectDir.path}/proguard-rules.pro"
+val proguardSharedPath = "${projectDir.path}/proguard-shared.pro"
 
 android {
     namespace = "org.orca.pelorus"
@@ -125,7 +135,10 @@ android {
         getByName("release") {
             isMinifyEnabled = true
             signingConfig = signingConfigs.findByName("main")
-            proguardFiles.push(File(proguardPath))
+
+            proguardFiles += File(proguardSharedPath)
+            proguardFiles += File("${projectDir.path}/src/androidMain/proguard-android.pro")
+
         }
     }
 
@@ -156,11 +169,15 @@ compose.desktop {
             linux {
                 iconFile.set(project.file("icons/pelorus_logo.png"))
             }
+
+            modules("java.sql")
+
         }
 
         buildTypes.release.proguard {
-            configurationFiles.from(proguardPath)
+            configurationFiles.from(proguardSharedPath, "${projectDir.path}/src/desktopMain/proguard-desktop.pro")
         }
+
     }
 }
 
