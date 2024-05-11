@@ -16,7 +16,7 @@ class LocalStaffDataSource(
     private companion object {
 
         val table = GeneralCacheDateTable.Staff.name
-        val cacheValidDuration = DateTimePeriod(seconds = 8)
+        val cacheValidDuration = DateTimePeriod(months = 1)
 
     }
 

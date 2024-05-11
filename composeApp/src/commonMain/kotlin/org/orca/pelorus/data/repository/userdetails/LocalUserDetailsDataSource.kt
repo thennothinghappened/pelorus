@@ -25,7 +25,7 @@ class LocalUserDetailsDataSource(
     private companion object {
 
         val table = GeneralCacheDateTable.UserDetails.name
-        val cacheValidDuration = DateTimePeriod(minutes = 1)
+        val cacheValidDuration = DateTimePeriod(months = 1)
 
     }
 
