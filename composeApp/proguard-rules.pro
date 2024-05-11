@@ -1,9 +1,5 @@
-# https://github.com/KevinnZou/compose-webview-multiplatform/blob/main/README.desktop.md#proguard
--keep class org.cef.** { *; }
--keep class kotlinx.coroutines.swing.SwingDispatcherFactory
 
-# https://arkivanov.github.io/Decompose/extensions/compose/#proguard-rules-for-compose-for-desktop-jvm
--keep class com.arkivanov.decompose.extensions.compose.jetbrains.mainthread.SwingMainThreadChecker
+-dontobfuscate
 
 -dontwarn javafx.**
 -dontwarn org.eclipse.**
@@ -23,3 +19,8 @@
 
 -dontwarn org.apache.commons.compress.**
 -dontwarn com.jogamp.**
+
+-dontwarn androidx.window.extensions.area.**
+-dontwarn java.awt.event.**
+-dontwarn javax.swing.**
+-dontwarn org.slf4j.impl.**

@@ -72,9 +72,7 @@ kotlin {
     }
 }
 
-object Proguard {
-    const val COMMON_PATH = "proguard-rules.pro"
-}
+val proguardPath = "${projectDir.path}/proguard-rules.pro"
 
 android {
     namespace = "org.orca.pelorus"
@@ -127,7 +125,7 @@ android {
         getByName("release") {
             isMinifyEnabled = true
             signingConfig = signingConfigs.findByName("main")
-            proguardFiles.push(File(Proguard.COMMON_PATH))
+            proguardFiles.push(File(proguardPath))
         }
     }
 
@@ -161,7 +159,7 @@ compose.desktop {
         }
 
         buildTypes.release.proguard {
-            configurationFiles.from(Proguard.COMMON_PATH)
+            configurationFiles.from(proguardPath)
         }
     }
 }
