@@ -155,7 +155,7 @@ android {
 compose.desktop {
 
     application {
-        mainClass = "MainKt"
+        mainClass = "org.orca.pelorus.MainKt"
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Exe, TargetFormat.Deb)

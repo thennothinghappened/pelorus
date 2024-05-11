@@ -1,3 +1,5 @@
+package org.orca.pelorus
+
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowPosition
@@ -9,7 +11,6 @@ import kotlinx.coroutines.SupervisorJob
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import org.orca.pelorus.App
 import org.orca.pelorus.data.repository.cache.DriverFactory
 import org.orca.pelorus.data.repository.cache.createCache
 import org.orca.pelorus.data.di.WithRootServices
@@ -25,13 +26,19 @@ private object PrefsHook
 @OptIn(ExperimentalResourceApi::class)
 fun main() {
 
+    println("IT BEGINS")
+
     val preferences = Preferences.userNodeForPackage(PrefsHook::class.java)
     val sharedPrefs = SharedPrefsFactory(preferences).createSharedPrefs()
     val cache = createCache(DriverFactory())
     val dataCoroutineScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
     val rootServices = RootServices(cache, dataCoroutineScope, sharedPrefs)
 
+    println("LOADED SERVICES")
+
     application {
+        println("APP CONTEXT")
+
         Window(
             resizable = true,
             onCloseRequest = ::exitApplication,
@@ -41,6 +48,7 @@ fun main() {
             ),
             icon = painterResource(Res.drawable.pelorus_logo)
         ) {
+            println("WINDOW!")
             WithRootServices(rootServices) {
                 App()
             }
