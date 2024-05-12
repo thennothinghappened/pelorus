@@ -7,7 +7,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -19,9 +18,8 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.stringResource
 import org.orca.pelorus.data.di.authedServices
 import org.orca.pelorus.screens.AuthenticatedScreen
-import org.orca.pelorus.screens.tabs.calendar.CalendarScreenModel.*
+import org.orca.pelorus.screens.tabs.calendar.CalendarScreenModel.State
 import org.orca.pelorus.ui.common.ErrorCard
-import org.orca.pelorus.ui.common.ExpandableError
 import org.orca.pelorus.ui.components.calendar.CalendarContent
 import org.orca.pelorus.ui.components.calendar.CalendarHeading
 import org.orca.pelorus.ui.utils.collectValueWithLifecycle

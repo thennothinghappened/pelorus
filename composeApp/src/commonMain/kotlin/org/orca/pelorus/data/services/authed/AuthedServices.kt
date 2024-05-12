@@ -1,8 +1,11 @@
 package org.orca.pelorus.data.services.authed
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import cafe.adriel.voyager.core.model.rememberScreenModel
+import cafe.adriel.voyager.core.screen.Screen
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.datetime.Clock
+import kotlinx.datetime.LocalDate
 import org.orca.kotlass.client.CompassApiClient
 import org.orca.kotlass.client.CompassUserCredentials
 import org.orca.pelorus.cache.Cache
@@ -13,6 +16,7 @@ import org.orca.pelorus.data.repository.userdetails.LocalUserDetailsDataSource
 import org.orca.pelorus.data.repository.userdetails.UserDetailsRepository
 import org.orca.pelorus.data.services.root.IRootServices
 import org.orca.pelorus.data.usecases.GetCalendarEventsWithStaffAndActivityUseCase
+import org.orca.pelorus.data.utils.toLocalDate
 import org.orca.pelorus.screens.tabs.calendar.CalendarScreenModel
 import org.orca.pelorus.screens.tabs.home.HomeScreenModel
 
@@ -52,24 +56,32 @@ class AuthedServices(
         remoteClient = client
     )
 
+    context(Screen)
     @Composable
-    override fun homeScreenModel() = remember { HomeScreenModel(
-        userDetailsRepository = userDetailsRepository,
-        getCalendarEventsWithStaff = GetCalendarEventsWithStaffAndActivityUseCase(
-            calendarRepository = calendarRepository,
-            activityRepository = activityRepository,
-            staffRepository = staffRepository
+    override fun homeScreenModel() = rememberScreenModel {
+        HomeScreenModel(
+            date = Clock.System.now().toLocalDate(),
+            userDetailsRepository = userDetailsRepository,
+            getCalendarEventsWithStaff = GetCalendarEventsWithStaffAndActivityUseCase(
+                calendarRepository = calendarRepository,
+                activityRepository = activityRepository,
+                staffRepository = staffRepository
+            )
         )
-    ) }
+    }
 
+    context(Screen)
     @Composable
-    override fun calendarScreenModel() = remember { CalendarScreenModel(
-        userDetailsRepository = userDetailsRepository,
-        getCalendarEventsWithStaff = GetCalendarEventsWithStaffAndActivityUseCase(
-            calendarRepository = calendarRepository,
-            activityRepository = activityRepository,
-            staffRepository = staffRepository
+    override fun calendarScreenModel(date: LocalDate) = rememberScreenModel {
+        CalendarScreenModel(
+            initialDate = date,
+            userDetailsRepository = userDetailsRepository,
+            getCalendarEventsWithStaff = GetCalendarEventsWithStaffAndActivityUseCase(
+                calendarRepository = calendarRepository,
+                activityRepository = activityRepository,
+                staffRepository = staffRepository
+            )
         )
-    ) }
+    }
 
 }

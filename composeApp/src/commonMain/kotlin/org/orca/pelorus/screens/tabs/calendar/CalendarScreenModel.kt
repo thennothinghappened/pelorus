@@ -4,7 +4,10 @@ import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
-import kotlinx.datetime.*
+import kotlinx.datetime.DatePeriod
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.minus
+import kotlinx.datetime.plus
 import org.orca.pelorus.cache.UserDetails
 import org.orca.pelorus.data.objects.CalendarEventData
 import org.orca.pelorus.data.repository.RepositoryError
@@ -13,14 +16,19 @@ import org.orca.pelorus.data.repository.userdetails.IUserDetailsRepository
 import org.orca.pelorus.data.usecases.GetCalendarEventsWithStaffAndActivityUseCase
 import org.orca.pelorus.data.utils.combineSuccessOrPass
 import org.orca.pelorus.data.utils.foldResponse
-import org.orca.pelorus.data.utils.toLocalDateTime
 
+/**
+ * Screen model for the Calendar.
+ *
+ * @param initialDate The initial date to use.
+ */
 class CalendarScreenModel(
+    initialDate: LocalDate,
     userDetailsRepository: IUserDetailsRepository,
     getCalendarEventsWithStaff: GetCalendarEventsWithStaffAndActivityUseCase
 ) : ScreenModel {
 
-    private val mutableDate = MutableStateFlow(Clock.System.now().toLocalDateTime().date)
+    private val mutableDate = MutableStateFlow(initialDate)
     val date = mutableDate.asStateFlow()
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -65,6 +73,10 @@ class CalendarScreenModel(
         data object Loading : State
         data class Failure(val error: RepositoryError) : State
         data class Success(val events: List<CalendarEventData>, val userDetails: UserDetails) : State
+    }
+
+    override fun onDispose() {
+        println("byebye")
     }
 
 }

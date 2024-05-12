@@ -5,6 +5,9 @@ import kotlinx.datetime.*
 fun Instant.toLocalDateTime(): LocalDateTime =
     this.toLocalDateTime(TimeZone.currentSystemDefault())
 
+fun Instant.toLocalDate(): LocalDate =
+    this.toLocalDateTime(TimeZone.currentSystemDefault()).date
+
 /**
  * Add the given [period] in the current timezone.
  */

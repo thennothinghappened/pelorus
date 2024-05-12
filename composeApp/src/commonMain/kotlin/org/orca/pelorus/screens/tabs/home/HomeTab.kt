@@ -63,6 +63,8 @@ object HomeTab : AuthenticatedScreen, Tab {
 
         Column(Modifier.verticalScroll(scrollState)) {
 
+            CalendarHeading(screenModel.date)
+
             when (state) {
 
                 is State.Loading -> {
@@ -76,7 +78,6 @@ object HomeTab : AuthenticatedScreen, Tab {
                 is State.Success -> {
 
                     Column {
-                        CalendarHeading(state.calendarDate)
                         CalendarContent(state.events, state.user)
                     }
 
