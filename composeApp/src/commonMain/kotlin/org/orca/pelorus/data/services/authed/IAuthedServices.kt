@@ -1,7 +1,11 @@
 package org.orca.pelorus.data.services.authed
 
 import androidx.compose.runtime.Composable
+import org.orca.pelorus.screens.tabs.calendar.CalendarScreenModel
+import org.orca.pelorus.screens.tabs.calendar.CalendarTab
 import org.orca.pelorus.screens.tabs.home.HomeScreenModel
+import org.orca.pelorus.screens.tabs.home.HomeTab
+import kotlin.reflect.KClass
 
 /**
  * The main app authenticated-scope services provider.
@@ -14,5 +18,8 @@ interface IAuthedServices {
 
     @Composable
     fun homeScreenModel(): HomeScreenModel
+
+    @Composable
+    fun calendarScreenModel(): CalendarScreenModel
 
 }

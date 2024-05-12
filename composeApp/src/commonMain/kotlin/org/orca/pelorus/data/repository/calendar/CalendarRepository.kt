@@ -34,7 +34,7 @@ class CalendarRepository(
         /**
          * How long to consider a cached entry valid for.
          */
-        val cacheValidDuration = DateTimePeriod(seconds = 10)
+        val cacheValidDuration = DateTimePeriod(minutes = 2)
 
     }
 

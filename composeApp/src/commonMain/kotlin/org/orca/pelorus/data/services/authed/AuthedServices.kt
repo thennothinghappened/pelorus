@@ -7,14 +7,13 @@ import org.orca.kotlass.client.CompassApiClient
 import org.orca.kotlass.client.CompassUserCredentials
 import org.orca.pelorus.cache.Cache
 import org.orca.pelorus.data.repository.activity.ActivityRepository
-import org.orca.pelorus.data.repository.activity.LocalActivityDataSource
 import org.orca.pelorus.data.repository.calendar.CalendarRepository
-import org.orca.pelorus.data.repository.staff.LocalStaffDataSource
 import org.orca.pelorus.data.repository.staff.StaffRepository
 import org.orca.pelorus.data.repository.userdetails.LocalUserDetailsDataSource
 import org.orca.pelorus.data.repository.userdetails.UserDetailsRepository
 import org.orca.pelorus.data.services.root.IRootServices
 import org.orca.pelorus.data.usecases.GetCalendarEventsWithStaffAndActivityUseCase
+import org.orca.pelorus.screens.tabs.calendar.CalendarScreenModel
 import org.orca.pelorus.screens.tabs.home.HomeScreenModel
 
 class AuthedServices(
@@ -54,12 +53,23 @@ class AuthedServices(
     )
 
     @Composable
-    override fun homeScreenModel() = remember {
-        HomeScreenModel(userDetailsRepository, GetCalendarEventsWithStaffAndActivityUseCase(
-            calendarRepository,
-            staffRepository,
-            activityRepository
-        ))
-    }
+    override fun homeScreenModel() = remember { HomeScreenModel(
+        userDetailsRepository = userDetailsRepository,
+        getCalendarEventsWithStaff = GetCalendarEventsWithStaffAndActivityUseCase(
+            calendarRepository = calendarRepository,
+            activityRepository = activityRepository,
+            staffRepository = staffRepository
+        )
+    ) }
+
+    @Composable
+    override fun calendarScreenModel() = remember { CalendarScreenModel(
+        userDetailsRepository = userDetailsRepository,
+        getCalendarEventsWithStaff = GetCalendarEventsWithStaffAndActivityUseCase(
+            calendarRepository = calendarRepository,
+            activityRepository = activityRepository,
+            staffRepository = staffRepository
+        )
+    ) }
 
 }

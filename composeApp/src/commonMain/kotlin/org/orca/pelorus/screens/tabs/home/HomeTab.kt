@@ -1,13 +1,11 @@
 package org.orca.pelorus.screens.tabs.home
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -19,14 +17,19 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.util.fastForEach
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
+import kotlinx.datetime.LocalDate
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.stringResource
 import org.orca.pelorus.cache.UserDetails
 import org.orca.pelorus.data.di.authedServices
 import org.orca.pelorus.data.objects.CalendarEventData
 import org.orca.pelorus.screens.AuthenticatedScreen
+import org.orca.pelorus.screens.tabs.home.HomeScreenModel.*
+import org.orca.pelorus.ui.common.ErrorCard
 import org.orca.pelorus.ui.common.MediumHorizontalDivider
+import org.orca.pelorus.ui.components.calendar.CalendarContent
 import org.orca.pelorus.ui.components.calendar.CalendarEvent
+import org.orca.pelorus.ui.components.calendar.CalendarHeading
 import org.orca.pelorus.ui.theme.sizing
 import org.orca.pelorus.ui.utils.collectValueWithLifecycle
 import pelorus.composeapp.generated.resources.Res
@@ -44,7 +47,7 @@ object HomeTab : AuthenticatedScreen, Tab {
 
             return remember {
                 TabOptions(
-                    index = 1u,
+                    index = 2u,
                     title = title,
                     icon = icon
                 )
@@ -62,7 +65,7 @@ object HomeTab : AuthenticatedScreen, Tab {
 
             when (state) {
 
-                is HomeScreenModel.State.Loading -> {
+                is State.Loading -> {
 
                     Box(Modifier.fillMaxSize()) {
                         CircularProgressIndicator(Modifier.align(Alignment.Center))
@@ -70,45 +73,25 @@ object HomeTab : AuthenticatedScreen, Tab {
 
                 }
 
-                is HomeScreenModel.State.Success -> {
+                is State.Success -> {
 
-                    CalendarContent(state.events, state.user)
+                    Column {
+                        CalendarHeading(state.calendarDate)
+                        CalendarContent(state.events, state.user)
+                    }
 
                     MediumHorizontalDivider()
 
                 }
 
-                is HomeScreenModel.State.Failure -> {
-                    Text("Failed to load user details: ${state.error}")
+                is State.Failure -> {
+                    ErrorCard(
+                        title = "Failed to load the home page!",
+                        error = state.error.toString()
+                    )
                 }
 
             }
-
-        }
-
-    }
-
-    @OptIn(ExperimentalResourceApi::class)
-    @Composable
-    private fun CalendarContent(events: List<CalendarEventData>, user: UserDetails) {
-
-        Text(stringResource(Res.string.calendar_title), style = MaterialTheme.typography.titleLarge)
-
-        Column(
-            verticalArrangement = Arrangement.spacedBy(sizing.spacerMedium)
-        ) {
-
-            events
-                .filter { it.event.studentId == user.id }
-                .sortedBy { it.event.start }
-                .fastForEach {
-                    CalendarEvent(
-                        title = it.activity?.name ?: it.event.title,
-                        staffName = "${it.staff.firstName} ${it.staff.lastName}",
-                        startTime = it.event.start,
-                        finishTime = it.event.finish
-                    )
-                }
 
         }
 

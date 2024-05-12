@@ -18,7 +18,7 @@ fun <T> Flow<Response<T>>.filterIsResult() = filterIsInstance<Response.Result<T>
  * Map the given flow if it is a result, otherwise pass a loading value along the chain.
  */
 inline fun <T, R> Flow<Response<T>>.mapResultOrLoading(
-    crossinline transform: suspend (value: Response<T>) -> Response<R>
+    crossinline transform: suspend (value: Response.Result<T>) -> Response<R>
 ): Flow<Response<R>> = map {
     if (it is Response.Result) {
         transform(it)
@@ -62,11 +62,16 @@ inline fun <T1, T2, R> Flow<Response<T1>>.combineOrLoading(
  */
 inline fun <T1, T2, R> Flow<Response<T1>>.combineSuccessOrPass(
     flow: Flow<Response<T2>>,
-    crossinline transform: suspend (a: Response.Result<T1>, b: Response.Result<T2>) -> Response<R>
+    crossinline transform: suspend (a: T1, b: T2) -> Response<R>
 ): Flow<Response<R>> = combine(flow) { aResponse, bResponse ->
 
-    val a = aResponse.resultOrElse { return@combine Response.Loading() }
-    val b = bResponse.resultOrElse { return@combine Response.Loading() }
+    val a = aResponse
+        .resultOrElse { return@combine Response.Loading() }
+        .getOrElse { return@combine Response.Failure(it) }
+
+    val b = bResponse
+        .resultOrElse { return@combine Response.Loading() }
+        .getOrElse { return@combine Response.Failure(it) }
 
     transform(a, b)
 

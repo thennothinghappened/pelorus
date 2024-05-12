@@ -36,10 +36,7 @@ class ActivityRepository(
     override suspend fun fetch(id: Int): Response.Result<Activity> =
         Response.Success(
             withContext(ioContext) { remoteClient.getActivity(id) }
-                .getOrElse {
-                    return Response.Failure(RepositoryError.RemoteClientError(it))
-                }
-                .let { println(it); it }
+                .getOrElse { return Response.Failure(RepositoryError.RemoteClientError(it)) }
                 .asActivity(Clock.System.now())
         )
 

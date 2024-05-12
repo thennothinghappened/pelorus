@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.navigator.tab.CurrentTab
 import cafe.adriel.voyager.navigator.tab.TabNavigator
 import org.orca.pelorus.screens.AuthenticatedScreen
+import org.orca.pelorus.screens.tabs.calendar.CalendarTab
 import org.orca.pelorus.screens.tabs.home.HomeTab
 import org.orca.pelorus.screens.tabs.profile.ProfileTab
 import org.orca.pelorus.screens.tabs.settings.SettingsTab
@@ -28,6 +29,7 @@ object RootScreen : AuthenticatedScreen {
                 bottomBar = {
                     NavigationBar {
                         TabNavigationItem(SettingsTab)
+                        TabNavigationItem(CalendarTab)
                         TabNavigationItem(HomeTab)
                         TabNavigationItem(ProfileTab)
                     }
