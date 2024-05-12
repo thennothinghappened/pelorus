@@ -10,6 +10,7 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimePeriod
 import kotlinx.datetime.LocalDate
 import org.orca.kotlass.client.requests.ICalendarEventsClient
+import org.orca.kotlass.data.calendar.CalendarEvent
 import org.orca.kotlass.data.common.Manager
 import org.orca.pelorus.cache.Cache
 import org.orca.pelorus.data.repository.RepositoryError
@@ -62,27 +63,36 @@ class CalendarRepository(
                     localQueries.deleteOnDate(date)
 
                     remoteList.forEach {
+                        when (it) {
 
-                        // TODO: I'm like, 90% sure the managers[0] field is always filled lol.
-                        val (staffId, originalStaffId) = it.managers.first().let { manager ->
-                            when (manager) {
-                                is Manager.CoveredManager -> Pair(manager.coveringId, manager.id)
-                                is Manager.NormalManager -> Pair(manager.id, null)
+                            is CalendarEvent.ManagedActivity -> {
+
+                                val (staffId, originalStaffId) = it.managers.first()
+                                    .let { manager ->
+                                        when (manager) {
+                                            is Manager.CoveredManager -> Pair(manager.coveringId, manager.id)
+                                            is Manager.NormalManager -> Pair(manager.id, null)
+                                        }
+                                    }
+
+                                localQueries.insertEvent(
+                                    date = date,
+                                    id = it.id,
+                                    title = it.name,
+                                    allDay = it.allDay,
+                                    start = it.start.toLocalDateTime().time,
+                                    finish = it.finish.toLocalDateTime().time,
+                                    activityId = it.activityId,
+                                    studentId = it.targetStudentId,
+                                    staffId = staffId,
+                                    originalStaffId = originalStaffId,
+                                )
+
                             }
-                        }
 
-                        localQueries.insertEvent(
-                            date = date,
-                            id = it.id,
-                            title = it.name,
-                            allDay = it.allDay,
-                            start = it.start.toLocalDateTime().time,
-                            finish = it.finish.toLocalDateTime().time,
-                            activityId = if (it is KotlassCalendarEvent.HasActivity) it.activityId else null,
-                            studentId = it.targetStudentId,
-                            staffId = staffId,
-                            originalStaffId = originalStaffId,
-                        )
+                            else -> { println("TODO: handle non-managed event") }
+
+                        }
 
                     }
 
