@@ -12,7 +12,7 @@ class LocalActivityDataSource(
 ) : ILocalActivityDataSource {
 
     private companion object {
-        val cacheValidDuration = DateTimePeriod(seconds = 8)
+        val cacheValidDuration = DateTimePeriod(days = 7)
     }
 
     override fun get(id: Int) = cache.activityQueries
