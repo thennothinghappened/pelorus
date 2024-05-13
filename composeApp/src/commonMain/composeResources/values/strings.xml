@@ -22,5 +22,10 @@
     <!-- Calendar -->
     <string name="calendar_title">Calendar</string>
 
+    <!-- Settings -->
+    <string name="settings_logout">Log out</string>
+    <string name="settings_verify_login">Verify login credentials</string>
+    <string name="settings_verify_login_desc">Whether to verify that your login credentials are valid. You may disable this check for a speed boost, but the app will misbehave if your session has been invalidated.</string>
+
 
 </resources>

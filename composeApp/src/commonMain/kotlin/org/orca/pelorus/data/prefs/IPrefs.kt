@@ -1,8 +1,7 @@
 package org.orca.pelorus.data.prefs
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.ProvidableCompositionLocal
-import androidx.compose.runtime.staticCompositionLocalOf
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import org.orca.kotlass.client.CompassUserCredentials
 
 /**
@@ -11,9 +10,14 @@ import org.orca.kotlass.client.CompassUserCredentials
 interface IPrefs {
 
     /**
-     * Get the stored compass user credentials if any are stored.
+     * The stored compass user credentials if any are stored.
      */
-    fun getCompassCredentials(): CompassUserCredentials?
+    val compassCredentials: StateFlow<CompassUserCredentials?>
+
+    /**
+     * Whether we should verify that our login credentials are valid on startup.
+     */
+    val verifyValidLogin: StateFlow<Boolean>
 
 }
 
@@ -31,5 +35,10 @@ interface IMutablePrefs : IPrefs {
      * Reset the stored compass user credentials.
      */
     fun clearCompassCredentials()
+
+    /**
+     * Set whether we should verify that our login credentials are valid on startup.
+     */
+    fun setVerifyValidLogin(verify: Boolean)
 
 }

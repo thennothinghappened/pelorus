@@ -23,8 +23,18 @@ class AuthScreenModel(
 ) : StateScreenModel<State>(State.NotAuthenticated) {
 
     init {
-        mutablePrefs.getCompassCredentials()
-            ?.let(::tryLogin)
+
+        mutablePrefs.compassCredentials.value
+            ?.let { credentials ->
+
+                if (mutablePrefs.verifyValidLogin.value) {
+                    tryLogin(credentials)
+                } else {
+                    mutableState.update { State.Success(credentials) }
+                }
+
+            }
+
     }
 
     /**
