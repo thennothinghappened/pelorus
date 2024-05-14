@@ -1,13 +1,19 @@
 package org.orca.pelorus.screens.root
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.tab.CurrentTab
 import cafe.adriel.voyager.navigator.tab.TabNavigator
+import cafe.adriel.voyager.transitions.FadeTransition
+import cafe.adriel.voyager.transitions.SlideTransition
 import org.orca.pelorus.screens.AuthenticatedScreen
 import org.orca.pelorus.screens.tabs.calendar.CalendarTab
 import org.orca.pelorus.screens.tabs.home.HomeTab
@@ -35,8 +41,13 @@ object RootScreen : AuthenticatedScreen {
                     }
                 }
             ) { paddingValues ->
-                Box(Modifier.padding(paddingValues)) {
-                    CurrentTab()
+                Surface(
+                    Modifier
+                        .padding(paddingValues)
+                        .fillMaxSize()
+                ) {
+                    // TODO: this is using undocumented behaviour in Voyager as the tab navigator doesn't seem to provide transitions for some reason.
+                    FadeTransition(LocalNavigator.currentOrThrow)
                 }
             }
 
