@@ -45,7 +45,7 @@ ktor = "2.3.11"
 kotlinx-serialization = "1.6.3"
 
 # Core API for talking to Compass
-kotlass = "2.0.0-SNAPSHOT-13"
+kotlass = "2.0.0-SNAPSHOT-14"
 
 # SQL Database for caching
 sqldelight = "2.0.2"
