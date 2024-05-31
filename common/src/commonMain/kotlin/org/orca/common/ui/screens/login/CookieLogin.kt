@@ -16,15 +16,13 @@ import androidx.compose.ui.text.input.KeyboardType
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.essenty.instancekeeper.InstanceKeeper
 import com.arkivanov.essenty.instancekeeper.getOrCreate
-import com.arkivanov.essenty.parcelable.Parcelable
-import com.arkivanov.essenty.parcelable.Parcelize
-import com.arkivanov.essenty.statekeeper.consume
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.serialization.Serializable
 import org.orca.common.data.utils.collectAsStateAndLifecycle
 import org.orca.common.data.utils.coroutineScope
 import org.orca.common.ui.components.common.ErrorRenderer
@@ -39,14 +37,14 @@ interface CookieLoginComponent {
 
     fun onFinishLogin()
 
-    @Parcelize
+    @Serializable
     data class State(
         val cookie: String = "",
         val userId: String = "",
         val domain: String = "",
         val loading: Boolean = false,
         val result: LoginComponent.LoginResult? = null
-    ) : Parcelable
+    )
 
     fun onCookieUpdate(cookie: String)
     fun onUserIdUpdate(userId: String)
@@ -61,7 +59,7 @@ class DefaultCookieLoginComponent(
     private val handler =
         instanceKeeper.getOrCreate(KEY_STATE) {
             Handler(
-                initialState = stateKeeper.consume(KEY_STATE) ?: CookieLoginComponent.State()
+                initialState = stateKeeper.consume(KEY_STATE, CookieLoginComponent.State.serializer()) ?: CookieLoginComponent.State()
             )
         }
 
@@ -113,7 +111,7 @@ class DefaultCookieLoginComponent(
     }
 
     init {
-        stateKeeper.register(KEY_STATE) { handler.state.value }
+        stateKeeper.register(KEY_STATE, CookieLoginComponent.State.serializer()) { handler.state.value }
     }
 
     private companion object {

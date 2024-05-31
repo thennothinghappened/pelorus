@@ -3,6 +3,8 @@ package org.orca.common.ui.screens
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.DateRange
@@ -80,7 +82,7 @@ fun CalendarContent(
                     false,
                     component::goBackDay,
                     { Icon(
-                        imageVector = Icons.Default.ArrowBack,
+                        imageVector = Icons.AutoMirrored.Default.ArrowBack,
                         contentDescription = "Previous"
                     ) }
                 )
@@ -96,7 +98,7 @@ fun CalendarContent(
                     false,
                     component::goForwardDay,
                     { Icon(
-                        imageVector = Icons.Default.ArrowForward,
+                        imageVector = Icons.AutoMirrored.Default.ArrowForward,
                         contentDescription = "Next"
                     ) }
                 )

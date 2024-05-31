@@ -14,16 +14,15 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.extensions.compose.jetbrains.stack.Children
-import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.stackAnimation
+import com.arkivanov.decompose.extensions.compose.stack.Children
+import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
-import com.arkivanov.essenty.parcelable.Parcelable
-import com.arkivanov.essenty.parcelable.Parcelize
 import io.kamel.image.lazyPainterResource
 import io.ktor.http.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.serialization.Serializable
 import org.orca.common.data.Compass
 import org.orca.common.data.utils.collectAsStateAndLifecycle
 import org.orca.common.ui.defaults.Animations
@@ -47,6 +46,7 @@ class ResourcesComponent(
     private val _stack =
         childStack(
             source = navigation,
+            serializer = Config.serializer(),
             initialConfiguration = Config.Folder(4), // TODO: can we always count on this being "4"?
             handleBackButton = true,
             childFactory = ::child
@@ -78,10 +78,17 @@ class ResourcesComponent(
         object FileChild : Child
     }
 
-    @Parcelize
-    sealed class Config(open val id: Int) : Parcelable {
-        data class Folder(override val id: Int) : Config(id)
-        data class File(override val id: Int) : Config(id)
+    @Serializable
+    sealed interface Config {
+
+        val id: Int
+
+        @Serializable
+        data class Folder(override val id: Int) : Config
+
+        @Serializable
+        data class File(override val id: Int) : Config
+
     }
 
     fun down(config: Config) {
@@ -285,7 +292,7 @@ private fun File(
     downloadUrlGetter: (String, String) -> String,
     fileDownloader: (String) -> Unit,
     fileFlow: StateFlow<IFlowKotlassClient.State<String>>,
-    domain: String? = null
+    domain: String = ""
 ) {
     val uriHandler = LocalUriHandler.current
 
@@ -310,7 +317,7 @@ private fun File(
 
                         Column {
                             NetStates(filePreview) { file ->
-                                HtmlText(file, domain = domain)
+                                HtmlText(file, baseUri = domain)
                             }
                         }
                     }

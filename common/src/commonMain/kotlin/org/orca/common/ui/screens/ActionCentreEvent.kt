@@ -93,7 +93,7 @@ fun ActionCentreEventComponent(
     additionalDetails: String,
     dressCode: String,
     transportation: String,
-    domain: String? = null
+    domain: String = ""
 ) {
     EventSubheading("Descriptive and educative purpose", educativePurpose, domain)
 
@@ -115,12 +115,12 @@ fun ActionCentreEventComponent(
 private fun EventSubheading(
     title: String,
     text: String,
-    domain: String? = null
+    baseUri: String = ""
 ) {
     Column(Modifier.padding(8.dp)) {
         Text(title, style = MaterialTheme.typography.titleLarge)
         Spacer(Modifier.height(4.dp))
-        HtmlText(text, domain = domain)
+        HtmlText(text, baseUri = baseUri)
     }
 
     Divider(Modifier.padding(vertical = Padding.Divider))

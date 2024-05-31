@@ -15,13 +15,11 @@ import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.essenty.parcelable.Parcelable
-import com.arkivanov.essenty.parcelable.Parcelize
-import com.arkivanov.essenty.statekeeper.consume
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import kotlinx.serialization.Serializable
 import org.orca.common.data.Compass
 import org.orca.common.data.utils.formatAsDateTime
 import org.orca.common.data.utils.collectAsStateAndLifecycle
@@ -48,7 +46,8 @@ class LearningTaskListComponent(
     )
 ) : ComponentContext by componentContext {
 
-    private val _state = stateKeeper.consume("LEARNING_TASKS_STATE") ?: State(activityFilter, statusFilter)
+    private val _state = stateKeeper.consume("LEARNING_TASKS_STATE", State.serializer())
+        ?: State(activityFilter, statusFilter)
 
     private val _activityFilter: MutableStateFlow<Set<Int>> = MutableStateFlow(_state.activityFilter)
     val activityFilter: StateFlow<Set<Int>> = _activityFilter
@@ -87,14 +86,16 @@ class LearningTaskListComponent(
     }
 
     init {
-        stateKeeper.register("LEARNING_TASKS_STATE") { State(activityFilter, statusFilter) }
+        stateKeeper.register("LEARNING_TASKS_STATE", State.serializer()) {
+            State(activityFilter, statusFilter)
+        }
     }
 
-    @Parcelize
+    @Serializable
     private class State(
         var activityFilter: Set<Int>,
         var statusFilter: Set<LearningTaskSubmissionStatus>
-    ) : Parcelable
+    )
 }
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)

@@ -1,6 +1,7 @@
 package org.orca.common.ui.components.common
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -13,6 +14,6 @@ fun BackNavIcon(
     IconButton(
         onClick = onBackPress
     ) {
-        Icon(Icons.Default.ArrowBack, "Back")
+        Icon(Icons.AutoMirrored.Default.ArrowBack, "Back")
     }
 }

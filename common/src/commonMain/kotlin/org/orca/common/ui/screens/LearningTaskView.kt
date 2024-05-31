@@ -3,6 +3,7 @@ package org.orca.common.ui.screens
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -93,7 +94,7 @@ fun LearningTaskViewContent(
         Column(modifier = Modifier.padding(8.dp)) {
             if (PLATFORM == Platform.DESKTOP) {
                 Button(onClick = component.onBackPress) {
-                    Icon(Icons.Default.ArrowBack, "Back")
+                    Icon(Icons.AutoMirrored.Default.ArrowBack, "Back")
                 }
             }
             FlairedCard(
@@ -133,7 +134,7 @@ fun LearningTaskViewContent(
                                     HtmlText(
                                         task.description,
                                         Modifier.padding(16.dp),
-                                        domain = component.compass.buildDomainUrlString("")
+                                        baseUri = component.compass.buildDomainUrlString("")
                                     )
                                 }
                             }
@@ -179,7 +180,7 @@ fun LearningTaskViewContent(
                                 HtmlText(
                                     task.description,
                                     Modifier.padding(16.dp),
-                                    domain = component.compass.buildDomainUrlString("")
+                                    baseUri = component.compass.buildDomainUrlString("")
                                 )
                             }
                         }

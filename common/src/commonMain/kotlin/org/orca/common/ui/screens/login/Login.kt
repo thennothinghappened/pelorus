@@ -2,21 +2,21 @@ package org.orca.common.ui.screens.login
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.extensions.compose.jetbrains.stack.Children
-import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.fade
-import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.plus
-import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.scale
-import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.stackAnimation
-import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
+import com.arkivanov.decompose.extensions.compose.stack.Children
+import com.arkivanov.decompose.extensions.compose.stack.animation.fade
+import com.arkivanov.decompose.extensions.compose.stack.animation.plus
+import com.arkivanov.decompose.extensions.compose.stack.animation.scale
+import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
+import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
-import com.arkivanov.essenty.parcelable.Parcelable
-import com.arkivanov.essenty.parcelable.Parcelize
+import kotlinx.serialization.Serializable
 import org.orca.common.data.PLATFORM
 import org.orca.common.data.Platform
 import org.orca.common.ui.components.common.BackNavIcon
@@ -40,42 +40,74 @@ interface LoginComponent {
     }
 
     @Suppress("JavaIoSerializableObjectMustHaveReadResolve")
-    @Parcelize
-    sealed interface Config : Parcelable {
+    @Serializable
+    sealed interface Config {
+
+        @Serializable
         data object Menu : Config
+
+        @Serializable
         data object CookieLogin : Config
+
+        @Serializable
         data object WebLogin : Config
+
     }
 
+    @Serializable
     enum class FieldErrorType {
         OK,
         INVALID_FORMAT,
         REJECTED
     }
 
-    @Parcelize
-    sealed class LoginResult : Parcelable {
+    @Serializable
+    sealed class LoginResult {
+
+        @Serializable
         data object Success : LoginResult() {
             private fun readResolve(): Any = Success
         }
 
+        @Serializable
         data class FieldError(
             val cookie: FieldErrorType = FieldErrorType.OK,
             val userId: FieldErrorType = FieldErrorType.OK,
             val domain: FieldErrorType = FieldErrorType.OK
         ) : LoginResult()
-        data class NetworkError(val error: Throwable) : LoginResult()
-        data class ClientError(val error: Throwable) : LoginResult()
+
+        @Serializable
+        data class NetworkError(val error: SerializableException) : LoginResult()
+
+        @Serializable
+        data class ClientError(val error: SerializableException) : LoginResult()
+
     }
 }
+
+@Serializable
+data class SerializableException(
+    val originalExceptionType: String?,
+    override val message: String?,
+    override val cause: SerializableException?
+) : Throwable() {
+    override fun toString(): String {
+        return originalExceptionType + " :: " + super.toString()
+    }
+}
+
+fun Throwable.asSerializableException(): SerializableException = SerializableException(
+    originalExceptionType = this::class.qualifiedName,
+    message = message,
+    cause = cause?.asSerializableException()
+)
 
 class DefaultLoginComponent(
     val componentContext: ComponentContext,
     private val onFinishLogin: (
         domain: String,
         userId: String,
-        cookie: String,
-        mainThread: Boolean
+        cookie: String
     ) -> LoginComponent.LoginResult
 ) : LoginComponent, ComponentContext by componentContext {
 
@@ -83,6 +115,7 @@ class DefaultLoginComponent(
     private val _stack =
         childStack(
             source = navigation,
+            serializer = LoginComponent.Config.serializer(),
             initialConfiguration = LoginComponent.Config.Menu,
             handleBackButton = true,
             childFactory = ::child
@@ -94,11 +127,11 @@ class DefaultLoginComponent(
 
             is LoginComponent.Config.CookieLogin -> LoginComponent.Child.CookieLoginChild(DefaultCookieLoginComponent(
                 componentContext = componentContext,
-                _onFinishLogin = { domain, userId, cookie -> onFinishLogin(domain, userId, cookie, true) }
+                _onFinishLogin = { domain, userId, cookie -> onFinishLogin(domain, userId, cookie) }
             ))
 
             is LoginComponent.Config.WebLogin -> LoginComponent.Child.WebLoginChild(DefaultWebLoginComponent(
-                _onFinishLogin = { domain, userId, cookie -> onFinishLogin(domain, userId, cookie, false) }
+                _onFinishLogin = { domain, userId, cookie -> onFinishLogin(domain, userId, cookie) }
             ))
         }
 

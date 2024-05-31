@@ -1,27 +1,25 @@
 [versions]
 
-kotlin = "1.9.20"
-# Note: AGP 8.1.0-rc01 is used here due to
-# https://youtrack.jetbrains.com/issue/IDEA-316608
-# AGP >=8.1.0 is needed for updating libs, but is not supported by Intellij.
-android-gradle-plugin = "8.1.0-rc01"
+kotlin = "2.0.0"
+android-gradle-plugin = "8.2.0"
 
-androidx-activity-compose = "1.8.0"
-androidx-appcompat = "1.6.1"
-androidx-lifecycle-runtime-compose = "2.6.2"
-androidx-material3 = "1.1.2"
-androidx-core-ktx = "1.12.0"
-androidx-window = "1.1.0"
+androidx-activity-compose = "1.9.0"
+androidx-appcompat = "1.7.0"
+androidx-lifecycle-runtime-compose = "2.8.1"
+androidx-material3 = "1.2.1"
+androidx-core-ktx = "1.13.1"
+androidx-window = "1.3.0"
 
-compose = "1.5.10"
+compose = "1.6.10"
 
-kotlinx-datetime = "0.4.0"
-kotlinx-serialization-json = "1.6.0"
-ktor = "2.3.3"
+kotlinx-datetime = "0.5.0"
+kotlinx-serialization-json = "1.6.3"
+kotlinx-coroutines = "1.8.0"
+ktor = "2.3.11"
 
-decompose = "2.1.4"
+decompose = "3.0.0"
 kotlass = "1.1.1"
-htmlText = "1.2.1"
+htmlText = "1.3.0"
 jSystemThemeDetector = "3.6"
 kamel-image = "0.4.1"
 accompanist-flowlayout = "0.25.2"
@@ -40,6 +38,7 @@ android-library =       { id = "com.android.library", version.ref = "android-gra
 kotlin-multiplatform =  { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-android =        { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-serialization =  { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+kotlin-compose =        { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 compose =               { id = "org.jetbrains.compose", version.ref = "compose" }
 buildconfig =           { id = "com.github.gmazzo.buildconfig", version.ref = "buildconfig" }
 
@@ -52,7 +51,7 @@ kamel-image =           { module = "com.alialbaali.kamel:kamel-image", version.r
 kotlinx-datetime =      { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
 
 decompose =             { module = "com.arkivanov.decompose:decompose", version.ref = "decompose" }
-decompose-jetbrains =   { module = "com.arkivanov.decompose:extensions-compose-jetbrains", version.ref = "decompose" }
+decompose-compose =     { module = "com.arkivanov.decompose:extensions-compose", version.ref = "decompose" }
 jSystemThemeDetector =  { module = "com.github.Dansoftowner:jSystemThemeDetector", version.ref = "jSystemThemeDetector" }
 kotlass =               { module = "org.orca:kotlass", version.ref = "kotlass" }
 htmlText =              { module = "org.orca.htmltext:common", version.ref = "htmlText" }
@@ -66,6 +65,7 @@ androidx-lifecycle-runtime-compose ={ module = "androidx.lifecycle:lifecycle-run
 androidx-activity-compose =         { module = "androidx.activity:activity-compose", version.ref = "androidx-activity-compose" }
 androidx-window =       { module = "androidx.window:window", version.ref = "androidx-window" }
 
+kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
 kotlinx-serialization-json =        { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization-json" }
 ktor-client-core =                  { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-serialization-kotlinx-json =   { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }

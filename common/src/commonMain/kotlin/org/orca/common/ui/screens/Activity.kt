@@ -106,7 +106,7 @@ internal fun ActivityContent(
                                 ) { lp ->
                                     HtmlText(
                                         lp ?: "<body>No lesson plan recorded.</body>",
-                                        domain = component.compass.buildDomainUrlString("")
+                                        baseUri = component.compass.buildDomainUrlString("")
                                     )
                                 }
                             }

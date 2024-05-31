@@ -2,8 +2,8 @@ import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 
 val localProperties = gradleLocalProperties(rootDir)
 
-val gitHubUser: Any? = project.findProperty("gpr.user") ?: localProperties.getProperty("GITHUB_USER") ?: System.getenv("GITHUB_USER")
-val gitHubToken: Any? = project.findProperty("gpr.key") ?: localProperties.getProperty("GITHUB_TOKEN") ?: System.getenv("GITHUB_TOKEN")
+val gitHubUser = (extra["githubUser"] ?: System.getenv("GITHUB_USER"))?.toString()
+val gitHubToken = (extra["githubToken"] ?: System.getenv("GITHUB_TOKEN"))?.toString()
 
 allprojects {
     group = Pelorus.group
@@ -43,4 +43,5 @@ plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.android.library) apply false
     alias(libs.plugins.compose) apply false
+    alias(libs.plugins.kotlin.compose) apply false
 }

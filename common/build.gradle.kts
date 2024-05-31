@@ -5,14 +5,13 @@ plugins {
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.buildconfig)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.kotlin.compose)
 }
 
 kotlin {
     jvmToolchain(Pelorus.Jvm.versionNumber)
 
     androidTarget {
-        jvmToolchain(Pelorus.Jvm.versionNumber)
-
         compilations.all {
             kotlinOptions.jvmTarget = Pelorus.Jvm.version.majorVersion
         }
@@ -31,7 +30,7 @@ kotlin {
                 implementation(libs.htmlText)
                 implementation(libs.kotlinx.datetime)
                 implementation(libs.decompose)
-                implementation(libs.decompose.jetbrains)
+                implementation(libs.decompose.compose)
                 implementation(libs.kamel.image)
                 implementation(libs.accompanist.flowlayout)
 //                implementation("me.xdrop:fuzzywuzzy:1.4.0")
@@ -70,6 +69,7 @@ kotlin {
             dependencies {
                 api(compose.preview)
                 implementation(libs.jSystemThemeDetector)
+                implementation(libs.kotlinx.coroutines.swing)
             }
         }
 

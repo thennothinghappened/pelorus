@@ -10,20 +10,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalUriHandler
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.extensions.compose.jetbrains.stack.Children
-import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.fade
-import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.stackAnimation
-import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
+import com.arkivanov.decompose.extensions.compose.stack.Children
+import com.arkivanov.decompose.extensions.compose.stack.animation.fade
+import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
+import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
-import com.arkivanov.essenty.parcelable.Parcelable
-import com.arkivanov.essenty.parcelable.Parcelize
 import io.ktor.utils.io.errors.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kotlinx.serialization.Serializable
 import org.orca.common.data.*
 import org.orca.common.data.utils.*
 import org.orca.common.ui.utils.WindowSize
@@ -31,6 +30,7 @@ import org.orca.common.ui.components.calendar.ScheduleHolderType
 import org.orca.common.ui.screens.login.DefaultLoginComponent
 import org.orca.common.ui.screens.login.LoginComponent
 import org.orca.common.ui.screens.login.LoginContent
+import org.orca.common.ui.screens.login.asSerializableException
 import org.orca.kotlass.IFlowKotlassClient
 import org.orca.kotlass.KotlassClient
 import org.orca.kotlass.data.LearningTaskSubmissionStatus
@@ -60,20 +60,39 @@ interface RootComponent {
     }
 
     @Suppress("JavaIoSerializableObjectMustHaveReadResolve")
-    @Parcelize
-    sealed interface Config : Parcelable {
+    @Serializable
+    sealed interface Config {
+        @Serializable
         data object Login : Config
+
+        @Serializable
         data object Home : Config
+
+        @Serializable
         data object Calendar : Config
+
+        @Serializable
         data class LearningTasks(
             val activityFilter: Set<Int> = setOf(-1),
             val statusFilter: Set<LearningTaskSubmissionStatus> = emptySet()
         ) : Config
+
+        @Serializable
         data class LearningTaskView(val learningTaskActivityId: Int, val learningTaskId: Int) : Config
+
+        @Serializable
         data object Settings : Config
+
+        @Serializable
         data class Activity(val scheduleEntryIndex: Int) : Config
+
+        @Serializable
         data class Resources(val activityId: Int) : Config
+
+        @Serializable
         data object Profile : Config
+
+        @Serializable
         data class ActionCentreEvent(val eventId: Int) : Config
     }
 }
@@ -88,6 +107,7 @@ class DefaultRootComponent(
     private val _stack =
         childStack(
             source = navigation,
+            serializer = RootComponent.Config.serializer(),
             initialConfiguration = RootComponent.Config.Login,
             handleBackButton = true,
             childFactory = ::child
@@ -115,14 +135,13 @@ class DefaultRootComponent(
 
     private fun onFinishLogin(
         credentials: KotlassClient.CompassClientCredentials,
-        enableVerify: Boolean = true,
-        mainThread: Boolean
+        enableVerify: Boolean = true
     ): NetResponse<*> {
 
         if (enableVerify) {
             // make sure the credentials are valid!
-            val _compass = KotlassClient(credentials)
-            val valid = _compass.validateCredentials()
+            val tempClient = KotlassClient(credentials)
+            val valid = tempClient.validateCredentials()
 
             if (valid !is NetResponse.Success) {
                 return valid
@@ -132,12 +151,7 @@ class DefaultRootComponent(
         compassClientCredentials = credentials
         setClientCredentials(preferences, compassClientCredentials)
 
-        if (!mainThread) {
-            // We launch this in a scope since this function can get called from a coroutine in Browser login.
-            CoroutineScope(Dispatchers.Main).launch {
-                goToNavItem(RootComponent.Config.Home)
-            }
-        } else {
+        CoroutineScope(Dispatchers.Main.immediate).launch {
             goToNavItem(RootComponent.Config.Home)
         }
 
@@ -283,15 +297,14 @@ class DefaultRootComponent(
 
         val credentials = getClientCredentials(preferences)
         if (credentials != null) {
-            onFinishLogin(credentials, preferences.get(DefaultPreferences.Api.verifyCredentials), true)
+            onFinishLogin(credentials, preferences.get(DefaultPreferences.Api.verifyCredentials))
         }
     }
 
     private fun onFinishLoginFromScreen(
         domain: String,
         userId: String,
-        cookie: String,
-        mainThread: Boolean
+        cookie: String
     ): LoginComponent.LoginResult {
 
         val blanks = listOf(domain, userId, cookie).map {
@@ -317,16 +330,17 @@ class DefaultRootComponent(
                     override val cookie = cookie
                     override val userId = _userId
                     override val domain = domain
-                }, mainThread = mainThread
+                }
             )
         }
 
         return when (reply) {
+
             is NetResponse.ClientError -> {
                 if (reply.error is IOException) {
-                    return LoginComponent.LoginResult.NetworkError(reply.error)
+                    return LoginComponent.LoginResult.NetworkError(reply.error.asSerializableException())
                 }
-                LoginComponent.LoginResult.ClientError(reply.error)
+                LoginComponent.LoginResult.ClientError(reply.error.asSerializableException())
             }
 
             is NetResponse.RequestFailure -> LoginComponent.LoginResult.FieldError(
