@@ -11,11 +11,11 @@
 #############################
 
 ### Compose Multiplatform ###
-compose = "1.6.2"
-compose-compiler = "1.5.11"
+compose = "1.6.11"
+compose-compiler = "1.5.14"
 
 ### Kotlin ###
-kotlin = "1.9.23"
+kotlin = "2.0.0"
 
 ### Gradle ###
 # Latest supported by Intellij IDEA 2024.2 is AGP 8.2.0
@@ -31,10 +31,10 @@ androidx-compose = "1.6.7"
 androidx-activityCompose = "1.9.0"
 
 # Support for the Android lifecycle in Compose.
-androidx-lifecycle = "2.7.0"
+androidx-lifecycle = "2.8.1"
 
 # Extended Android metadata "stuff" - gives us the AppCompat adaptive themes.
-androidx-appcompat = "1.6.1"
+androidx-appcompat = "1.7.0"
 
 ### Backend ###
 
@@ -53,7 +53,7 @@ sqldelight = "2.0.2"
 ### Util ###
 
 # Kotlin's own DateTime library for formatting dates
-kotlinx-datetime = "0.5.0"
+kotlinx-datetime = "0.6.0"
 
 ### Compose ###
 
@@ -61,10 +61,10 @@ kotlinx-datetime = "0.5.0"
 trulysharedprefs = "1.1.0"
 
 # Desktop `Dispatchers.Main`
-kotlinx-coroutines = "1.8.0"
+kotlinx-coroutines = "1.8.1"
 
 # HTML rendering
-htmltext = "1.2.2"
+htmltext = "1.6.0"
 
 # Unofficial Material 3 window size class port until added to Compose Multiplatform.
 material3-windowSizeClassMultiplatform = "0.5.0"
@@ -122,6 +122,7 @@ voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", vers
 [plugins]
 
 jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "compose" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 androidApplication = { id = "com.android.application", version.ref = "android-gradle-plugin" }
 androidLibrary = { id = "com.android.library", version.ref = "android-gradle-plugin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }

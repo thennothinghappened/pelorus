@@ -3,12 +3,14 @@ rootProject.name = "pelorus"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
+
     repositories {
         maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
         google()
         gradlePluginPortal()
         mavenCentral()
     }
+
 }
 
 val gitHubUser = (extra["githubUser"] ?: System.getenv("GITHUB_USER"))?.toString()
